@@ -1,0 +1,85 @@
+.wp-block-gallery.has-nested-images.is-cropped figure.wp-block-image:not(#individual-image) a, .wp-block-gallery.has-nested-images.is-cropped figure.wp-block-image:not(#individual-image) img {
+    flex: 1 0 0%;
+/*     height: 100%; */
+    object-fit: cover;
+    width: 50%;
+}
+
+
+.menu-highlight-item{
+	display:none
+}
+@media (min-width: 1024px) {
+	.site-header-row-container-inner {
+		padding: 0px 50px 0px 50px;
+	}
+}
+.tmc-notification{
+	display:none;
+}
+.elementor-container .elementor-column-gap-no {
+	display:none;
+}
+
+
+/* Forcer l'affichage du logo sur tous les écrans */
+.custom-logo {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Spécifiquement pour les grands écrans (desktop) */
+@media (min-width: 1025px) {
+    .custom-logo {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        max-width: 200px; /* Ajustez la taille si nécessaire */
+        height: auto;
+    }
+}
+
+/* Pour le lien contenant le logo */
+.custom-logo-link {
+    display: block !important;
+    visibility: visible !important;
+}
+
+
+
+
+/* Pour l'en-tête principal sur toutes les pages */
+.site-header,
+.header-main,
+.header-wrap,
+#masthead,
+header.site-header {
+    background-color: #F2E6DD !important; /* Remplacez par votre couleur */
+}
+
+/* Si vous voulez seulement sur desktop */
+@media (min-width: 768px) {
+    .site-header {
+        background-color: #F2E6DD !important;
+    }
+}
+
+/* Pour la page d'accueil spécifiquement */
+.home .site-header {
+    background-color: #F2E6DD !important;
+}
+
+.post-author, .author, .byline, .meta-author ,.posted-by {
+    display: none !important;
+}
+
+
+/* Désactive et cache définitivement le popup avec l'ID welcome-popup */
+#welcome-popup, #exit-popup {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+²

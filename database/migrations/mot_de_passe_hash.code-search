@@ -1,0 +1,41 @@
+# Query: mot_de_passe_hash
+# ContextLines: 1
+
+13 results - 3 files
+
+app\Models\User.php:
+  21          'email',
+  22:         'mot_de_passe_hash',
+  23          'role',
+
+  32      protected $hidden = [
+  33:         'mot_de_passe_hash',
+  34      ];
+
+database\migrations\2025_12_24_000003_sync_users_exact_fields.php:
+  22              }
+  23:             if (!Schema::hasColumn('users', 'mot_de_passe_hash')) {
+  24:                 $table->string('mot_de_passe_hash', 255)->nullable()->after('password');
+  25              }
+  26              if (!Schema::hasColumn('users', 'role')) {
+  27:                 $table->string('role')->default('client')->after('mot_de_passe_hash');
+  28              }
+
+  48  
+  49:         // Copy existing password to mot_de_passe_hash where empty
+  50:         if (Schema::hasColumn('users', 'password') && Schema::hasColumn('users', 'mot_de_passe_hash')) {
+  51:             $users = DB::table('users')->select('id_user', 'password', 'mot_de_passe_hash')->get();
+  52              foreach ($users as $u) {
+  53:                 if (empty($u->mot_de_passe_hash) && !empty($u->password)) {
+  54:                     DB::table('users')->where('id_user', $u->id_user)->update(['mot_de_passe_hash' => $u->password]);
+  55                  }
+
+  87              }
+  88:             if (Schema::hasColumn('users', 'mot_de_passe_hash')) {
+  89:                 $table->dropColumn('mot_de_passe_hash');
+  90              }
+
+database\migrations\db.sql:
+  12      email VARCHAR(100) UNIQUE,
+  13:     mot_de_passe_hash VARCHAR(255) NOT NULL,
+  14      role ENUM('client', 'vendeur', 'admin') NOT NULL DEFAULT 'client',
