@@ -21,8 +21,9 @@ class VendorSettingsController extends Controller
         $vendeur = Auth::user()->vendeur;
         $vendeur->load(['horaires', 'contacts', 'categories']);
         $allCategories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
+        $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
 
-        return view('vendeur.settings.index', compact('vendeur', 'allCategories'));
+        return view('vendeur.settings.index', compact('vendeur', 'allCategories', 'vendorCategories'));
     }
 
     /**
@@ -32,10 +33,9 @@ class VendorSettingsController extends Controller
     {
         $vendeur = Auth::user()->vendeur;
 
-        $validated = $request->validate([
+        $rules = [
             'nom_commercial' => 'required|string|max:100',
             'description' => 'nullable|string',
-            'type_vendeur' => 'required|string',
             'adresse_complete' => 'nullable|string',
             'image_principale' => 'nullable|image|max:2048',
             'facebook_url' => 'nullable|url|max:255',
@@ -44,7 +44,19 @@ class VendorSettingsController extends Controller
             'tiktok_url' => 'nullable|url|max:255',
             'whatsapp_number' => 'nullable|string|max:20',
             'website_url' => 'nullable|url|max:255',
-        ]);
+        ];
+
+        // Only allow setting category if not already set
+        if (!$vendeur->id_category_vendeur) {
+            $rules['id_category_vendeur'] = 'required|exists:vendor_categories,id_category_vendeur';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Remove from data if it's already set to prevent accidental overrides (security)
+        if ($vendeur->id_category_vendeur) {
+            unset($validated['id_category_vendeur']);
+        }
 
         if ($request->hasFile('image_principale')) {
             $validated['image_principale'] = ImageHelper::uploadAndConvert($request->file('image_principale'), 'vendeurs');

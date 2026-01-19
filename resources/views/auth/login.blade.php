@@ -1,199 +1,200 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Connexion | {{ config('app.name', 'Cabaacabaa') }}</title>
+@extends('layouts.auth')
 
-    <!-- Google Fonts: Outfit & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+@section('title', 'Connexion')
 
-    <script>
-        // Check for dark mode preference immediately to prevent flash
-        if (localStorage.getItem('darkMode') === 'true' || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+@section('content')
+<div class="min-h-screen flex" x-data="{ showError: {{ $errors->any() ? 'true' : 'false' }} }">
+    <!-- Left Side - Branding & Trust Signals -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#ff4d00] via-orange-600 to-red-700 p-12 flex-col justify-between relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
+        </div>
 
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Inter', 'sans-serif'],
-                            display: ['Outfit', 'sans-serif'],
-                        },
-                        colors: {
-                            slate: {
-                                950: '#020617',
-                            }
-                        }
-                    }
-                }
-            }
-        </script>
-    @endif
-
-    <style>
-        [x-cloak] { display: none !important; }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
-
-        .dark .glass-card {
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(55, 65, 81, 0.5);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
-        }
-
-        .bg-gradient-premium {
-            background: radial-gradient(circle at top right, rgba(249, 115, 22, 0.05), transparent),
-                        radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.05), transparent),
-                        #f8fafc;
-        }
-
-        .dark .bg-gradient-premium {
-             background: radial-gradient(circle at top right, rgba(249, 115, 22, 0.1), transparent),
-                        radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.1), transparent),
-                        #030712;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-    </style>
-</head>
-<body class="min-h-screen bg-gradient-premium font-sans selection:bg-orange-100 selection:text-orange-900 transition-colors duration-300">
-
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
-        
-        <div class="w-full max-w-xl animate-fadeIn">
-            
-            <!-- Branding/Logo -->
-            <div class="text-center mb-8">
-                <a href="/" class="inline-flex items-center gap-2 group mb-6">
-                    <div class="w-12 h-12 bg-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-200 dark:shadow-none group-hover:scale-110 transition-transform">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="relative z-10">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 mb-12">
+                @if($siteLogo ?? false)
+                    <img src="{{ $siteLogo }}" alt="{{ $siteName ?? config('app.name') }}" class="h-12 w-auto">
+                @else
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-xl">
+                        <svg class="w-7 h-7 text-[#ff4d00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
                     </div>
-                    <span class="text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tight">{{ config('app.name', 'Cabaacabaa') }}</span>
-                </a>
-                <h1 class="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Bon retour !</h1>
-                <p class="text-slate-500 dark:text-slate-400 font-medium">Heureux de vous revoir parmi nous.</p>
-            </div>
-
-            <div class="glass-card rounded-3xl p-6 sm:p-10">
-                
-                @if ($errors->any())
-                    <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-2xl">
-                        <div class="flex items-center gap-2 text-red-600 dark:text-red-400 mb-1">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span class="text-sm font-bold">Veuillez corriger les erreurs suivantes:</span>
-                        </div>
-                        <ul class="text-sm text-red-500 dark:text-red-400 list-disc list-inside space-y-0.5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
                 @endif
-
-                <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
-                    @csrf
-                    
-                    <div class="space-y-2">
-                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Adresse Email</label>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500 group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z"/>
-                                </svg>
-                            </div>
-                            <input type="email" name="email" value="{{ old('email') }}" required autoFocus
-                                   class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-gray-900/50 border border-slate-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-orange-500/10 dark:focus:ring-orange-500/20 focus:border-orange-500 dark:focus:border-orange-500 outline-none transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600"
-                                   placeholder="email@exemple.com">
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center ml-1">
-                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Mot de Passe</label>
-                            <a href="#" class="text-xs font-bold text-orange-600 dark:text-orange-400 hover:underline">Oublié ?</a>
-                        </div>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-4 flex items-center text-slate-400 dark:text-slate-500 group-focus-within:text-orange-600 dark:group-focus-within:text-orange-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                </svg>
-                            </div>
-                            <input type="password" name="password" required
-                                   class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-gray-900/50 border border-slate-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-900 focus:ring-4 focus:ring-orange-500/10 dark:focus:ring-orange-500/20 focus:border-orange-500 dark:focus:border-orange-500 outline-none transition-all text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600"
-                                   placeholder="••••••••">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center px-1">
-                        <label class="flex items-center gap-2 cursor-pointer group">
-                            <input type="checkbox" name="remember" class="w-4 h-4 text-orange-600 border-slate-300 dark:border-gray-600 rounded focus:ring-orange-500 dark:bg-gray-800">
-                            <span class="text-sm font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Se souvenir de moi</span>
-                        </label>
-                    </div>
-
-                    <div class="pt-2">
-                        <button type="submit" class="w-full py-4 bg-orange-600 text-white font-bold rounded-xl shadow-lg shadow-orange-200 dark:shadow-none hover:bg-orange-700 hover:shadow-orange-300 hover:-translate-y-0.5 transition-all active:scale-[0.98]">
-                            Se Connecter
-                        </button>
-                    </div>
-                </form>
-
-                <div class="mt-8 pt-8 border-t border-slate-100 dark:border-gray-700 text-center">
-                    <p class="text-slate-600 dark:text-slate-400">
-                        Nouveau ici ? 
-                        <a href="{{ route('register') }}" class="text-orange-600 dark:text-orange-400 font-bold hover:underline ml-1">Créer un compte</a>
-                    </p>
-                </div>
+                <span class="text-3xl font-black text-white tracking-tight">{{ $siteName ?? config('app.name') }}</span>
             </div>
 
-            <div class="mt-8 flex flex-col items-center gap-4 text-center">
-                <p class="text-xs text-slate-400 dark:text-slate-500 leading-relaxed max-w-sm">
-                    En vous connectant, vous acceptez nos <a href="{{ route('terms') }}" class="text-slate-600 dark:text-slate-400 hover:underline">Conditions d'Utilisation</a>.
+            <!-- Value Proposition -->
+            <div class="space-y-8">
+                <h1 class="text-5xl font-black text-white leading-tight">
+                    Votre plateforme<br>de confiance
+                </h1>
+                <p class="text-xl text-orange-100 leading-relaxed max-w-md">
+                    Connectez-vous pour gérer vos commandes, suivre vos livraisons et développer votre activité.
                 </p>
-                <div class="flex items-center gap-6">
-                    <a href="/" class="text-xs font-bold text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 flex items-center gap-1 transition-colors uppercase tracking-wider">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Accueil
-                    </a>
-                </div>
+            </div>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="relative z-10 grid grid-cols-3 gap-6">
+            <div class="text-center">
+                <div class="text-3xl font-black text-white mb-1">10K+</div>
+                <div class="text-sm text-orange-100">Utilisateurs</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-black text-white mb-1">99.9%</div>
+                <div class="text-sm text-orange-100">Disponibilité</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-black text-white mb-1">24/7</div>
+                <div class="text-sm text-orange-100">Support</div>
             </div>
         </div>
     </div>
 
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</body>
-</html>
+    <!-- Right Side - Login Form -->
+    <div class="flex-1 flex items-center justify-center p-8 bg-gray-50">
+        <div class="w-full max-w-md">
+            <!-- Mobile Logo -->
+            <div class="lg:hidden flex items-center justify-center gap-3 mb-8">
+                @if($siteLogo ?? false)
+                    <img src="{{ $siteLogo }}" alt="{{ $siteName ?? config('app.name') }}" class="h-10 w-auto">
+                @endif
+                <span class="text-2xl font-black text-gray-900">{{ $siteName ?? config('app.name') }}</span>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black text-gray-900 mb-2">Bon retour !</h2>
+                    <p class="text-gray-500">Connectez-vous à votre compte</p>
+                </div>
+
+                <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                    @csrf
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Adresse email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                                </svg>
+                            </div>
+                            <input type="email" name="email" value="{{ old('email') }}" required autofocus
+                                   class="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all"
+                                   placeholder="vous@exemple.com">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Mot de passe</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <input type="password" name="password" required
+                                   class="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all"
+                                   placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="remember" class="w-4 h-4 text-[#ff4d00] border-gray-300 rounded focus:ring-[#ff4d00]">
+                            <span class="text-sm text-gray-600">Se souvenir de moi</span>
+                        </label>
+                        <a href="#" class="text-sm font-bold text-[#ff4d00] hover:text-orange-600 transition">Mot de passe oublié ?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-[#ff4d00] to-orange-600 text-white font-black py-4 rounded-xl hover:shadow-2xl hover:shadow-orange-200 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                        Se connecter
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500 font-medium">Nouveau sur la plateforme ?</span>
+                    </div>
+                </div>
+
+                <!-- Register Link -->
+                <a href="{{ route('register') }}" 
+                   class="block w-full text-center py-4 border-2 border-gray-200 rounded-xl font-bold text-gray-700 hover:border-[#ff4d00] hover:text-[#ff4d00] hover:bg-orange-50 transition-all">
+                    Créer un compte
+                </a>
+            </div>
+
+            <!-- Security Badge -->
+            <div class="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <span>Connexion sécurisée SSL</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div x-show="showError" 
+         x-cloak
+         @click.away="showError = false"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 transform"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-90"
+             @click.stop>
+            <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-lg font-black text-gray-900 mb-2">Erreur de connexion</h3>
+                    <ul class="space-y-1 text-sm text-gray-600">
+                        @foreach($errors->all() as $error)
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-500 mt-0.5">•</span>
+                                <span>{{ $error }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <button @click="showError = false" 
+                    class="mt-6 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl transition">
+                Fermer
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+@endsection

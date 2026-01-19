@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Trouvez votre repas en quelques clics')
+@section('title', 'Trouvez votre bonheur en quelques clics')
 
 @section('content')
 
@@ -25,7 +25,7 @@
 
             <!-- Titre principal -->
             <h1 class="text-6xl md:text-7xl lg:text-8xl tracking-tight text-gray-900 dark:text-white mb-8 leading-tight">
-                Votre repas,
+                Votre bonheur,
                 <br class="hidden sm:block">
                 <span class="relative inline-block">
                     <span class="relative z-10 bg-gradient-to-r from-red-600 via-orange-500 to-red-600 bg-clip-text text-transparent">
@@ -37,9 +37,7 @@
                 </span>
             </h1>
             
-            <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Les meilleurs vendeurs de Lomé à portée de main. Commandez maintenant, récupérez en 20 minutes.
-            </p>
+                Les meilleurs boutiques de Lomé à portée de main. Commandez maintenant, récupérez en quelques minutes.
 
             <!-- Search Bar Ultra Moderne -->
             <div class="max-w-3xl mx-auto mb-12" x-data="{ location: '', focused: false }">
@@ -124,7 +122,7 @@
                     </div>
                     <div>
                         <div class="text-sm text-gray-900 dark:text-white">Rapide</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">Prêt en 15-30 min</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Prêt en quelques minutes</div>
                     </div>
                 </div>
 
@@ -189,15 +187,15 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @forelse($popularVendors ?? [] as $vendor)
-            <a href="{{-- route('vendor.show', $vendor->slug) --}}" class="group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900/50 transition-all duration-300">
+            @forelse($vendeurs ?? [] as $vendor)
+            <a href="{{-- route('vendor.show', optional($vendor)->slug) --}}" class="group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900/50 transition-all duration-300">
                 <!-- Image -->
                 <div class="relative h-52 overflow-hidden bg-gray-100 dark:bg-gray-700">
-                    <img src="{{ $vendor->cover_image ?? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400' }}"
-                         alt="{{ $vendor->name }}"
+                    <img src="{{ optional($vendor)->cover_image ?? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400' }}"
+                         alt="{{ optional($vendor)->name }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     
-                    @if($vendor->is_open)
+                    @if(optional($vendor)->is_open)
                         <span class="absolute top-4 right-4 px-3 py-1.5 bg-green-500 text-white text-xs rounded-full backdrop-blur-sm bg-opacity-90 shadow-lg">
                             Ouvert
                         </span>
@@ -207,20 +205,20 @@
                 <!-- Content -->
                 <div class="p-5">
                     <h3 class="text-lg text-gray-900 dark:text-white mb-1 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                        {{ $vendor->name }}
+                        {{ optional($vendor)->name }}
                     </h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-1">{{ $vendor->description }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-1">{{ optional($vendor)->description }}</p>
 
                     <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
                         <div class="flex items-center gap-1">
                             <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
-                            <span class="text-sm text-gray-900 dark:text-white">{{ number_format($vendor->rating, 1) }}</span>
-                            <span class="text-sm text-gray-400 dark:text-gray-500">({{ $vendor->reviews_count }})</span>
+                            <span class="text-sm text-gray-900 dark:text-white">{{ number_format(optional($vendor)->rating ?? 0, 1) }}</span>
+                            <span class="text-sm text-gray-400 dark:text-gray-500">({{ optional($vendor)->reviews_count ?? 0 }})</span>
                         </div>
 
-                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ $vendor->distance ?? '1.2' }} km</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ optional($vendor)->distance ?? '1.2' }} km</span>
                     </div>
                 </div>
             </a>
@@ -272,7 +270,7 @@
                     </svg>
                 </div>
                 <h3 class="text-lg text-gray-900 dark:text-white mb-2">Commandez</h3>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Choisissez vos plats favoris en quelques clics</p>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Choisissez vos articles favoris en quelques clics</p>
             </div>
 
             <!-- Step 3 -->
@@ -294,18 +292,18 @@
     <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
         <div class="text-center mb-12">
             <h2 class="text-3xl text-gray-900 dark:text-white mb-3">Explorez par catégorie</h2>
-            <p class="text-gray-600 dark:text-gray-400">Qu'avez-vous envie de manger ?</p>
+            <p class="text-gray-600 dark:text-gray-400">Qu'avez-vous envie d'acheter ?</p>
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             @php
             $categories = [
-                ['name' => 'Plats locaux', 'icon' => '🍲', 'color' => 'from-red-500 to-orange-500'],
-                ['name' => 'Fast-food', 'icon' => '🍔', 'color' => 'from-orange-500 to-yellow-500'],
-                ['name' => 'Pizza', 'icon' => '🍕', 'color' => 'from-yellow-500 to-red-500'],
-                ['name' => 'Boissons', 'icon' => '🥤', 'color' => 'from-blue-500 to-cyan-500'],
-                ['name' => 'Desserts', 'icon' => '🍰', 'color' => 'from-pink-500 to-purple-500'],
-                ['name' => 'Petit-déj', 'icon' => '🥐', 'color' => 'from-amber-500 to-orange-500'],
+                ['name' => 'Produits locaux', 'icon' => '📦', 'color' => 'from-red-500 to-orange-500'],
+                ['name' => 'Électronique', 'icon' => '📱', 'color' => 'from-orange-500 to-yellow-500'],
+                ['name' => 'Mode', 'icon' => '👕', 'color' => 'from-yellow-500 to-red-500'],
+                ['name' => 'Beauté', 'icon' => '💄', 'color' => 'from-blue-500 to-cyan-500'],
+                ['name' => 'Maison', 'icon' => '🏠', 'color' => 'from-pink-500 to-purple-500'],
+                ['name' => 'Autres', 'icon' => '✨', 'color' => 'from-amber-500 to-orange-500'],
             ];
             @endphp
 
@@ -320,30 +318,7 @@
     </div>
 </section>
 
-<!-- Vendeur CTA -->
-<section class="py-20 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-black dark:to-gray-900 text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="inline-block p-3 bg-white/10 backdrop-blur-sm rounded-2xl mb-6 shadow-xl">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-            </svg>
-        </div>
-        
-        <h2 class="text-4xl mb-4 font-bold">Vous êtes vendeur ?</h2>
-        <p class="text-xl text-gray-300 mb-8 leading-relaxed">
-            Rejoignez notre plateforme et développez votre activité
-        </p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{-- route('vendor.apply') --}}" class="px-8 py-4 bg-white text-gray-900 rounded-xl hover:bg-gray-100 transition-colors font-bold shadow-lg">
-                Devenir vendeur
-            </a>
-            <a href="{{-- route('how-it-works') --}}" class="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20 transition-colors font-bold">
-                En savoir plus
-            </a>
-        </div>
-    </div>
-</section>
+
 
 <!-- Testimonials -->
 <section class="py-20 bg-white dark:bg-gray-950 transition-colors duration-300">
@@ -364,7 +339,7 @@
                     @endfor
                 </div>
                 <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed italic">
-                    "Application très pratique ! Je gagne du temps pendant ma pause déjeuner. Les vendeurs sont pros et la nourriture toujours bonne."
+                    "Application très pratique ! Je gagne du temps lors de mes achats. Les boutiques sont pros et les articles de qualité."
                 </p>
                 <div class="flex items-center gap-3">
                     <img src="https://ui-avatars.com/api/?name=Kofi+Mensah&background=ef4444&color=fff" class="w-10 h-10 rounded-full" alt="Client">
@@ -392,7 +367,7 @@
             $faqs = [
                 [
                     'question' => 'Comment passer une commande ?',
-                    'answer' => 'Recherchez un vendeur près de vous, parcourez son menu, ajoutez les plats à votre panier, puis validez votre commande. Vous recevrez une confirmation avec l\'heure de retrait.'
+                    'answer' => 'Recherchez une boutique près de vous, parcourez son catalogue, ajoutez les articles à votre panier, puis validez votre commande. Vous recevrez une confirmation avec l\'heure de retrait.'
                 ],
                 [
                     'question' => 'Comment fonctionne le paiement ?',
@@ -400,7 +375,7 @@
                 ],
                 [
                     'question' => 'Y a-t-il des frais de service ?',
-                    'answer' => 'Non, notre plateforme est gratuite pour les clients. Vous payez uniquement le prix des plats commandés.'
+                    'answer' => 'Non, notre plateforme est gratuite pour les clients. Vous payez uniquement le prix des articles commandés.'
                 ],
                 [
                     'question' => 'Puis-je annuler ma commande ?',

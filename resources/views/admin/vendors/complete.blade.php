@@ -68,13 +68,12 @@
                                class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:bg-white outline-none transition-all font-bold text-gray-900">
                     </div>
                     <div>
-                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Type d'activité</label>
-                        <select name="type_vendeur" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:bg-white outline-none transition-all font-bold text-gray-900">
-                            <option value="restaurant">🍴 Restaurant</option>
-                            <option value="epicerie">🛒 Épicerie / Marché</option>
-                            <option value="cafe">☕ Café / Salon de thé</option>
-                            <option value="boulangerie">🥐 Boulangerie / Pâtisserie</option>
-                            <option value="other">✨ Autre</option>
+                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Type de Boutique / Catégorie</label>
+                        <select name="id_category_vendeur" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:bg-white outline-none transition-all font-bold text-gray-900">
+                            <option value="">Sélectionner une catégorie...</option>
+                            @foreach($vendorCategories as $cat)
+                                <option value="{{ $cat->id_category_vendeur }}">{{ $cat->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

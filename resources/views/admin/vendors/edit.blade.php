@@ -84,13 +84,14 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Type d'Établissement</label>
-                        <select name="type_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
-                            <option value="restaurant" @selected($vendeur->type_vendeur === 'restaurant')>Restaurant</option>
-                            <option value="epicerie" @selected($vendeur->type_vendeur === 'epicerie')>Épicerie</option>
-                            <option value="cafe" @selected($vendeur->type_vendeur === 'cafe')>Café / Lounge</option>
-                            <option value="boulangerie" @selected($vendeur->type_vendeur === 'boulangerie')>Boulangerie</option>
-                            <option value="other" @selected($vendeur->type_vendeur === 'other')>Autre Service</option>
+                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Type de Boutique / Catégorie</label>
+                        <select name="id_category_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                            <option value="">Choisir une catégorie...</option>
+                            @foreach($vendorCategories as $cat)
+                                <option value="{{ $cat->id_category_vendeur }}" @selected($vendeur->id_category_vendeur == $cat->id_category_vendeur)>
+                                    {{ $cat->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

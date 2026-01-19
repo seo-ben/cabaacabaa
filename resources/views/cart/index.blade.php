@@ -45,7 +45,7 @@
                                 <div class="mb-3 flex items-start justify-between gap-4">
                                     <div class="flex-1">
                                         <h3 class="text-xl font-black text-gray-900 dark:text-white leading-tight mb-1">{{ $item['name'] }}</h3>
-                                        <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ $item['vendor_name'] ?? 'Restaurant' }}</p>
+                                        <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ $item['vendor_name'] ?? 'Établissement' }}</p>
                                     </div>
                                     @if(isset($item['options']) && !empty($item['options']))
                                     <button class="edit-options-btn px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
@@ -217,9 +217,9 @@
             </div>
             <div>
                 <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-2">Votre panier est vide</h2>
-                <p class="text-gray-500 dark:text-gray-400 font-medium">Laissez-vous tenter par une spécialité locale !</p>
+                <p class="text-gray-500 dark:text-gray-400 font-medium">Laissez-vous tenter par nos articles disponibles !</p>
             </div>
-            <a href="{{ route('explore.plats') }}" class="px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 shadow-xl transition-all active:scale-95">Explorer les plats</a>
+            <a href="{{ route('explore.plats') }}" class="px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 shadow-xl transition-all active:scale-95">Explorer les articles</a>
         </div>
         @endif
     </div>

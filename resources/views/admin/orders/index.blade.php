@@ -53,7 +53,7 @@
         </a>
         <div class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm space-y-4 col-span-1">
             <div>
-                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Cuisine</p>
+                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Préparation</p>
                 <p class="text-xl font-black text-gray-900">{{ $stats['en_preparation'] }}</p>
             </div>
             <div class="pt-2 border-t border-gray-50">
@@ -80,7 +80,7 @@
             <div class="flex-1">
                 <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Recherche multicritères</label>
                 <div class="relative">
-                    <input type="text" name="search" value="{{ $search }}" placeholder="N° Commande, Client ou Restaurant..." 
+                    <input type="text" name="search" value="{{ $search }}" placeholder="N° Commande, Client ou Établissement..." 
                            class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all text-sm font-bold">
                     <svg class="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
@@ -117,7 +117,7 @@
                     <tr class="bg-gray-50 border-b border-gray-100">
                         <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">N° COMMANDE</th>
                         <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">DETAILS</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">RESTAURANT</th>
+                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">ÉTABLISSEMENT</th>
                         <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">MONTANT</th>
                         <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">STATUT</th>
                         <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">ACTION</th>

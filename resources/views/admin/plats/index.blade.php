@@ -9,8 +9,8 @@
     <div class="mb-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">Catalogue Global</h1>
-                <p class="text-gray-600">Gérez l'ensemble des plats et produits publiés par vos vendeurs</p>
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">Catalogue d'Articles</h1>
+                <p class="text-gray-600">Gérez l'ensemble des articles publiés par vos vendeurs</p>
             </div>
             <div class="flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl shadow-lg">
                 <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="text-sm font-semibold">
                     <div class="opacity-90">Total</div>
-                    <div>Produits</div>
+                    <div>Articles</div>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1 relative">
                     <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" name="search" x-model="searchQuery" placeholder="Rechercher un plat, description ou boutique..." 
+                    <input type="text" name="search" x-model="searchQuery" placeholder="Rechercher un article, description ou établissement..." 
                         class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg font-medium text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition-all">
                 </div>
                 <div class="w-full md:w-56">
@@ -109,7 +109,7 @@
                 <table class="w-full">
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-200">
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Produit</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Article</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Vendeur</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Catégorie</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Prix</th>
@@ -190,7 +190,7 @@
                                             </button>
                                         </form>
 
-                                        <form action="{{ route('admin.plats.destroy', $plat->id_plat) }}" method="POST" onsubmit="return confirm('Supprimer ce plat définitivement du catalogue ?')">
+                                        <form action="{{ route('admin.plats.destroy', $plat->id_plat) }}" method="POST" onsubmit="return confirm('Supprimer cet article définitivement du catalogue ?')">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Supprimer">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>

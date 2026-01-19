@@ -108,7 +108,7 @@
                                 </td>
                                 <td class="px-8 py-6">
                                     <div class="flex flex-col">
-                                        <span class="text-xs font-black text-gray-700 capitalize">{{ $v->type_vendeur }}</span>
+                                        <span class="text-xs font-black text-gray-700 capitalize">{{ $v->category ? $v->category->name : ($v->type_vendeur ?? 'Non défini') }}</span>
                                         <span class="text-[10px] font-bold text-gray-400 mt-1">{{ $v->zone->nom ?? 'Hors zone' }}</span>
                                     </div>
                                 </td>
@@ -260,7 +260,7 @@
             <div class="px-10 py-8 border-b border-gray-100 flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-black text-gray-900 tracking-tight">Nouveau Partenaire</h2>
-                    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest mt-1">Création d'un accès vendeur manuel</p>
+                    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest mt-1">Création d'un accès établissement manuel</p>
                 </div>
                 <button @click="showAddModal = false" class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -272,7 +272,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Nom du Gérant</label>
+                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Nom du Responsable</label>
                         <input type="text" name="name" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all">
                     </div>
                     <div class="space-y-2">
@@ -287,15 +287,14 @@
                         <input type="text" name="nom_commercial" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all">
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Type d'Établissement</label>
-                        <select name="type_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
-                            <option value="">Sélectionner</option>
-                            <option value="restaurant">Restaurant</option>
-                            <option value="epicerie">Épicerie</option>
-                            <option value="cafe">Café / Lounge</option>
-                            <option value="boulangerie">Boulangerie</option>
-                            <option value="other">Autre Service</option>
+                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Type de Boutique / Catégorie</label>
+                        <select name="id_category_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all appearance-none cursor-pointer">
+                            <option value="">Sélectionner une catégorie...</option>
+                            @foreach($vendorCategories as $cat)
+                                <option value="{{ $cat->id_category_vendeur }}">{{ $cat->name }}</option>
+                            @endforeach
                         </select>
+                        <input type="hidden" name="type_vendeur" value="autre">
                     </div>
                 </div>
 

@@ -56,7 +56,7 @@
                                         type="text" 
                                         name="search" 
                                         value="{{ request('search') }}" 
-                                        placeholder="Nom du restaurant..." 
+                                        placeholder="Nom de l'établissement..." 
                                         class="w-full pl-5 pr-12 py-4 bg-gray-50 dark:bg-gray-800 border border-transparent rounded-xl text-[13px] font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-orange-500 transition-all outline-none"
                                     >
                                     <button type="submit" class="absolute right-2 top-2 bottom-2 w-11 bg-gray-900 dark:bg-gray-700 text-white rounded-xl flex items-center justify-center hover:bg-orange-600 transition-colors shadow-lg shadow-gray-200 dark:shadow-none">
@@ -84,6 +84,32 @@
                                            class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ request('category') == $cat->id_categorie ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
                                             <span>{{ $cat->nom_categorie }}</span>
                                             @if(request('category') == $cat->id_categorie)
+                                                <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Vendor Types (Genres de Boutique) -->
+                            <div>
+                                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6 flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Types de Boutique
+                                </h3>
+                                <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-filter-scrollbar text-left">
+                                    <a href="{{ route('explore', request()->except('type')) }}" 
+                                       class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ !request('type') ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                        <span>Tous les genres</span>
+                                        @if(!request('type'))
+                                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                        @endif
+                                    </a>
+                                    @foreach($types as $type)
+                                        <a href="{{ route('explore', array_merge(request()->query(), ['type' => $type->id_category_vendeur])) }}" 
+                                           class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ request('type') == $type->id_category_vendeur ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                            <span>{{ $type->name }}</span>
+                                            @if(request('type') == $type->id_category_vendeur)
                                                 <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
                                             @endif
                                         </a>
@@ -249,7 +275,7 @@
                                     <div class="mt-auto pt-4 border-t border-gray-50 dark:border-gray-800">
                                         <a href="{{ route('vendor.show', ['id' => $v->id_vendeur, 'slug' => \Str::slug($v->nom_commercial)]) }}" 
                                            class="group/btn flex items-center justify-center gap-3 w-full py-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-orange-600 dark:hover:bg-orange-600 hover:text-white hover:shadow-xl hover:shadow-orange-100 dark:hover:shadow-none transition-all duration-300">
-                                            Découvrir la carte
+                                            Voir le catalogue
                                             <svg class="w-4 h-4 transform transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                                         </a>
                                     </div>

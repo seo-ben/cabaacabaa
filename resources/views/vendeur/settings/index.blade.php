@@ -70,15 +70,25 @@
                             </div>
 
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Type *</label>
-                                <select name="type_vendeur" required
-                                        class="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all font-semibold text-gray-900 dark:text-white">
-                                    <option>{{ $vendeur->type_vendeur }}</option>
-                                    <option>Restaurant</option>
-                                    <option>Fast Food</option>
-                                    <option>Café</option>
-                                    <option>Boulangerie</option>
-                                </select>
+                                <label class="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Type de Boutique *</label>
+                                @if($vendeur->id_category_vendeur)
+                                    <div class="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-semibold text-gray-500 flex items-center justify-between">
+                                        {{ $vendeur->category->name }}
+                                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                    </div>
+                                    <input type="hidden" name="id_category_vendeur" value="{{ $vendeur->id_category_vendeur }}">
+                                @else
+                                    <select name="id_category_vendeur" required
+                                            class="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all font-semibold text-gray-900 dark:text-white">
+                                        <option value="" disabled selected>Choisir un type...</option>
+                                        @foreach($vendorCategories as $cat)
+                                            <option value="{{ $cat->id_category_vendeur }}" {{ $vendeur->id_category_vendeur == $cat->id_category_vendeur ? 'selected' : '' }}>
+                                                {{ $cat->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @endif
+                                <p class="text-[9px] text-gray-400 mt-1 italic font-medium">Le type de boutique ne peut plus être modifié une fois défini pour plus de sécurité.</p>
                             </div>
                         </div>
                     </div>
@@ -118,7 +128,7 @@
             <!-- Categories Compact -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
                 <div class="bg-red-600 px-6 py-3 flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-white">Spécialités</h3>
+                    <h3 class="text-sm font-bold text-white">Catégories d'Articles</h3>
                     <span class="px-2 py-1 bg-white/20 text-white rounded text-[10px] font-bold">Requis</span>
                 </div>
 
@@ -141,8 +151,8 @@
                     </div>
 
                     <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
-                        <label class="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Autre spécialité ?</label>
-                        <input type="text" name="new_specialty" placeholder="Ex: Cuisine Vegan..." 
+                        <label class="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Autre catégorie ?</label>
+                        <input type="text" name="new_specialty" placeholder="Ex: Électronique, Mode..." 
                                class="w-full px-3 py-2 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-red-500 outline-none transition-all font-semibold text-gray-900 dark:text-white">
                     </div>
 
@@ -232,8 +242,8 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-4">
                 <h4 class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-3">Actions Rapides</h4>
                 <div class="space-y-2">
-                    <a href="#" class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-all group">
-                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Gérer Plats</span>
+                    <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-all group">
+                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Gérer Articles</span>
                         <svg class="w-3 h-3 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>

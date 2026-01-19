@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
             <h1 class="text-3xl font-black text-gray-900 tracking-tight">Catégories Globales</h1>
-            <p class="text-gray-500 font-medium mt-1 text-sm uppercase tracking-widest">Spécialités culinaires et types de boutiques</p>
+            <p class="text-gray-500 font-medium mt-1 text-sm uppercase tracking-widest">Catégories d'articles et types d'activités</p>
         </div>
         <a href="{{ route('admin.categories.create') }}" class="px-8 py-4 bg-red-600 text-white rounded-[1.5rem] font-black shadow-xl shadow-red-200 hover:bg-red-700 transition flex items-center gap-3 active:scale-95">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
@@ -71,7 +71,7 @@
                     <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                 </div>
                 <h3 class="text-xl font-black text-gray-900 tracking-tight">Zéro catégorie trouvée</h3>
-                <p class="text-gray-400 font-medium mt-2">Commencez par créer la première spécialité culinaire.</p>
+                <p class="text-gray-400 font-medium mt-2">Commencez par créer la première catégorie d'articles.</p>
                 <a href="{{ route('admin.categories.create') }}" class="mt-8 inline-block px-10 py-4 bg-red-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-red-200 hover:bg-black transition-all">Ajouter une catégorie</a>
             </div>
         @endforelse

@@ -49,10 +49,26 @@ class AppSettingSeeder extends Seeder
             ['key' => 'meta_description', 'value' => 'Découvrez les meilleurs restaurants et épiceries près de chez vous. Livraison rapide et fiable.', 'label' => 'Description Meta (SEO)', 'group' => 'seo', 'type' => 'textarea'],
             ['key' => 'meta_keywords', 'value' => 'food, livraison, restaurant, épicerie, repas, rapide', 'label' => 'Mots-clés Meta', 'group' => 'seo', 'type' => 'text'],
             ['key' => 'seo_google_analytics', 'value' => null, 'label' => 'Google Analytics ID', 'group' => 'seo', 'type' => 'text'],
+
+            // Email Notifications
+            ['key' => 'email_vendor_approved_subject', 'value' => 'Votre boutique est maintenant active ! 🚀', 'label' => 'Sujet Email: Vendeur Approuvé', 'group' => 'email', 'type' => 'text'],
+            ['key' => 'email_vendor_approved_body', 'value' => "Félicitations ! Votre compte vendeur a été validé par notre équipe. Vous pouvez maintenant configurer votre menu, ajouter des photos et commencer à recevoir des commandes. Connectez-vous à votre tableau de bord pour finaliser votre configuration.", 'label' => 'Contenu Email: Vendeur Approuvé', 'group' => 'email', 'type' => 'textarea'],
         ];
 
         foreach ($settings as $setting) {
-            \App\Models\AppSetting::updateOrCreate(['key' => $setting['key']], $setting);
+            $existing = \App\Models\AppSetting::where('key', $setting['key'])->first();
+
+            if ($existing) {
+                // Update metadata but keep the existing value (to preserve user changes like logos)
+                $existing->update([
+                    'label' => $setting['label'],
+                    'group' => $setting['group'],
+                    'type' => $setting['type'],
+                ]);
+            } else {
+                // Create new setting with default value
+                \App\Models\AppSetting::create($setting);
+            }
         }
     }
 }

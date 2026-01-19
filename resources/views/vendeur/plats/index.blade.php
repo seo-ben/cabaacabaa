@@ -1,19 +1,19 @@
 @extends('layouts.vendor')
 
-@section('title', 'Gestion du Menu')
-@section('page_title', 'Gestion du Menu')
+@section('title', 'Mes Articles')
+@section('page_title', 'Mes Articles')
 
 @section('content')
 <div class="space-y-10">
     <!-- Header avec stats simples -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Vos Spécialités</h1>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total de {{ $plats->count() }} produits actifs</p>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight">Mes Articles</h1>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total de {{ $plats->count() }} articles actifs</p>
         </div>
         <a href="{{ vendor_route('vendeur.slug.plats.create') }}" class="px-8 py-4 bg-red-600 text-white rounded-[1.5rem] font-black shadow-xl shadow-red-600/20 hover:bg-red-700 transition flex items-center gap-3 active:scale-95">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            AJOUTER UN PLAT
+            AJOUTER UN ARTICLE
         </a>
     </div>
 
@@ -22,8 +22,8 @@
             <div class="w-24 h-24 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-gray-200">
                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             </div>
-            <h3 class="text-2xl font-black text-gray-900 mb-2">Votre carte est vide</h3>
-            <p class="text-gray-400 font-medium">Commencez par ajouter votre premier plat pour être visible par les clients.</p>
+            <h3 class="text-2xl font-black text-gray-900 mb-2">Votre boutique est vide</h3>
+            <p class="text-gray-400 font-medium">Commencez par ajouter votre premier article pour être visible par les clients.</p>
         </div>
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -66,7 +66,7 @@
                         </div>
 
                         <p class="text-gray-500 text-sm font-medium line-clamp-2 leading-relaxed mb-8">
-                            {{ $plat->description ?: 'Une délicieuse expérience culinaire préparée avec passion par notre chef.' }}
+                            {{ $plat->description ?: 'Qualité garantie pour cet article sélectionné avec passion.' }}
                         </p>
                         
                         <!-- Actions -->

@@ -1,7 +1,7 @@
 @extends('layouts.vendor')
 
-@section('title', 'Modifier le Plat')
-@section('page_title', 'Modifier une spécialité')
+@section('title', 'Modifier l\'Article')
+@section('page_title', 'Modifier un article')
 
 @section('content')
 <div class="max-w-4xl mx-auto space-y-10">
@@ -9,7 +9,7 @@
     <div class="flex items-center justify-between">
         <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="flex items-center gap-3 px-6 py-3 bg-white border border-gray-100 text-gray-400 hover:text-gray-900 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            RETOUR AU MENU
+            RETOUR AU CATALOGUE
         </a>
     </div>
 
@@ -22,19 +22,19 @@
             <!-- Left: Main Info -->
             <div class="lg:col-span-2 space-y-10">
                 <div class="bg-white rounded-[3rem] p-10 border border-gray-100 shadow-sm space-y-8">
-                    <h3 class="text-xl font-black text-gray-900 border-b border-gray-50 pb-6">Informations du Plat</h3>
+                    <h3 class="text-xl font-black text-gray-900 border-b border-gray-50 pb-6">Informations de l'Article</h3>
                     
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Dénomination du Chef</label>
-                            <input type="text" name="nom_plat" value="{{ old('nom_plat', $plat->nom_plat) }}" required placeholder="Ex: Risotto aux Champignons des Bois"
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Dénomination de l'Article</label>
+                            <input type="text" name="nom_plat" value="{{ old('nom_plat', $plat->nom_plat) }}" required placeholder="Ex: Produit ou Service"
                                    class="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-[1.5rem] focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all font-bold text-gray-900 placeholder:text-gray-300">
                             @error('nom_plat') <p class="text-red-600 text-[10px] mt-2 font-black uppercase tracking-widest">{{ $message }}</p> @enderror
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Univers Culinaire</label>
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Catégorie d'Article</label>
                                 <select name="id_categorie" required class="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-[1.5rem] focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all font-bold text-gray-900 appearance-none">
                                     <option value="">Sélectionner...</option>
                                     @foreach($categories as $category)
@@ -58,8 +58,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Secret du Chef & Ingrédients</label>
-                            <textarea name="description" rows="5" placeholder="Décrivez l'expérience gustative, les allergènes et la préparation..."
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Description & Détails</label>
+                            <textarea name="description" rows="5" placeholder="Décrivez les caractéristiques, les spécifications et les détails de l'article..."
                                       class="w-full px-8 py-5 bg-gray-50 border border-gray-100 rounded-[1.5rem] focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all font-medium text-gray-700 leading-relaxed">{{ old('description', $plat->description) }}</textarea>
                             @error('description') <p class="text-red-600 text-[10px] mt-2 font-black uppercase tracking-widest">{{ $message }}</p> @enderror
                         </div>
@@ -69,7 +69,7 @@
                                 <input type="checkbox" name="en_promotion" value="1" {{ old('en_promotion', $plat->en_promotion) ? 'checked' : '' }} class="w-5 h-5 rounded-lg text-red-600 focus:ring-red-500">
                                 <div>
                                     <span class="block text-[10px] font-black uppercase tracking-widest text-gray-900">En Promotion</span>
-                                    <span class="block text-[9px] font-bold text-gray-400 uppercase">Mettre en avant ce plat</span>
+                                    <span class="block text-[9px] font-bold text-gray-400 uppercase">Mettre en avant cet article</span>
                                 </div>
                             </label>
 

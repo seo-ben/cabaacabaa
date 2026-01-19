@@ -2,14 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @php
-        $siteName = \App\Models\AppSetting::get('site_name', config('app.name', 'FoodConnect'));
-        $siteLogo = \App\Models\AppSetting::get('site_logo');
-        $siteLogoUrl = \App\Models\AppSetting::get('site_logo_url');
-        $siteFavicon = \App\Models\AppSetting::get('site_favicon');
-        $siteFaviconUrl = \App\Models\AppSetting::get('site_favicon_url');
-        
-        $finalLogo = $siteLogo ? asset('storage/' . $siteLogo) : ($siteLogoUrl ?: null);
-        $finalFavicon = $siteFavicon ? asset('storage/' . $siteFavicon) : ($siteFaviconUrl ?: null);
+        // Variables are now shared globally via AppServiceProvider
+        $finalLogo = $siteLogo ?? asset('assets/logo/logo-cabaa.png');
+        $siteName = $siteName ?? config('app.name', 'FoodConnect');
+        $finalFavicon = $siteFavicon ?? null;
     @endphp
 
     <meta charset="utf-8">
@@ -88,6 +84,16 @@
         .dark ::-webkit-scrollbar-thumb:hover { background: #374151; }
     </style>
     
+    @php
+        $dashboardRoute = route('dashboard');
+        if(auth()->check()) {
+            if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin') {
+                $dashboardRoute = route('admin.dashboard');
+            } elseif(auth()->user()->isVendor()) {
+                $dashboardRoute = route('vendeur.dashboard');
+            }
+        }
+    @endphp
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300" 
       x-data="{ 
@@ -110,6 +116,7 @@
         unreadCount: 0,
         
         init() {
+
             window.showToast = (message, type = 'success') => {
                 this.toastMessage = message;
                 this.toastType = type;
@@ -392,6 +399,9 @@
                                 </div>
 
                                 <div class="p-2 space-y-1">
+                                    <a href="{{ $dashboardRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-black text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all">
+                                        Tableau de bord
+                                    </a>
                                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
                                         Mon profil
                                     </a>
@@ -403,17 +413,11 @@
                                 @if(auth()->user()->isVendor())
                                     <div class="p-2 border-t border-gray-50 dark:border-gray-800">
                                         <div class="px-4 py-2 mb-1 text-[10px] font-black uppercase tracking-widest text-gray-400">Espace Vendeur</div>
-                                        <a href="{{ vendor_route('vendeur.slug.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-black text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-xl transition-all">
-                                            Tableau de bord
+                                        <a href="{{ vendor_route('vendeur.slug.orders.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl transition-all">
+                                            Commandes reçues
                                         </a>
                                         <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all">
-                                            Ma carte (Plats)
-                                        </a>
-                                    </div>
-                                @else
-                                    <div class="p-2 border-t border-gray-50 dark:border-gray-800">
-                                        <a href="{{ route('vendor.apply') }}" class="flex items-center gap-3 px-4 py-3 text-sm font-black text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-2xl transition-all">
-                                            Devenir Vendeur
+                                            Ma boutique (Articles)
                                         </a>
                                     </div>
                                 @endif
@@ -577,10 +581,10 @@
         </a>
 
         @auth
-            <a href="{{ route('dashboard') }}" class="flex flex-col items-center gap-1 {{ request()->routeIs('dashboard') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
+            <a href="{{ $dashboardRoute }}" class="flex flex-col items-center gap-1 {{ request()->url() === $dashboardRoute ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
                 <div class="relative">
                     <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff' }}" 
-                         class="w-6 h-6 rounded-lg object-cover {{ request()->routeIs('dashboard') ? 'ring-2 ring-red-600' : '' }}">
+                         class="w-6 h-6 rounded-lg object-cover {{ request()->url() === $dashboardRoute ? 'ring-2 ring-red-600' : '' }}">
                     <div class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 border border-white dark:border-gray-900 rounded-full"></div>
                 </div>
                 <span class="text-[9px] font-black uppercase tracking-wider">Compte</span>

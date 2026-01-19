@@ -17,11 +17,11 @@
                 </div>
                 <div>
                     <h3 class="text-xl font-black">Configuration Incomplète !</h3>
-                    <p class="text-sm opacity-80 font-medium mt-1">Vous devez d'abord sélectionner vos **Spécialités Culinaire** dans les paramètres avant de pouvoir ajouter des plats.</p>
+                    <p class="text-sm opacity-80 font-medium mt-1">Vous devez d'abord configurer votre **Boutique** dans les paramètres avant de pouvoir ajouter des articles.</p>
                 </div>
             </div>
             <a href="{{ vendor_route('vendeur.slug.settings.index') }}" class="px-8 py-4 bg-white text-red-600 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all shadow-xl active:scale-95 whitespace-nowrap">
-                Choisir mes spécialités
+                Configurer ma boutique
             </a>
         </div>
     </div>
@@ -73,11 +73,11 @@
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </div>
                 <div>
-                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Produits au Menu</p>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Articles en Boutique</p>
                     <h3 class="text-3xl font-black text-gray-900 dark:text-white leading-tight">{{ $totalPlats }}</h3>
                 </div>
                 <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="inline-flex items-center gap-2 text-[10px] font-black uppercase text-red-600 dark:text-red-400 hover:gap-3 transition-all">
-                    Gérer le menu
+                    Gérer mes articles
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
                 </a>
             </div>
@@ -179,9 +179,9 @@
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/10 dark:to-orange-950/20 rounded-2xl p-10 border border-orange-200 dark:border-orange-900/30">
                 <p class="text-xs font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-4">Conseil Pro</p>
                 <h4 class="text-xl font-black text-gray-900 dark:text-white leading-tight mb-4">Boostez votre visibilité !</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium mb-8">Ajoutez des photos de haute qualité à vos plats pour augmenter vos ventes de <strong>30%</strong>.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium mb-8">Ajoutez des photos de haute qualité à vos articles pour augmenter vos ventes de <strong>30%</strong>.</p>
                 <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-xl shadow-orange-950/5 dark:shadow-none hover:bg-orange-600 hover:text-white dark:hover:bg-orange-600 transition-all">
-                    Mettre à jour mes plats
+                    Mettre à jour mes articles
                 </a>
             </div>
         </div>

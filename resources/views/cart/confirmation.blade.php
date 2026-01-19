@@ -47,7 +47,7 @@
                 @php
                     $steps = [
                         ['id' => 'en_attente', 'label' => 'Reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                        ['id' => 'en_preparation', 'label' => 'Cuisine', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
+                        ['id' => 'en_preparation', 'label' => 'Préparation', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
                         ['id' => 'pret', 'label' => 'Prête', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
                         ['id' => 'termine', 'label' => 'Livre', 'icon' => 'M5 13l4 4L19 7']
                     ];
@@ -214,7 +214,7 @@
                     </div>
                     <div>
                         <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Besoin d'aide ?</p>
-                        <p class="text-xs font-black text-white">Contactez le restaurant</p>
+                        <p class="text-xs font-black text-white">Contactez l'établissement</p>
                     </div>
                 </div>
                 <div class="flex gap-3">
@@ -227,7 +227,7 @@
         </div>
 
         <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <a href="{{ route('home') }}" class="px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all active:scale-95">Explorer d'autres menus</a>
+            <a href="{{ route('home') }}" class="px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all active:scale-95">Explorer d'autres articles</a>
             
             @if($commande->statut == 'en_attente')
                 <a href="{{ route('orders.cancel', $commande->id_commande) }}" 

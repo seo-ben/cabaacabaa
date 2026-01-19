@@ -83,6 +83,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
+// Staff Login Routes (must be before slug group to avoid conflicts)
+Route::get('/{vendor_slug}/staff-login', [\App\Http\Controllers\Vendor\StaffAuthController::class, 'showLogin'])->name('vendor.staff.login');
+Route::post('/{vendor_slug}/staff-login', [\App\Http\Controllers\Vendor\StaffAuthController::class, 'login'])->name('vendor.staff.login.post');
+
 // Vendeur routes with slug (e.g., /pizza-hut/dashboard)
 Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\IdentifyVendorBySlug::class])->group(function () {
     // Vendeur dashboard
@@ -116,6 +120,12 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
     Route::post('/coupons', [\App\Http\Controllers\Vendor\CouponController::class, 'store'])->name('vendeur.slug.coupons.store');
     Route::patch('/coupons/{coupon}/toggle', [\App\Http\Controllers\Vendor\CouponController::class, 'toggle'])->name('vendeur.slug.coupons.toggle');
     Route::delete('/coupons/{coupon}', [\App\Http\Controllers\Vendor\CouponController::class, 'destroy'])->name('vendeur.slug.coupons.destroy');
+
+    // Team Management
+    Route::get('/team', [\App\Http\Controllers\Vendor\TeamController::class, 'index'])->name('vendeur.slug.team.index');
+    Route::get('/team/create', [\App\Http\Controllers\Vendor\TeamController::class, 'create'])->name('vendeur.slug.team.create');
+    Route::post('/team', [\App\Http\Controllers\Vendor\TeamController::class, 'store'])->name('vendeur.slug.team.store');
+    Route::delete('/team/{id}', [\App\Http\Controllers\Vendor\TeamController::class, 'destroy'])->name('vendeur.slug.team.destroy');
 });
 
 // Legacy Vendeur routes (backward compatibility - redirects to slug-based URLs)
@@ -212,6 +222,19 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
         ]
     ]);
 
+    // Vendor Categories management
+    Route::resource('vendor-categories', \App\Http\Controllers\Admin\VendorCategoryController::class, [
+        'names' => [
+            'index' => 'admin.vendor-categories.index',
+            'create' => 'admin.vendor-categories.create',
+            'store' => 'admin.vendor-categories.store',
+            'show' => 'admin.vendor-categories.show',
+            'edit' => 'admin.vendor-categories.edit',
+            'update' => 'admin.vendor-categories.update',
+            'destroy' => 'admin.vendor-categories.destroy',
+        ]
+    ]);
+
     // Catalogue management (Produits)
     Route::resource('produits', \App\Http\Controllers\Admin\PlatController::class, [
         'names' => [
@@ -273,5 +296,14 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
     // System Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
     Route::put('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
+
+    // Security logs
+    Route::get('/security', [\App\Http\Controllers\Admin\SecurityController::class, 'index'])->name('admin.security.index');
+    Route::get('/users/{id}/security', [\App\Http\Controllers\Admin\SecurityController::class, 'userSecurity'])->name('admin.security.user');
+
+    // Admin User Management
+    Route::resource('admins', \App\Http\Controllers\Admin\AdminUserController::class, [
+        'names' => 'admin.admins'
+    ]);
 });
 

@@ -56,5 +56,12 @@ class DatabaseSeeder extends Seeder
             'role' => 'client',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
         ]);
+
+        // Run other seeders
+        $this->call([
+            PermissionSeeder::class,
+            AppSettingSeeder::class,
+            VendorCategorySeeder::class,
+        ]);
     }
 }

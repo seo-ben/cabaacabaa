@@ -84,7 +84,7 @@
                 </button>
                 <button @click="activeTab = 'products'" :class="activeTab === 'products' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                    Produits ({{ $vendeur->plats_count }})
+                    Articles ({{ $vendeur->plats_count }})
                 </button>
                 <button @click="activeTab = 'orders'" :class="activeTab === 'orders' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -180,7 +180,7 @@
                             <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Profil Commercial</h3>
                             <div class="space-y-6">
                                 <div>
-                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Spécialités</p>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Catégories</p>
                                     <div class="flex flex-wrap gap-2">
                                         @foreach($vendeur->categories as $cat)
                                             <span class="px-3 py-1.5 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-100">{{ $cat->icone }} {{ $cat->nom_categorie }}</span>
@@ -275,8 +275,8 @@
             <div x-show="activeTab === 'products'" class="space-y-6 animate-fade-in" style="display: none;">
                 <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
                     <div class="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
-                        <h3 class="text-lg font-black text-gray-900 tracking-tight">Catalogue de Produits</h3>
-                        <span class="text-[10px] font-black uppercase text-gray-400 tracking-widest group">{{ $vendeur->plats_count }} Articles</span>
+                        <h3 class="text-lg font-black text-gray-900 tracking-tight">Catalogue d'Articles</h3>
+                        <span class="text-[10px] font-black uppercase text-gray-400 tracking-widest group">{{ $vendeur->plats_count }} Produits</span>
                     </div>
                     <div class="divide-y divide-gray-50">
                         @forelse($plats as $plat)

@@ -37,8 +37,8 @@ class Vendeur extends Model
         'twitter_url',
         'tiktok_url',
         'whatsapp_number',
-        'website_url',
         'wallet_balance',
+        'id_category_vendeur',
         'actif'
     ];
 
@@ -121,8 +121,18 @@ class Vendeur extends Model
         return $this->hasMany(PayoutRequest::class, 'id_vendeur', 'id_vendeur');
     }
 
+    public function category()
+    {
+        return $this->belongsTo(VendorCategory::class, 'id_category_vendeur', 'id_category_vendeur');
+    }
+
     public function coupons()
     {
         return $this->hasMany(Coupon::class, 'id_vendeur', 'id_vendeur');
+    }
+
+    public function staff()
+    {
+        return $this->hasMany(VendorStaff::class, 'id_vendeur', 'id_vendeur');
     }
 }

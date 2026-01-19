@@ -36,7 +36,7 @@
                         <div class="md:col-span-2 pt-10 border-t border-gray-100 dark:border-gray-800 space-y-8">
                             <div class="space-y-1">
                                 <h3 class="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white">Mode de récupération</h3>
-                                <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Choisissez comment vous souhaitez recevoir votre délice.</p>
+                                <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Choisissez comment vous souhaitez recevoir vos articles.</p>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -49,7 +49,7 @@
                                         </div>
                                         <div>
                                             <span class="block text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-1">À emporter</span>
-                                            <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Je récupère moi-même au restaurant</span>
+                                            <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Je récupère moi-même à l'établissement</span>
                                         </div>
                                         <div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
                                             <div class="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">

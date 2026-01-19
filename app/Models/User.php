@@ -105,6 +105,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'id_utilisateur', 'id_user');
     }
 
+    public function loginAttempts()
+    {
+        return $this->hasMany(LoginAttempt::class, 'id_user', 'id_user');
+    }
+
     /**
      * Get unread notifications (safe fallback if read_at column doesn't exist).
      * Returns empty collection for MVP.
@@ -121,6 +126,31 @@ class User extends Authenticatable
     public function isVendor()
     {
         return ($this->role === 'vendor' || $this->role === 'vendeur') || (($this->has_shop ?? false) === true);
+    }
+
+    /**
+     * Check if user is a super admin
+     */
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+
+    // ===== PERMISSIONS =====
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'permission_user', 'user_id', 'permission_id');
+    }
+
+    public function hasPermission($key)
+    {
+        // Super Admin has all permissions
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return $this->permissions->contains('key', $key);
     }
 
     // ===== SCOPES POUR FILTRAGE =====

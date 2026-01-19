@@ -58,6 +58,15 @@ class HomeController extends Controller
             $data['categories'] = collect([]);
         }
 
+        // Catégories de boutiques actives
+        try {
+            $data['vendorCategories'] = \App\Models\VendorCategory::where('is_active', true)
+                ->orderBy('name')
+                ->get();
+        } catch (\Throwable $e) {
+            $data['vendorCategories'] = collect([]);
+        }
+
         // Statistiques globales
         try {
             $data['stats'] = [
@@ -94,9 +103,9 @@ class HomeController extends Controller
             });
         }
 
-        // Filtre par type
+        // Filtre par catégorie de boutique (Type)
         if ($request->filled('type')) {
-            $query->where('type_vendeur', $request->type);
+            $query->where('id_category_vendeur', $request->type);
         }
 
         // Filtre par zone
@@ -117,7 +126,7 @@ class HomeController extends Controller
 
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
         $zones = ZoneGeographique::where('actif', true)->orderBy('nom')->get();
-        $types = ['restaurant', 'cantine', 'fast_food', 'vendeur_independant', 'patisserie', 'autre'];
+        $types = \App\Models\VendorCategory::where('is_active', true)->orderBy('name')->get();
 
         return view('explore', compact('vendeurs', 'categories', 'zones', 'types'));
     }

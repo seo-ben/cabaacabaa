@@ -14,7 +14,7 @@ class EnsureUserIsAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-        if (!$user || ($user->role ?? 'client') !== 'admin') {
+        if (!$user || !in_array($user->role ?? 'client', ['admin', 'super_admin'])) {
             // Option: redirect to home or 403
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Forbidden. Admins only.'], 403);

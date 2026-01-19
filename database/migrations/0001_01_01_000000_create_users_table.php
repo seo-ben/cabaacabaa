@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -27,6 +26,8 @@ return new class extends Migration
             $table->timestamp('date_derniere_connexion')->nullable();
             $table->string('derniere_ip', 45)->nullable();
 
+            $table->softDeletes(); // Add soft delete support
+
             $table->index('role');
             $table->index('statut_compte');
         });
@@ -39,7 +40,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->unsignedBigInteger('id_user')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

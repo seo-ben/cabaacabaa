@@ -131,7 +131,7 @@
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <nav class="flex gap-8 overflow-x-auto scrollbar-hide py-4">
                 <a href="#menu" class="text-sm font-semibold text-orange-600 border-b-2 border-orange-600 pb-4 whitespace-nowrap">
-                    Menu
+                    Catalogue
                 </a>
                 <a href="#about" class="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pb-4 whitespace-nowrap transition-colors">
                     À propos
@@ -201,11 +201,11 @@
             <!-- Left Column: Menu & Content -->
             <div class="lg:col-span-2 space-y-12">
                 
-                <!-- Menu Section -->
+                <!-- Products Section -->
                 <section id="menu" class="scroll-mt-20">
                     <div class="mb-8">
-                        <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Notre Menu</h2>
-                        <p class="text-slate-600 dark:text-slate-400">{{ $vendeur->plats->count() }} plats disponibles</p>
+                        <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Nos Articles</h2>
+                        <p class="text-slate-600 dark:text-slate-400">{{ $vendeur->plats->count() }} articles disponibles</p>
                     </div>
 
                     @if($vendeur->plats->count() > 0)
@@ -319,8 +319,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Menu en préparation</h3>
-                            <p class="text-slate-600 dark:text-slate-400">Revenez bientôt pour découvrir nos plats !</p>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Catalogue en préparation</h3>
+                            <p class="text-slate-600 dark:text-slate-400">Revenez bientôt pour découvrir nos articles !</p>
                         </div>
                     @endif
                 </section>
@@ -357,7 +357,7 @@
                             </p>
                         @else
                             <p class="text-slate-700 dark:text-slate-300 leading-relaxed text-lg">
-                                Bienvenue chez {{ $vendeur->nom_commercial }}. Nous nous engageons à vous offrir le meilleur de la gastronomie locale avec des ingrédients frais et un savoir-faire authentique.
+                                Bienvenue chez {{ $vendeur->nom_commercial }}. Nous nous engageons à vous offrir le meilleur service avec des articles sélectionnés et un savoir-faire authentique.
                             </p>
                         @endif
 
@@ -370,7 +370,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-slate-900 dark:text-white mb-1">Qualité garantie</h4>
-                                    <p class="text-sm text-slate-600 dark:text-slate-400">Ingrédients frais et locaux</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Articles sélectionnés avec soin</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">

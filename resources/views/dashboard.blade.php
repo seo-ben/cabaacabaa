@@ -18,7 +18,7 @@
             </div>
             <div class="flex flex-wrap gap-4">
                 <a href="{{ route('home') }}" class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all active:scale-95 shadow-lg">
-                    Commander maintenant
+                    Acheter maintenant
                 </a>
                 @if(($user->role ?? 'client') === 'client')
                 <a href="{{ route('vendor.apply') }}" class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-100 dark:border-gray-700 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-700 transition-all active:scale-95 shadow-sm">
@@ -150,7 +150,7 @@
                                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                             </div>
                             <p class="text-sm font-bold text-gray-400 dark:text-gray-500 italic">Vous n'avez pas encore passé de commande.</p>
-                            <a href="{{ route('home') }}" class="mt-8 inline-block px-8 py-4 bg-red-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95">Explorer les saveurs</a>
+                            <a href="{{ route('home') }}" class="mt-8 inline-block px-8 py-4 bg-red-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95">Explorer les articles</a>
                         </div>
                     @endforelse
                 </div>

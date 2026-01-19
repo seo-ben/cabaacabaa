@@ -2,14 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @php
-        $siteName = \App\Models\AppSetting::get('site_name', config('app.name', 'FoodConnect'));
-        $siteLogo = \App\Models\AppSetting::get('site_logo');
-        $siteLogoUrl = \App\Models\AppSetting::get('site_logo_url');
-        $siteFavicon = \App\Models\AppSetting::get('site_favicon');
-        $siteFaviconUrl = \App\Models\AppSetting::get('site_favicon_url');
-        
-        $finalLogo = $siteLogo ? asset('storage/' . $siteLogo) : ($siteLogoUrl ?: null);
-        $finalFavicon = $siteFavicon ? asset('storage/' . $siteFavicon) : ($siteFaviconUrl ?: null);
+        // Variables are now shared globally via AppServiceProvider to ensure persistence across sessions and views.
+        // $siteLogo, $siteName, $siteFavicon etc. are available.
+        $finalLogo = $siteLogo ?? asset('assets/logo/logo-cabaa.png');
+        $finalFavicon = $siteFavicon ?? null;
     @endphp
 
     <meta charset="utf-8">
@@ -82,6 +78,8 @@
 
             <!-- Navigation -->
             <nav class="flex-1 overflow-y-auto py-4 px-2">
+                
+                @can('view_dashboard')
                 <!-- Tableau de bord -->
                 <a href="{{ route('admin.dashboard') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition group {{ request()->routeIs('admin.dashboard') ? 'bg-red-50 text-red-600' : '' }}">
@@ -90,7 +88,9 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Tableau de bord</span>
                 </a>
+                @endcan
 
+                @can('view_vendors')
                 <!-- Gestion Vendeurs -->
                 <div class="mt-4" x-data="{ open: {{ request()->routeIs('admin.vendors*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.vendors*') ? 'bg-red-50 text-red-600' : '' }}">
@@ -111,7 +111,9 @@
                         <a href="{{ route('admin.vendors.index') }}?status=suspended" class="block px-3 py-2 text-sm text-gray-600 hover:text-red-600 rounded-lg hover:bg-red-50 transition">Suspendus</a>
                     </div>
                 </div>
+                @endcan
 
+                @can('view_orders')
                 <!-- Gestion Commandes -->
                 <div class="mt-1" x-data="{ open: {{ request()->routeIs('admin.orders*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition">
@@ -132,18 +134,9 @@
                         <a href="{{ route('admin.orders.index', ['status' => 'annule']) }}" class="block px-3 py-2 text-sm text-gray-600 hover:text-red-600 rounded-lg hover:bg-red-50 transition {{ request('status') == 'annule' ? 'text-red-600 bg-red-50' : '' }}">Annulées</a>
                     </div>
                 </div>
+                @endcan
 
-                <!-- Utilisateurs -->
-                {{-- <a href="{{ route('admin.users.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all group {{ request()->routeIs('admin.users*') ? 'bg-red-50 text-red-600' : '' }}">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center {{ request()->routeIs('admin.users*') ? 'bg-red-100' : 'bg-gray-100 group-hover:bg-red-100' }} transition-colors">
-                        <svg class="w-5 h-5 {{ request()->routeIs('admin.users*') ? 'text-red-600' : 'text-gray-500 group-hover:text-red-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </div>
-                    <span x-show="sidebarOpen" class="font-bold text-sm">Utilisateurs</span>
-                </a> --}}
-
+                @can('view_users')
                 <!-- Gestion Utilisateurs -->
                 <div class="mt-1" x-data="{ open: {{ request()->routeIs('admin.users*') ? 'true' : 'false' }} }">
                     <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.users*') ? 'bg-red-50 text-red-600' : '' }}">
@@ -160,27 +153,36 @@
                     <div x-show="open && sidebarOpen" x-collapse class="ml-8 space-y-1">
                         <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 text-sm text-gray-600 hover:text-red-600 rounded-lg hover:bg-red-50 transition {{ request()->routeIs('admin.users.index') ? 'text-red-600 bg-red-50' : '' }}">Liste utilisateurs</a>
                         <a href="{{ route('admin.users.create') }}" class="block px-3 py-2 text-sm text-gray-600 hover:text-red-600 rounded-lg hover:bg-red-50 transition {{ request()->routeIs('admin.users.create') ? 'text-red-600 bg-red-50' : '' }}">Ajouter un utilisateur</a>
+                        @can('manage_admins')
+                        <a href="{{ route('admin.admins.index') }}" class="block px-3 py-2 text-sm text-gray-600 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition {{ request()->routeIs('admin.admins*') ? 'text-purple-600 bg-purple-50' : '' }}">Administrateurs</a>
+                        @endcan
                     </div>
                 </div>
+                @endcan
 
-                <!-- Gestion Produits -->
+                @can('manage_products')
+                <!-- Gestion Articles -->
                 <a href="{{ route('admin.plats.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition {{ request()->routeIs('admin.plats*') ? 'bg-red-50 text-red-600 font-bold' : '' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('admin.plats*') ? 'text-red-600' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Produits</span>
+                    <span x-show="sidebarOpen" class="font-medium">Articles</span>
                 </a>
+                @endcan
 
-                <!-- Catégories -->
+                @can('manage_categories')
+                <!-- Catégories Articles -->
                 <a href="{{ route('admin.categories.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.categories*') ? 'bg-red-50 text-red-600' : '' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('admin.categories*') ? 'text-red-600' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                     </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Catégories</span>
+                    <span x-show="sidebarOpen" class="font-medium">Catégories Articles</span>
                 </a>
+                @endcan
 
+                @can('view_vendors')
                 <!-- Avis & Évaluations -->
                 <a href="{{-- route('admin.reviews.index') --}}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.reviews*') ? 'bg-gray-100' : '' }}">
@@ -189,7 +191,9 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Avis</span>
                 </a>
+                @endcan
 
+                @can('manage_zones')
                 <!-- Zones & Localisation -->
                 <a href="{{ route('admin.zones.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.zones*') ? 'bg-red-50 text-red-600' : '' }}">
@@ -199,16 +203,20 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Zones</span>
                 </a>
+                @endcan
 
-                <!-- Catégories -->
-                <a href="{{ route('admin.categories.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.categories*') ? 'bg-red-50 text-red-600' : '' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                @can('view_vendor_categories')
+                <!-- Catégories Boutiques -->
+                <a href="{{ route('admin.vendor-categories.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.vendor-categories*') ? 'bg-orange-50 text-orange-600' : '' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('admin.vendor-categories*') ? 'text-orange-600' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
-                    <span x-show="sidebarOpen" class="font-medium">Catégories</span>
+                    <span x-show="sidebarOpen" class="font-medium">Catégories Boutiques</span>
                 </a>
+                @endcan
 
+                @can('manage_products')
                 <!-- Promotions & Mise en avant -->
                 <a href="{{-- route('admin.promotions.index') --}}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.promotions*') ? 'bg-gray-100' : '' }}">
@@ -217,7 +225,9 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Promotions</span>
                 </a>
+                @endcan
 
+                @can('view_finance')
                 <!-- Paiements & Transactions -->
                 <a href="{{ route('admin.finance.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.finance*') ? 'bg-red-50 text-red-600' : '' }}">
@@ -226,7 +236,9 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Finance</span>
                 </a>
+                @endcan
 
+                @can('view_dashboard')
                 <!-- Statistiques -->
                 <a href="{{-- route('admin.analytics.index') --}}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.analytics*') ? 'bg-gray-100' : '' }}">
@@ -235,9 +247,22 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Statistiques</span>
                 </a>
+                @endcan
 
                 <div class="my-4 border-t border-gray-200"></div>
 
+                @can('view_security')
+                <!-- Sécurité -->
+                <a href="{{ route('admin.security.index') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.security*') ? 'bg-indigo-50 text-indigo-600' : '' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('admin.security*') ? 'text-indigo-600' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span x-show="sidebarOpen" class="font-medium">Sécurité</span>
+                </a>
+                @endcan
+
+                @can('manage_settings')
                 <!-- Paramètres -->
                 <a href="{{ route('admin.settings.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-gray-700 hover:bg-gray-100 transition {{ request()->routeIs('admin.settings*') ? 'bg-red-50 text-red-600' : '' }}">
@@ -247,6 +272,7 @@
                     </svg>
                     <span x-show="sidebarOpen" class="font-medium">Paramètres</span>
                 </a>
+                @endcan
             </nav>
 
             <!-- User Profile -->

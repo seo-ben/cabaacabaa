@@ -10,8 +10,8 @@
             <div class="md:w-5/12 bg-gradient-to-br from-red-600 to-orange-500 p-12 text-white flex flex-col justify-center relative overflow-hidden">
                 <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                 <div class="relative z-10">
-                    <h1 class="text-4xl font-display font-black mb-6 leading-tight uppercase tracking-tighter">Faites décoller votre cuisine.</h1>
-                    <p class="text-lg opacity-90 mb-10 font-medium italic leading-relaxed">Rejoignez la première plateforme dédiée aux talents culinaires locaux et touchez des milliers de gourmands.</p>
+                    <h1 class="text-4xl font-display font-black mb-6 leading-tight uppercase tracking-tighter">Faites décoller votre activité.</h1>
+                    <p class="text-lg opacity-90 mb-10 font-medium italic leading-relaxed">Rejoignez la première plateforme dédiée aux professionnels locaux et touchez des milliers de clients.</p>
                     
                     <ul class="space-y-6">
                         <li class="flex items-start gap-4">
@@ -24,7 +24,7 @@
                             <div class="bg-white/20 p-2 rounded-xl shrink-0">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                             </div>
-                            <span class="font-bold text-sm tracking-wide">Gestion de Cartes Intelligente</span>
+                            <span class="font-bold text-sm tracking-wide">Gestion de Catalogue Intelligente</span>
                         </li>
                         <li class="flex items-start gap-4">
                             <div class="bg-white/20 p-2 rounded-xl shrink-0">
@@ -49,21 +49,19 @@
                     <!-- Section: Infos Basiques -->
                     <div class="space-y-4">
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Nom Commercial du Restaurant</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Nom Commercial de l'Établissement</label>
                             <input type="text" name="nom_commercial" value="{{ old('nom_commercial', auth()->user()->name) }}" required
                                    class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900">
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Type de Cuisine</label>
-                                <select name="type_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 appearance-none">
-                                    <option value="restaurant">Restaurant</option>
-                                    <option value="fast_food">Fast Food</option>
-                                    <option value="cantine">Cantine</option>
-                                    <option value="patisserie">Pâtisserie</option>
-                                    <option value="vendeur_independant">Indépendant</option>
-                                    <option value="autre">Autre</option>
+                                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Type de Boutique</label>
+                                <select name="id_category_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 appearance-none">
+                                    <option value="" disabled selected>Choisir un type...</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id_category_vendeur }}">{{ $category->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="space-y-1.5">
@@ -74,7 +72,7 @@
                         </div>
 
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Adresse du Restaurant / Local</label>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Adresse de l'Établissement / Local</label>
                             <textarea name="adresse_complete" required placeholder="Rue, Quartier, Ville..."
                                       class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 h-24 resize-none">{{ old('adresse_complete') }}</textarea>
                         </div>

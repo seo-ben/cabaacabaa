@@ -48,7 +48,9 @@ class VendorController extends Controller
             'suspended' => Vendeur::where('statut_verification', 'suspendu')->count(),
         ];
 
-        return view('admin.vendors.index', compact('vendeurs', 'zones', 'stats'));
+        $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
+
+        return view('admin.vendors.index', compact('vendeurs', 'zones', 'stats', 'vendorCategories'));
     }
 
     /**
@@ -61,7 +63,7 @@ class VendorController extends Controller
             'email' => 'required|email|unique:users,email',
             'nom_commercial' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'type_vendeur' => 'required|in:restaurant,epicerie,cafe,boulangerie,other',
+            'id_category_vendeur' => 'nullable|exists:vendor_categories,id_category_vendeur',
             'adresse_complete' => 'required|string|max:500',
             'id_zone' => 'nullable|exists:zones_geographiques,id_zone',
             'telephone_commercial' => 'nullable|string|max:20',
@@ -81,7 +83,7 @@ class VendorController extends Controller
             'id_zone' => $validated['id_zone'] ?? null,
             'nom_commercial' => $validated['nom_commercial'],
             'description' => $validated['description'] ?? '',
-            'type_vendeur' => $validated['type_vendeur'],
+            'id_category_vendeur' => $validated['id_category_vendeur'] ?? null,
             'adresse_complete' => $validated['adresse_complete'],
             'latitude' => 0.0,
             'longitude' => 0.0,
@@ -139,8 +141,9 @@ class VendorController extends Controller
     {
         $vendeur = Vendeur::findOrFail($id);
         $zones = ZoneGeographique::all();
+        $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
 
-        return view('admin.vendors.edit', compact('vendeur', 'zones'));
+        return view('admin.vendors.edit', compact('vendeur', 'zones', 'vendorCategories'));
     }
 
     /**
@@ -155,12 +158,12 @@ class VendorController extends Controller
             'email' => 'required|email|unique:users,email,' . $vendeur->user->id_user . ',id_user',
             'nom_commercial' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'type_vendeur' => 'required|in:restaurant,epicerie,cafe,boulangerie,other',
+            'id_category_vendeur' => 'required|exists:vendor_categories,id_category_vendeur',
             'adresse_complete' => 'required|string|max:500',
             'id_zone' => 'nullable|exists:zones_geographiques,id_zone',
             'telephone_commercial' => 'nullable|string|max:20',
             'actif' => 'required|boolean',
-            'statut_verification' => 'required|in:non_verifie,verifie,suspendu',
+            'statut_verification' => 'required|in:non_verifie,verifie,suspendu,en_cours',
         ]);
 
         // Mettre à jour l'utilisateur
@@ -175,7 +178,7 @@ class VendorController extends Controller
         $vendeur->update([
             'nom_commercial' => $validated['nom_commercial'],
             'description' => $validated['description'] ?? $vendeur->description,
-            'type_vendeur' => $validated['type_vendeur'],
+            'id_category_vendeur' => $validated['id_category_vendeur'],
             'adresse_complete' => $validated['adresse_complete'],
             'id_zone' => $validated['id_zone'],
             'telephone_commercial' => $validated['telephone_commercial'],
@@ -219,6 +222,17 @@ class VendorController extends Controller
         // Mise à jour du rôle utilisateur si nécessaire
         if ($vendeur->user && $vendeur->user->role !== 'admin') {
             $vendeur->user->update(['role' => 'vendeur']);
+        }
+
+        // Send Approval Email
+        if ($vendeur->user) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($vendeur->user->email)->send(new \App\Mail\VendorApproved($vendeur));
+            } catch (\Throwable $e) {
+                // Log error or just continue, we don't want to break the approval flow
+                \Illuminate\Support\Facades\Log::error('Failed to send vendor approval email: ' . $e->getMessage());
+                return back()->with('success', 'Vendeur approuvé, mais l\'envoi de l\'email a échoué. Vérifiez les logs.');
+            }
         }
 
         return back()->with('success', 'Vendeur approuvé et activé avec succès.');
@@ -297,8 +311,9 @@ class VendorController extends Controller
 
         $zones = ZoneGeographique::all();
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
+        $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
 
-        return view('admin.vendors.complete', compact('user', 'zones', 'categories'));
+        return view('admin.vendors.complete', compact('user', 'zones', 'categories', 'vendorCategories'));
     }
 
     /**
@@ -310,7 +325,7 @@ class VendorController extends Controller
 
         $validated = $request->validate([
             'nom_commercial' => 'required|string|max:255',
-            'type_vendeur' => 'required|string',
+            'id_category_vendeur' => 'required|exists:vendor_categories,id_category_vendeur',
             'description' => 'nullable|string',
             'id_zone' => 'nullable|exists:zones_geographiques,id_zone',
             'contact' => 'required|array',
@@ -329,7 +344,7 @@ class VendorController extends Controller
                 ['id_user' => $user->id_user],
                 [
                     'nom_commercial' => $validated['nom_commercial'],
-                    'type_vendeur' => $validated['type_vendeur'],
+                    'id_category_vendeur' => $validated['id_category_vendeur'],
                     'description' => $validated['description'] ?? '',
                     'id_zone' => $validated['id_zone'],
                     'adresse_complete' => $validated['contact']['adresse_ligne_1'] ?? '',

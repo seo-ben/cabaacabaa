@@ -6,7 +6,7 @@
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div class="space-y-4">
                 <h1 class="text-5xl font-black text-gray-900 dark:text-white tracking-tighter">Mes commandes</h1>
-                <p class="text-gray-500 dark:text-gray-400 font-medium">Suivez l'historique et le statut de vos délices.</p>
+                <p class="text-gray-500 dark:text-gray-400 font-medium">Suivez l'historique et le statut de vos articles.</p>
             </div>
             
             <div class="flex items-center gap-4">
@@ -22,8 +22,8 @@
                     <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 </div>
                 <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Vous n'avez pas encore commandé</h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-10 max-w-sm mx-auto font-medium">Vos plats préférés n'attendent que vous. Découvrez les meilleurs restaurants autour de vous.</p>
-                <a href="{{ route('home') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-[2rem] font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le menu</a>
+                <p class="text-gray-500 dark:text-gray-400 mb-10 max-w-sm mx-auto font-medium">Nos articles n'attendent que vous. Découvrez les meilleures boutiques autour de vous.</p>
+                <a href="{{ route('home') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-[2rem] font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le catalogue</a>
             </div>
         @else
             <div class="space-y-8">
@@ -63,7 +63,7 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 pt-8 border-t border-gray-50 dark:border-gray-800">
                                     <div>
-                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Restaurant</h4>
+                                        <h4 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Établissement</h4>
                                         <div class="flex items-center gap-3">
                                             <div class="w-8 h-8 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-orange-600 dark:text-orange-400 font-black italic text-xs">
                                                 {{ substr($commande->vendeur->nom_commercial, 0, 1) }}
