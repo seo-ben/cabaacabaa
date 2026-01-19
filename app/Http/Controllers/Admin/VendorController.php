@@ -42,10 +42,10 @@ class VendorController extends Controller
 
         // Stats
         $stats = [
-            'total' => Vendeur::count(),
-            'active' => Vendeur::where('actif', true)->where('statut_verification', 'verifie')->count(),
-            'pending' => Vendeur::where('statut_verification', 'en_cours')->count(),
-            'suspended' => Vendeur::where('statut_verification', 'suspendu')->count(),
+            'total' => Vendeur::count('*'),
+            'active' => Vendeur::where('actif', '=', true, 'and')->where('statut_verification', '=', 'verifie', 'and')->count('*'),
+            'pending' => Vendeur::where('statut_verification', '=', 'en_cours', 'and')->count('*'),
+            'suspended' => Vendeur::where('statut_verification', '=', 'suspendu', 'and')->count('*'),
         ];
 
         $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
@@ -198,10 +198,10 @@ class VendorController extends Controller
         $vendeur = Vendeur::findOrFail($id);
         $user = $vendeur->user;
 
-        $vendeur->delete();
         if ($user) {
             $user->delete();
         }
+        $vendeur->delete();
 
         return redirect()->route('admin.vendors.index')
             ->with('success', 'Vendeur supprimé avec succès.');
@@ -224,6 +224,19 @@ class VendorController extends Controller
             $vendeur->user->update(['role' => 'vendeur']);
         }
 
+        // Créer une notification interne
+        if ($vendeur->user) {
+            \App\Models\Notification::create([
+                'id_utilisateur' => $vendeur->user->id_user,
+                'type_notification' => 'vendeur_approuve',
+                'titre' => 'Félicitations ! Votre compte vendeur est approuvé.',
+                'message' => "Votre boutique \"{$vendeur->nom_commercial}\" a été validée par notre équipe. Vous pouvez maintenant commencer à vendre.",
+                'id_vendeur' => $vendeur->id_vendeur,
+                'lue' => false,
+                'date_creation' => now(),
+            ]);
+        }
+
         // Send Approval Email
         if ($vendeur->user) {
             try {
@@ -231,11 +244,11 @@ class VendorController extends Controller
             } catch (\Throwable $e) {
                 // Log error or just continue, we don't want to break the approval flow
                 \Illuminate\Support\Facades\Log::error('Failed to send vendor approval email: ' . $e->getMessage());
-                return back()->with('success', 'Vendeur approuvé, mais l\'envoi de l\'email a échoué. Vérifiez les logs.');
+                return back()->with('success', 'Vendeur approuvé et notification envoyée, mais l\'envoi de l\'email a échoué. Vérifiez les logs.');
             }
         }
 
-        return back()->with('success', 'Vendeur approuvé et activé avec succès.');
+        return back()->with('success', 'Vendeur approuvé, activé et notifié avec succès.');
     }
 
     /**
@@ -303,15 +316,15 @@ class VendorController extends Controller
         $user = User::findOrFail($userId);
 
         // Vérifier si un profil vendeur existe déjà
-        $vendeur = Vendeur::where('id_user', $userId)->first();
+        $vendeur = Vendeur::where('id_user', '=', $userId, 'and')->first();
 
         if ($vendeur) {
             return redirect()->route('admin.vendors.edit', $vendeur->id_vendeur);
         }
 
         $zones = ZoneGeographique::all();
-        $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
-        $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
+        $categories = CategoryPlat::where('actif', '=', true, 'and')->orderBy('nom_categorie')->get();
+        $vendorCategories = \App\Models\VendorCategory::where('is_active', '=', true, 'and')->get();
 
         return view('admin.vendors.complete', compact('user', 'zones', 'categories', 'vendorCategories'));
     }

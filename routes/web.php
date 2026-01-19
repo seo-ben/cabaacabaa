@@ -301,6 +301,11 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
     Route::get('/security', [\App\Http\Controllers\Admin\SecurityController::class, 'index'])->name('admin.security.index');
     Route::get('/users/{id}/security', [\App\Http\Controllers\Admin\SecurityController::class, 'userSecurity'])->name('admin.security.user');
 
+    // Countries management (Settings sub-domain)
+    Route::get('/countries', [\App\Http\Controllers\Admin\CountryController::class, 'index'])->name('admin.countries.index');
+    Route::post('/countries/update-selection', [\App\Http\Controllers\Admin\CountryController::class, 'updateSelection'])->name('admin.countries.update-selection');
+    Route::post('/countries/{id}/toggle', [\App\Http\Controllers\Admin\CountryController::class, 'toggle'])->name('admin.countries.toggle');
+
     // Admin User Management
     Route::resource('admins', \App\Http\Controllers\Admin\AdminUserController::class, [
         'names' => 'admin.admins'

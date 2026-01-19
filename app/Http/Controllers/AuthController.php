@@ -17,23 +17,27 @@ class AuthController extends Controller
         if ($request->has('ref')) {
             session(['referred_by_code' => $request->query('ref')]);
         }
-        return view('auth.register');
+        $countries = \App\Models\Country::where('is_active', '=', true, 'and')->get();
+        return view('auth.register', compact('countries'));
     }
 
     public function register(Request $request)
     {
-        $data = $request->only(['name', 'email', 'password', 'password_confirmation', 'telephone']);
+        $data = $request->only(['name', 'email', 'password', 'password_confirmation', 'telephone', 'phone_prefix']);
 
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'telephone' => 'nullable|string|max:20',
+            'telephone' => 'required|string|max:20',
+            'phone_prefix' => 'required|string|max:10',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        $fullPhone = $data['phone_prefix'] . ' ' . preg_replace('/[^0-9]/', '', $data['telephone']);
 
         // Logic for referral
         $referredBy = null;
@@ -55,7 +59,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'telephone' => $data['telephone'] ?? null,
+            'telephone' => $fullPhone,
             'role' => 'client',
             'referral_code' => $referralCode,
             'referred_by' => $referredBy,
@@ -64,6 +68,19 @@ class AuthController extends Controller
             'date_derniere_connexion' => now(),
             'status' => 'actif',
         ]);
+
+        // Notify Admins of new registration
+        $admins = User::whereIn('role', ['admin', 'super_admin'], 'and', false)->get();
+        foreach ($admins as $admin) {
+            \App\Models\Notification::create([
+                'id_utilisateur' => $admin->id_user,
+                'type_notification' => 'nouvel_utilisateur',
+                'titre' => 'Nouvel utilisateur inscrit',
+                'message' => "Un nouvel utilisateur, {$user->name}, vient de s'inscrire.",
+                'lue' => false,
+                'date_creation' => now(),
+            ]);
+        }
 
         // Log registration as a successful login attempt
         LoginAttempt::create([
@@ -90,7 +107,16 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only(['email', 'password']);
+        $login = $request->input('login');
+        $password = $request->input('password');
+
+        // Determine if login is email or phone
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
+
+        $credentials = [
+            $field => $login,
+            'password' => $password
+        ];
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
@@ -121,24 +147,18 @@ class AuthController extends Controller
         }
 
         // Log failed attempt
-        $user = User::where('email', '=', $credentials['email'], 'and')->first();
-
-        if ($user) {
-            $user->increment('login_attempts');
-            $user->increment('failed_logins_count'); // If we have this field, if not it just won't work but won't crash usually if we handle it
-            // Actually let's just stick to what we have in User model
-        }
+        $user = User::where($field, '=', $login, 'and')->first();
 
         LoginAttempt::create([
             'id_user' => $user ? $user->id_user : null,
-            'email' => $credentials['email'],
+            'email' => $field === 'email' ? $login : ($user->email ?? $login),
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'status' => 'failed',
             'failure_reason' => 'Identifiants invalides',
         ]);
 
-        return back()->withErrors(['email' => 'Identifiants invalides'])->withInput();
+        return back()->withErrors(['login' => 'Identifiants invalides'])->withInput();
     }
 
     public function logout(Request $request)
@@ -172,7 +192,8 @@ class AuthController extends Controller
     public function showApply()
     {
         $categories = \App\Models\VendorCategory::where('is_active', '=', true, 'and')->get();
-        return view('auth.vendor_apply', compact('categories'));
+        $countries = \App\Models\Country::where('is_active', '=', true, 'and')->get();
+        return view('auth.vendor_apply', compact('categories', 'countries'));
     }
 
     /**
@@ -189,7 +210,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'nom_commercial' => 'required|string|max:150',
             'id_category_vendeur' => 'required|exists:vendor_categories,id_category_vendeur',
-            'telephone_commercial' => 'required|string|max:20',
+            'telephone_commercial' => 'nullable|string|max:20',
+            'phone_prefix' => 'nullable|string|max:10',
             'registre_commerce' => 'required|string|max:100',
             'adresse_complete' => 'required|string|max:500',
             'document_identite' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -200,11 +222,16 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $fullPhone = null;
+        if ($request->telephone_commercial) {
+            $fullPhone = ($request->phone_prefix ?? '') . ' ' . $request->telephone_commercial;
+        }
+
         $data = [
             'id_user' => $user->id_user,
             'nom_commercial' => $request->nom_commercial,
             'id_category_vendeur' => $request->id_category_vendeur,
-            'telephone_commercial' => $request->telephone_commercial,
+            'telephone_commercial' => $fullPhone,
             'registre_commerce' => $request->registre_commerce,
             'adresse_complete' => $request->adresse_complete,
             'statut_verification' => 'en_cours',
@@ -219,10 +246,24 @@ class AuthController extends Controller
             $data['justificatif_domicile'] = $request->file('justificatif_domicile')->store('verification_docs', 'private');
         }
 
-        Vendeur::updateOrCreate(
+        $vendeur = Vendeur::updateOrCreate(
             ['id_user' => $user->id_user],
             $data
         );
+
+        // Notify Admins of new application
+        $admins = User::whereIn('role', ['admin', 'super_admin'], 'and', false)->get();
+        foreach ($admins as $admin) {
+            \App\Models\Notification::create([
+                'id_utilisateur' => $admin->id_user,
+                'type_notification' => 'demande_vendeur',
+                'titre' => 'Nouvelle demande de vendeur',
+                'message' => "L'utilisateur {$user->name} a déposé une demande pour la boutique \"{$vendeur->nom_commercial}\".",
+                'id_vendeur' => $vendeur->id_vendeur,
+                'lue' => false,
+                'date_creation' => now(),
+            ]);
+        }
 
         return redirect()->route('home')->with('success', 'Votre demande pour devenir vendeur a été envoyée avec succès. Elle est en cours de révision par nos administrateurs.');
     }

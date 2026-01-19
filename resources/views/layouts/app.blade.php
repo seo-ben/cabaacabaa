@@ -506,7 +506,11 @@
                     <ul class="space-y-4">
                         <li><a href="/" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Accueil</a></li>
                         <li><a href="{{ route('explore') }}" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Explorer</a></li>
-                        <li><a href="{{ route('vendor.apply') }}" class="text-[13px] font-bold text-red-500 hover:text-red-600 transition-colors">Devenir Vendeur</a></li>
+                        @auth
+                            @if(auth()->user()->canApplyAsVendor())
+                                <li><a href="{{ route('vendor.apply') }}" class="text-[13px] font-bold text-red-500 hover:text-red-600 transition-colors">Devenir Vendeur</a></li>
+                            @endif
+                        @endauth
                     </ul>
                 </div>
 

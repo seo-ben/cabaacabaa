@@ -111,12 +111,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get unread notifications (safe fallback if read_at column doesn't exist).
-     * Returns empty collection for MVP.
+     * Get unread notifications.
      */
     public function unreadNotifications()
     {
-        return collect([]);
+        return $this->notifications()->where('lue', false)->orderBy('date_creation', 'desc')->get();
     }
 
     /**
@@ -134,6 +133,24 @@ class User extends Authenticatable
     public function isSuperAdmin()
     {
         return $this->role === 'super_admin';
+    }
+
+    /**
+     * Check if user can apply to become a vendor
+     */
+    public function canApplyAsVendor()
+    {
+        // Don't allow if already a vendor
+        if ($this->isVendor()) {
+            return false;
+        }
+
+        // Don't allow if there is an existing vendor profile (pending or otherwise)
+        if ($this->vendeur()->exists()) {
+            return false;
+        }
+
+        return true;
     }
 
     // ===== PERMISSIONS =====

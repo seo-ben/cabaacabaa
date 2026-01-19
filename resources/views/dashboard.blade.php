@@ -20,7 +20,7 @@
                 <a href="{{ route('home') }}" class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all active:scale-95 shadow-lg">
                     Acheter maintenant
                 </a>
-                @if(($user->role ?? 'client') === 'client')
+                @if($user->canApplyAsVendor())
                 <a href="{{ route('vendor.apply') }}" class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-100 dark:border-gray-700 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-700 transition-all active:scale-95 shadow-sm">
                     Devenir Vendeur
                 </a>

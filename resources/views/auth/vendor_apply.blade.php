@@ -55,19 +55,99 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="space-y-1.5">
+                            <div class="space-y-1.5 flex-1">
                                 <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Type de Boutique</label>
-                                <select name="id_category_vendeur" required class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 appearance-none">
-                                    <option value="" disabled selected>Choisir un type...</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id_category_vendeur }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
+                                <div x-data="{ 
+                                        open: false, 
+                                        selected: '{{ old('id_category_vendeur') }}',
+                                        options: [
+                                            @foreach($categories as $category)
+                                                { id: '{{ $category->id_category_vendeur }}', name: '{{ $category->name }}' },
+                                            @endforeach
+                                        ],
+                                        get selectedLabel() {
+                                            const opt = this.options.find(o => o.id == this.selected);
+                                            return opt ? opt.name : 'Choisir un type...';
+                                        }
+                                    }" class="relative w-full">
+                                    <input type="hidden" name="id_category_vendeur" :value="selected">
+                                    <button type="button" @click="open = !open" 
+                                            class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 flex items-center justify-between">
+                                        <span x-text="selectedLabel" :class="!selected ? 'text-gray-400' : ''"></span>
+                                        <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    </button>
+                                    
+                                    <div x-show="open" @click.away="open = false" x-cloak
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                         class="absolute z-50 mt-2 w-full bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 max-h-64 overflow-y-auto">
+                                        <template x-for="opt in options" :key="opt.id">
+                                            <button type="button" @click="selected = opt.id; open = false"
+                                                    class="w-full px-6 py-3 text-left hover:bg-red-50 transition-colors flex items-center justify-between"
+                                                    :class="selected == opt.id ? 'bg-red-50 text-red-600' : 'text-gray-700'">
+                                                <span class="font-bold" x-text="opt.name"></span>
+                                                <svg x-show="selected == opt.id" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">Téléphone Pro</label>
-                                <input type="text" name="telephone_commercial" value="{{ old('telephone_commercial') }}" required placeholder="+228..."
-                                       class="w-full px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4 flex justify-between">
+                                    Téléphone Pro
+                                    <span class="text-[8px] font-medium opacity-50 lowercase tracking-normal">Optionnel</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <div x-data="{ 
+                                            open: false, 
+                                            selected: '{{ old('phone_prefix', '+228') }}',
+                                            options: [
+                                                @foreach($countries as $country)
+                                                    { prefix: '{{ $country->phone_prefix }}', name: '{{ $country->name }}', icon: '{{ $country->flag_icon }}' },
+                                                @endforeach
+                                            ],
+                                            get selectedOption() {
+                                                return this.options.find(o => o.prefix === this.selected) || (this.options.length > 0 ? this.options[0] : {prefix: '', icon: ''});
+                                            }
+                                        }" class="relative w-32">
+                                        <input type="hidden" name="phone_prefix" :value="selected">
+                                        <button type="button" @click="open = !open" 
+                                                class="w-full px-4 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900 flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-lg" x-text="selectedOption.icon"></span>
+                                                <span x-text="selected"></span>
+                                            </div>
+                                            <svg class="w-3 h-3 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                            </svg>
+                                        </button>
+                                        
+                                        <div x-show="open" @click.away="open = false" x-cloak
+                                             x-transition:enter="transition ease-out duration-200"
+                                             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                             class="absolute z-50 mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 max-h-64 overflow-y-auto">
+                                            <template x-for="opt in options" :key="opt.prefix">
+                                                <button type="button" @click="selected = opt.prefix; open = false"
+                                                        class="w-full px-4 py-3 text-left hover:bg-red-50 transition-colors flex items-center gap-3"
+                                                        :class="selected === opt.prefix ? 'bg-red-50 text-red-600' : 'text-gray-700'">
+                                                    <span class="text-2xl" x-text="opt.icon"></span>
+                                                    <div>
+                                                        <div class="font-black text-sm" x-text="opt.prefix"></div>
+                                                        <div class="text-[9px] font-bold text-gray-400 uppercase" x-text="opt.name"></div>
+                                                    </div>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <input type="text" name="telephone_commercial" value="{{ old('telephone_commercial') }}" placeholder="00 00 00 00"
+                                           class="flex-1 px-6 py-4 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 outline-none transition-all text-sm font-bold text-gray-900">
+                                </div>
                             </div>
                         </div>
 

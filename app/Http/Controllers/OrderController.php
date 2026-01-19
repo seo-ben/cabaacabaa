@@ -222,6 +222,20 @@ class OrderController extends Controller
             // Notify vendor in real-time
             event(new \App\Events\OrderPlaced($commande));
 
+            // Notify Admins
+            $admins = \App\Models\User::whereIn('role', ['admin', 'super_admin'])->get();
+            foreach ($admins as $admin) {
+                \App\Models\Notification::create([
+                    'id_utilisateur' => $admin->id_user,
+                    'type_notification' => 'nouvelle_commande',
+                    'titre' => 'Nouvelle commande reçue',
+                    'message' => "La commande {$commande->numero_commande} d'un montant de {$commande->montant_total} FCFA a été passée.",
+                    'id_commande' => $commande->id_commande,
+                    'lue' => false,
+                    'date_creation' => now(),
+                ]);
+            }
+
             if ($request->mode_paiement == 'mobile_money') {
                 try {
                     // Call QOSPAY API

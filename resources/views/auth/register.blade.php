@@ -122,9 +122,53 @@
                     <!-- Phone -->
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Téléphone</label>
-                        <input type="tel" name="telephone" value="{{ old('telephone') }}" required
-                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all"
-                               placeholder="+221 XX XXX XX XX">
+                        <div class="flex gap-2">
+                            <div x-data="{ 
+                                    open: false, 
+                                    selected: '{{ old('phone_prefix', '+228') }}',
+                                    options: [
+                                        @foreach($countries as $country)
+                                            { prefix: '{{ $country->phone_prefix }}', name: '{{ $country->name }}', icon: '{{ $country->flag_icon }}' },
+                                        @endforeach
+                                    ],
+                                    get selectedOption() {
+                                        return this.options.find(o => o.prefix === this.selected) || (this.options.length > 0 ? this.options[0] : {prefix: '', icon: ''});
+                                    }
+                                }" class="relative w-32">
+                                <input type="hidden" name="phone_prefix" :value="selected">
+                                <button type="button" @click="open = !open" 
+                                        class="w-full px-3 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all bg-gray-50 font-bold text-sm flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-lg" x-text="selectedOption.icon"></span>
+                                        <span x-text="selected"></span>
+                                    </div>
+                                    <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+                                
+                                <div x-show="open" @click.away="open = false" x-cloak
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                     class="absolute z-50 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 max-h-64 overflow-y-auto">
+                                    <template x-for="opt in options" :key="opt.prefix">
+                                        <button type="button" @click="selected = opt.prefix; open = false"
+                                                class="w-full px-4 py-3 text-left hover:bg-orange-50 transition-colors flex items-center gap-3"
+                                                :class="selected === opt.prefix ? 'bg-orange-50 text-[#ff4d00]' : 'text-gray-700'">
+                                            <span class="text-2xl" x-text="opt.icon"></span>
+                                            <div>
+                                                <div class="font-black text-sm" x-text="opt.prefix"></div>
+                                                <div class="text-[10px] font-bold text-gray-400 uppercase tracking-tight" x-text="opt.name"></div>
+                                            </div>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                            <input type="tel" name="telephone" value="{{ old('telephone') }}" required
+                                   class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all"
+                                   placeholder="XX XXX XX XX">
+                        </div>
                     </div>
 
                     <!-- Password -->
