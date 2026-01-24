@@ -40,8 +40,8 @@
         
         <!-- Page Header (Mobile) -->
         <div class="lg:hidden mb-8">
-            <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tight">Explorer les articles</h1>
-            <p class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">{{ $plats->total() }} articles disponibles</p>
+            <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tight">Tous nos Produits</h1>
+            <p class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">{{ $plats->total() }} produits disponibles</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
@@ -174,10 +174,10 @@
                 <!-- Title & Count (Desktop) -->
                 <div class="hidden lg:flex items-end justify-between pb-6 border-b border-gray-100 dark:border-gray-800">
                     <div>
-                        <h1 class="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Tous nos Articles</h1>
+                        <h1 class="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Tous nos Produits</h1>
                         <div class="flex items-center gap-3 mt-2">
                             <span class="px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-[0.2em] rounded-full">
-                                {{ $plats->total() }} articles trouvés
+                                {{ $plats->total() }} produits trouvés
                             </span>
                             @if(request('search'))
                                 <span class="text-xs font-bold text-gray-400 dark:text-gray-500 italic">pour "{{ request('search') }}"</span>
@@ -222,7 +222,7 @@
                                                 </div>
                                             @endif
                                             <div class="px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl">
-                                                {{ $plat->categorie->nom_categorie ?? 'Article' }}
+                                                {{ $plat->categorie->nom_categorie ?? 'Produit' }}
                                             </div>
                                         </div>
                                         
@@ -302,7 +302,7 @@
                                     </div>
 
                                     <p class="text-sm font-bold text-gray-400 dark:text-gray-500 line-clamp-2 mb-8 leading-relaxed">
-                                        {{ $plat->description ?: 'Qualité garantie pour cet article sélectionné avec passion.' }}
+                                        {{ $plat->description ?: 'Qualité garantie pour ce produit sélectionné avec passion.' }}
                                     </p>
 
                                     <!-- Footer Card -->
@@ -343,7 +343,7 @@
                             <svg class="w-12 h-12 text-gray-200 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         </div>
                         <h2 class="text-3xl font-display font-black text-gray-900 dark:text-white mb-4 tracking-tight">Oups ! Rien trouvé</h2>
-                        <p class="text-gray-400 dark:text-gray-500 font-bold max-w-sm mx-auto mb-12 uppercase text-[11px] tracking-[0.2em] leading-loose">Nous n'avons trouvé aucun article correspondant à vos critères. Essayez peut-être une autre catégorie ou un mot-clé différent.</p>
+                        <p class="text-gray-400 dark:text-gray-500 font-bold max-w-sm mx-auto mb-12 uppercase text-[11px] tracking-[0.2em] leading-loose">Nous n'avons trouvé aucun produit correspondant à vos critères. Essayez peut-être une autre catégorie ou un mot-clé différent.</p>
                         <a href="{{ route('explore.plats') }}" class="inline-flex px-12 py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-black uppercase tracking-[0.3em] rounded-xl hover:bg-black dark:hover:bg-gray-100 transition-all shadow-2xl shadow-gray-200 dark:shadow-none">
                             Réinitialiser la recherche
                         </a>

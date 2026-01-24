@@ -6,7 +6,7 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-gray-900 rounded-[2.5rem] p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
             <div class="flex items-center gap-6">
-                <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-orange-500 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-red-200 dark:shadow-red-900/20">
+                <div class="w-20 h-20 bg-linear-to-br from-red-600 to-orange-500 rounded-4xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-red-200 dark:shadow-red-900/20">
                     {{ substr($user->name, 0, 1) }}
                 </div>
                 <div>
@@ -162,12 +162,12 @@
 <script>
     function copyReferralCode(code) {
         navigator.clipboard.writeText(code).then(() => {
-            alert('Code promo copié !');
+            window.showToast('Code promo copié !', 'success');
         });
     }
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Lien de parrainage copié !');
+            window.showToast('Lien de parrainage copié !', 'success');
         });
     }
 </script>

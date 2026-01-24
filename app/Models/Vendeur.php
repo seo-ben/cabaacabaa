@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Vendeur extends Model
 {
@@ -39,6 +40,8 @@ class Vendeur extends Model
         'whatsapp_number',
         'wallet_balance',
         'id_category_vendeur',
+        'is_boosted',
+        'boost_expires_at',
         'actif'
     ];
 
@@ -55,13 +58,13 @@ class Vendeur extends Model
 
         static::creating(function ($vendeur) {
             if (empty($vendeur->slug)) {
-                $vendeur->slug = \Str::slug($vendeur->nom_commercial);
+                $vendeur->slug = Str::slug($vendeur->nom_commercial);
             }
         });
 
         static::updating(function ($vendeur) {
             if ($vendeur->isDirty('nom_commercial') && empty($vendeur->slug)) {
-                $vendeur->slug = \Str::slug($vendeur->nom_commercial);
+                $vendeur->slug = Str::slug($vendeur->nom_commercial);
             }
         });
     }

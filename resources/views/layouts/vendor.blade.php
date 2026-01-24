@@ -75,7 +75,7 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300" 
       x-data="{ 
-          sidebarOpen: true,
+          sidebarOpen: window.innerWidth >= 1024,
           darkMode: localStorage.getItem('darkMode') === 'true',
           newOrder: null,
           toggleDarkMode() {
@@ -109,9 +109,9 @@
 
     <!-- New Order Popup Alert -->
     <template x-if="newOrder">
-        <div class="fixed top-8 left-1/2 -translate-x-1/2 z-[100] w-full max-w-md px-4">
-            <div class="bg-gray-900 text-white p-6 rounded-[2.5rem] shadow-2xl new-order-alert flex items-center gap-6 border border-white/10">
-                <div class="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+        <div class="fixed top-8 left-1/2 -translate-x-1/2 z-100 w-full max-w-md px-4">
+            <div class="bg-gray-900 text-white p-6 rounded-4xl shadow-2xl new-order-alert flex items-center gap-6 border border-white/10">
+                <div class="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center shrink-0">
                     <svg class="w-8 h-8 text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 </div>
                 <div class="flex-1">
@@ -127,6 +127,18 @@
         </div>
     </template>
 
+    <!-- Mobile Backdrop -->
+    <div x-show="sidebarOpen" 
+         @click="sidebarOpen = false"
+         class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden transition-opacity"
+         x-transition:enter="ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display: none;"></div>
+
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 transition-transform duration-300 transform lg:translate-x-0"
            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
@@ -135,15 +147,15 @@
             <!-- Brand -->
             <div class="px-8 py-10 flex items-center gap-3">
                 @if($finalLogo)
-                    <img src="{{ $finalLogo }}" alt="{{ $siteName }}" class="w-10 h-10 object-contain">
+                    <img ...>
                 @else
-                    <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-200 dark:shadow-red-900/20">
+                    <div class="w-10 h-10 bg-linear-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-200 dark:shadow-red-900/20">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                         </svg>
                     </div>
                 @endif
-                <span class="text-2xl font-display font-black tracking-tighter bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent truncate">{{ $siteName }}</span>
+                <span class="text-2xl font-display font-black tracking-tighter bg-linear-to-r from-red-600 to-orange-600 bg-clip-text text-transparent truncate">{{ $siteName }}</span>
             </div>
 
             <!-- Navigation -->
@@ -160,9 +172,17 @@
                    class="flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 dark:text-gray-400 transition-all hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white {{ request()->routeIs('vendeur.slug.orders.*') || request()->routeIs('vendeur.orders.*') ? 'sidebar-active' : '' }}">
                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                    Commandes
-                   @if(isset($activeOrders) && $activeOrders > 0)
-                    <span class="ml-auto px-2 py-0.5 bg-red-600 text-white text-[10px] rounded-lg">{{ $activeOrders }}</span>
-                   @endif
+                   <div class="ml-auto flex items-center gap-1">
+                       @if(isset($unreadChatMessagesCount) && $unreadChatMessagesCount > 0)
+                        <span class="px-2 py-0.5 bg-orange-600 text-white text-[10px] rounded-lg animate-pulse" title="Nouveaux messages chat">
+                            <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                            {{ $unreadChatMessagesCount }}
+                        </span>
+                       @endif
+                       @if(isset($activeOrders) && $activeOrders > 0)
+                        <span class="px-2 py-0.5 bg-red-600 text-white text-[10px] rounded-lg">{{ $activeOrders }}</span>
+                       @endif
+                   </div>
                 </a>
 
                 <a href="{{ vendor_route('vendeur.slug.coupons.index') }}" 
@@ -240,6 +260,17 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
+                    <!-- Chat Notifications -->
+                    @if(isset($unreadChatMessagesCount) && $unreadChatMessagesCount > 0)
+                    <a href="{{ vendor_route('vendeur.slug.orders.index') }}" 
+                       class="p-2.5 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl border border-orange-100 dark:border-orange-900/30 relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-[9px] font-black rounded-full flex items-center justify-center animate-pulse">
+                            {{ $unreadChatMessagesCount }}
+                        </span>
+                    </a>
+                    @endif
+
                     <!-- Dark Mode Toggle -->
                     <button @click="toggleDarkMode()" class="p-2.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/30">
                         <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
@@ -258,7 +289,7 @@
         <main class="p-8">
             <!-- Messages Flush/Alerts -->
             @if(session('success'))
-                <div class="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 rounded-[2rem] flex items-center gap-4 text-green-700 dark:text-green-400 transition-colors">
+                <div class="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 rounded-4xl flex items-center gap-4 text-green-700 dark:text-green-400 transition-colors">
                     <div class="w-10 h-10 bg-green-100 dark:bg-green-900/50 rounded-2xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     </div>
@@ -267,7 +298,7 @@
             @endif
 
             @if(session('error'))
-                <div class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-[2rem] flex items-center gap-4 text-red-700 dark:text-red-400 transition-colors">
+                <div class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-4xl flex items-center gap-4 text-red-700 dark:text-red-400 transition-colors">
                     <div class="w-10 h-10 bg-red-100 dark:bg-red-900/50 rounded-2xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>

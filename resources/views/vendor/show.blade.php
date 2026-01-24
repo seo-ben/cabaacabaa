@@ -2,12 +2,12 @@
 
 @section('content')
 <script src="{{ asset('js/product-options.js') }}"></script>
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300" 
+<div class="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300" 
      x-data="productOptionsManager()">
     
     <!-- Closed State Modal -->
     @if(!$vendeur->actif)
-    <div class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="fixed inset-0 z-100 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in duration-300">
             <div class="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mx-auto">
                 <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,9 +39,9 @@
                 <img src="{{ asset('storage/' . $vendeur->image_principale) }}" 
                      class="w-full h-full object-cover opacity-40" 
                      alt="{{ $vendeur->nom_commercial }}">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/80 to-slate-900/40"></div>
             @else
-                <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900"></div>
+                <div class="absolute inset-0 bg-linear-to-br from-slate-800 to-slate-900"></div>
             @endif
         </div>
 
@@ -49,14 +49,14 @@
         <div class="relative max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-16">
             <div class="flex flex-col lg:flex-row items-start lg:items-end gap-8">
                 <!-- Logo/Avatar -->
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-2xl border-4 border-white/20">
                         @if($vendeur->image_principale)
                             <img src="{{ asset('storage/' . $vendeur->image_principale) }}" 
                                  class="w-full h-full object-cover" 
                                  alt="{{ $vendeur->nom_commercial }}">
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                            <div class="w-full h-full bg-linear-to-br from-orange-400 to-red-500 flex items-center justify-center">
                                 <span class="text-5xl font-bold text-white">{{ substr($vendeur->nom_commercial, 0, 1) }}</span>
                             </div>
                         @endif
@@ -114,7 +114,7 @@
                 </div>
 
                 <!-- CTA Button -->
-                <div class="flex-shrink-0 hidden lg:block">
+                <div class="shrink-0 hidden lg:block">
                     <button class="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -164,7 +164,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($vendeur->coupons as $coupon)
-                <div class="group relative bg-white dark:bg-slate-800 p-6 rounded-[2rem] border-2 border-dashed border-red-200 dark:border-red-900/50 hover:border-red-500 transition-all overflow-hidden">
+                <div class="group relative bg-white dark:bg-slate-800 p-6 rounded-4xl border-2 border-dashed border-red-200 dark:border-red-900/50 hover:border-red-500 transition-all overflow-hidden">
                     <!-- Background Decoration -->
                     <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-50 dark:bg-red-900/20 rounded-full blur-2xl group-hover:bg-red-100 transition-colors"></div>
                     
@@ -221,7 +221,7 @@
                                         <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-all group">
                                             <div class="flex flex-col sm:flex-row gap-4 p-5">
                                                 <!-- Image -->
-                                                <div class="relative w-full sm:w-40 h-40 flex-shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700">
+                                                <div class="relative w-full sm:w-40 h-40 shrink-0 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700">
                                                     @if($plat->image_principale)
                                                         <img src="{{ asset('storage/' . $plat->image_principale) }}" 
                                                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
@@ -363,7 +363,7 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-slate-100 dark:border-slate-700">
                             <div class="flex items-start gap-4">
-                                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center shrink-0">
                                     <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
@@ -374,7 +374,7 @@
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
-                                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center shrink-0">
                                     <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                     </svg>
@@ -405,7 +405,7 @@
                             <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 space-y-4">
                                 <div class="flex items-start justify-between">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 rounded-xl flex items-center justify-center font-bold text-slate-600 dark:text-slate-300">
+                                        <div class="w-12 h-12 bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 rounded-xl flex items-center justify-center font-bold text-slate-600 dark:text-slate-300">
                                             {{ substr($a->client->name ?? 'A', 0, 1) }}
                                         </div>
                                         <div>
@@ -444,7 +444,7 @@
                         <div class="space-y-6">
                             <!-- Address -->
                             <div class="flex gap-4">
-                                <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
                                     <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -460,7 +460,7 @@
 
                             <!-- Phone -->
                             <div class="flex gap-4">
-                                <div class="w-10 h-10 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center shrink-0">
                                     <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                                     </svg>
@@ -563,9 +563,9 @@
                     </div>
 
                     <!-- Security Badge -->
-                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-xl p-6 shadow-lg">
+                    <div class="bg-linear-to-br from-blue-600 to-blue-700 text-white rounded-xl p-6 shadow-lg">
                         <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                 </svg>
@@ -604,7 +604,7 @@
 </style>
 
     <!-- Product Options Modal -->
-    <div x-show="modalOpen" class="fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak>
+    <div x-show="modalOpen" class="fixed inset-0 z-100 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;" x-cloak>
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!-- Overlay -->
             <div x-show="modalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" 
@@ -721,7 +721,7 @@
 <script>
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => {
-            alert('Code promo copié : ' + text);
+            window.showToast('Code promo copié : ' + text, 'success');
         });
     }
 </script>

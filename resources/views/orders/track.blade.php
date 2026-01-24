@@ -23,6 +23,15 @@
         </div>
 
         @if($commande)
+        <!-- Mobile Chat Trigger -->
+        <div class="lg:hidden fixed bottom-6 right-6 z-40">
+            <button @click="document.getElementById('order-chat-section').scrollIntoView({behavior: 'smooth'})" 
+                    class="w-14 h-14 bg-orange-600 text-white rounded-full shadow-2xl flex items-center justify-center animate-bounce">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+            </button>
+        </div>
         <!-- Tracking Display -->
         <div id="tracking-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
             
@@ -149,7 +158,7 @@
             </div>
 
             <!-- Right Column: Chat -->
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1" id="order-chat-section">
                 @include('partials.order-chat', ['orderId' => $commande->id_commande])
             </div>
         </div>

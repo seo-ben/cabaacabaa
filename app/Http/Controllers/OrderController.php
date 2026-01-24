@@ -370,6 +370,9 @@ class OrderController extends Controller
                 abort(403);
             }
         }
+        
+        // Store in session to allow chat for guests/new orders
+        session()->put('viewed_order_' . $commande->id_commande, true);
 
         return view('cart.confirmation', compact('commande'));
     }
@@ -387,7 +390,10 @@ class OrderController extends Controller
                 ->where('numero_commande', 'LIKE', '%' . $code)
                 ->first();
 
-            if (!$commande) {
+            if ($commande) {
+                // Store in session to allow chat for guests
+                session()->put('viewed_order_' . $commande->id_commande, true);
+            } else {
                 return redirect()->back()->with('error', 'Commande introuvable avec ce code.');
             }
         }

@@ -20,6 +20,13 @@ class OrderController extends Controller
 
         $query = Commande::where('id_vendeur', $vendeur->id_vendeur)
             ->with(['client', 'lignes'])
+            ->withCount(['messages as unread_messages_count' => function ($q) {
+                $q->where('is_read', false)
+                  ->where(function ($sub) {
+                      $sub->where('id_user', '!=', Auth::id())
+                          ->orWhereNull('id_user');
+                  });
+            }])
             ->latest('date_commande');
 
         // Filtres
@@ -53,7 +60,7 @@ class OrderController extends Controller
     /**
      * Mettre à jour le statut d'une commande.
      */
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, $vendor_slug, $id)
     {
         $vendeur = Auth::user()->vendeur;
         $order = Commande::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);

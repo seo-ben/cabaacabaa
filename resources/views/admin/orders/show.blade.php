@@ -36,9 +36,16 @@
                                 'termine' => 'bg-green-50 text-green-600 border-green-100',
                                 'annule' => 'bg-red-50 text-red-600 border-red-100',
                             ];
+                            $statusLabels = [
+                                'en_attente' => 'Reçue',
+                                'en_preparation' => 'Préparation',
+                                'pret' => 'Prête',
+                                'termine' => 'Livre',
+                                'annule' => 'Annulée',
+                            ];
                         @endphp
                         <span class="px-6 py-2.5 rounded-2xl border text-xs font-black uppercase tracking-[0.2em] {{ $statusClasses[$order->statut] ?? 'bg-gray-50' }}">
-                            {{ strtoupper(str_replace('_', ' ', $order->statut)) }}
+                            {{ strtoupper($statusLabels[$order->statut] ?? str_replace('_', ' ', $order->statut)) }}
                         </span>
                     </div>
                 </div>
@@ -51,7 +58,7 @@
                         <div class="w-12 h-12 rounded-full mx-auto md:mx-0 mb-3 flex items-center justify-center {{ $order->date_commande ? 'bg-red-600 text-white shadow-glow' : 'bg-gray-100 text-gray-400' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">Passée</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">Reçue</p>
                         <p class="text-[9px] text-gray-400 mt-1">{{ $order->date_commande->format('H:i') }}</p>
                     </div>
 
@@ -59,7 +66,7 @@
                         <div class="w-12 h-12 rounded-full mx-auto md:mx-0 mb-3 flex items-center justify-center {{ $order->heure_preparation_debut ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         </div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">En cuisine</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">Préparation</p>
                         <p class="text-[9px] text-gray-400 mt-1">{{ $order->heure_preparation_debut ? $order->heure_preparation_debut->format('H:i') : '--:--' }}</p>
                     </div>
 
@@ -75,7 +82,7 @@
                         <div class="w-12 h-12 rounded-full mx-auto md:mx-0 mb-3 flex items-center justify-center {{ $order->statut == 'termine' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-400' }}">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                         </div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">Livrée</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-900">Livre</p>
                         <p class="text-[9px] text-gray-400 mt-1">{{ $order->heure_recuperation_effective ? $order->heure_recuperation_effective->format('H:i') : '--:--' }}</p>
                     </div>
                 </div>
@@ -206,10 +213,10 @@
                     <div>
                         <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Changer le statut de force</label>
                         <select name="statut" class="w-full bg-slate-800 border-none rounded-xl text-sm font-bold px-4 py-3 focus:ring-2 focus:ring-red-500">
-                            <option value="en_attente" {{ $order->statut == 'en_attente' ? 'selected' : '' }}>En attente</option>
-                            <option value="en_preparation" {{ $order->statut == 'en_preparation' ? 'selected' : '' }}>En préparation</option>
-                            <option value="pret" {{ $order->statut == 'pret' ? 'selected' : '' }}>Prêt pour retrait</option>
-                            <option value="termine" {{ $order->statut == 'termine' ? 'selected' : '' }}>Terminé / Livré</option>
+                            <option value="en_attente" {{ $order->statut == 'en_attente' ? 'selected' : '' }}>Reçue</option>
+                            <option value="en_preparation" {{ $order->statut == 'en_preparation' ? 'selected' : '' }}>Préparation</option>
+                            <option value="pret" {{ $order->statut == 'pret' ? 'selected' : '' }}>Prête</option>
+                            <option value="termine" {{ $order->statut == 'termine' ? 'selected' : '' }}>Livre</option>
                             <option value="annule" {{ $order->statut == 'annule' ? 'selected' : '' }}>Annuler la commande</option>
                         </select>
                     </div>

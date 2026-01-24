@@ -3,19 +3,19 @@
 @section('title', 'Tableau de Bord Admin')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+<div class=" bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         <!-- Header Section -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div class="space-y-2">
-                <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 sm:gap-6">
+            <div class="space-y-1 sm:space-y-2">
+                <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                     Tableau de Bord
                 </h1>
-                <p class="text-slate-600 text-lg">Bienvenue, Administrateur</p>
+                <p class="text-slate-600 text-sm sm:text-lg">Bienvenue, Administrateur</p>
             </div>
             
-            <div class="flex items-center gap-4">
+            <div class="hidden md:flex items-center gap-4">
                 <div class="bg-white/80 backdrop-blur-lg px-6 py-4 rounded-2xl shadow-lg border border-white/20">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

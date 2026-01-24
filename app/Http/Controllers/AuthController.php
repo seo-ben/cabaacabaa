@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -38,6 +40,10 @@ class AuthController extends Controller
         }
 
         $fullPhone = $data['phone_prefix'] . ' ' . preg_replace('/[^0-9]/', '', $data['telephone']);
+
+        if (User::withTrashed()->where('telephone', $fullPhone)->exists()) {
+            return redirect()->back()->withErrors(['telephone' => 'Ce numéro de téléphone est déjà utilisé.'])->withInput();
+        }
 
         // Logic for referral
         $referredBy = null;
@@ -110,6 +116,14 @@ class AuthController extends Controller
         $login = $request->input('login');
         $password = $request->input('password');
 
+        // SECURITY FIX: Rate Limiting to prevent brute force
+        $throttleKey = Str::lower($login) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->withErrors(['login' => "Trop de tentatives de connexion. Veuillez réessayer dans {$seconds} secondes."])->withInput();
+        }
+
         // Determine if login is email or phone
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
 
@@ -119,6 +133,7 @@ class AuthController extends Controller
         ];
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
             $user = Auth::user();
 
@@ -143,10 +158,18 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
+            // Prevent redirecting to API routes (like background notification polling)
+            $intendedUrl = session('url.intended');
+            if ($intendedUrl && (str_contains($intendedUrl, '/api/') || str_contains($intendedUrl, '/notifications/'))) {
+                session()->forget('url.intended');
+                return redirect('/');
+            }
+
             return redirect()->intended('/');
         }
 
         // Log failed attempt
+        RateLimiter::hit($throttleKey);
         $user = User::where($field, '=', $login, 'and')->first();
 
         LoginAttempt::create([

@@ -127,8 +127,17 @@
                                         'annule' => 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30',
                                     ];
                                 @endphp
+                                @php
+                                    $statusLabels = [
+                                        'en_attente' => 'Reçue',
+                                        'en_preparation' => 'Préparation',
+                                        'pret' => 'Prête',
+                                        'termine' => 'Livre',
+                                        'annule' => 'Annulée'
+                                    ];
+                                @endphp
                                 <span class="px-3 py-1.5 rounded-xl border {{ $statusColors[$order->statut] ?? 'bg-gray-50 dark:bg-gray-800' }} text-[9px] font-black uppercase tracking-widest">
-                                    {{ str_replace('_', ' ', $order->statut) }}
+                                    {{ $statusLabels[$order->statut] ?? $order->statut }}
                                 </span>
                             </td>
                             <td class="px-6 py-6">

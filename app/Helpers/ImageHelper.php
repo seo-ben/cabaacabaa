@@ -43,11 +43,13 @@ class ImageHelper
                     $image = imagecreatefromwebp($file->getRealPath());
                     break;
                 default:
-                    return $file->store($directory, 'public'); // Fallback to normal store
+                    // SECURITY FIX: Never store the file directly if the extension is not explicitly supported.
+                    // This prevents RCE attacks where a user uploads a PHP file disguised as an image.
+                    return false;
             }
 
             if (!$image) {
-                return $file->store($directory, 'public');
+                return false;
             }
 
             // Resize logic if maxWidth is set
@@ -79,8 +81,9 @@ class ImageHelper
 
             return $filePath;
         } catch (\Exception $e) {
-            // Log error or handle gracefully
-            return $file->store($directory, 'public');
+            // SECURITY FIX: fail gracefully instead of saving unsafe content
+            // Log::error('Image conversion failed: ' . $e->getMessage());
+            return false;
         }
     }
 }

@@ -44,6 +44,8 @@ class User extends Authenticatable
         'referral_code',
         'referred_by',
         'referral_balance',
+        'latitude',
+        'longitude',
     ];
 
     protected $hidden = [

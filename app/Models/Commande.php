@@ -39,4 +39,9 @@ class Commande extends Model
     {
         return $this->hasOne(AvisEvaluation::class, 'id_commande', 'id_commande');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(OrderMessage::class, 'id_commande', 'id_commande');
+    }
 }

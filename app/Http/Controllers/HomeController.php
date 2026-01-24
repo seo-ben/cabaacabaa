@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendeur;
+use App\Models\User;
 use App\Models\Plat;
 use App\Models\CategoryPlat;
 use App\Models\ZoneGeographique;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -18,9 +23,32 @@ class HomeController extends Controller
     {
         $data = [];
 
-        // Vendeurs populaires (basé sur la note ou l'ancienneté pour l'instant)
+        // 1. Gérer la localisation (Priorité: Paramètres > Session > Base de données)
+        $lat = request('lat') ?? session('user_lat');
+        $lng = request('lng') ?? session('user_lng');
+
+        // Si l'utilisateur est connecté et qu'on a une nouvelle position, on sauvegarde en DB
+        if (Auth::check()) {
+            if (request('lat') && request('lng')) {
+                User::where('id_user', Auth::id())->update([
+                    'latitude' => request('lat'),
+                    'longitude' => request('lng')
+                ]);
+            } elseif (!$lat && !$lng) {
+                // Si rien en requête/session, on prend celle de la DB
+                $lat = Auth::user()->latitude;
+                $lng = Auth::user()->longitude;
+            }
+        }
+
+        // Sauvegarde en session pour la navigation
+        if ($lat && $lng) {
+            session(['user_lat' => $lat, 'user_lng' => $lng]);
+        }
+
+        // 2. Récupération des vendeurs avec logique de priorité
         try {
-            $data['vendeurs'] = Vendeur::where('actif', 1)
+            $query = Vendeur::where('actif', 1)
                 ->with([
                     'categories',
                     'zone',
@@ -30,11 +58,39 @@ class HomeController extends Controller
                         });
                     }
                 ])
-                ->withCount('avisEvaluations')
-                ->orderBy('note_moyenne', 'desc')
-                ->paginate(4, ['*'], 'vendeurs_page');
+                ->withCount('avisEvaluations');
+
+            // Logique de tri: 
+            // 1. Les boostés (is_boosted = 1) en premier
+            // 2. Puis la distance (si dispo)
+            // 3. Enfin la note moyenne par défaut
+            
+            if ($lat && $lng) {
+                $query->selectRaw(
+                    '( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance',
+                    [$lat, $lng, $lat]
+                );
+                
+                $query->orderBy('is_boosted', 'desc')
+                      ->orderBy('distance', 'asc');
+            } else {
+                $query->orderBy('is_boosted', 'desc')
+                      ->orderBy('note_moyenne', 'desc');
+            }
+
+            // Filtre de recherche sur l'accueil
+            if (request()->filled('search')) {
+                $search = request('search');
+                $query->where(function($q) use ($search) {
+                    $q->where('nom_commercial', 'like', "%$search%")
+                      ->orWhere('description', 'like', "%$search%");
+                });
+            }
+
+            $data['vendeurs'] = $query->paginate(8, ['*'], 'vendeurs_page');
         } catch (\Throwable $e) {
-            $data['vendeurs'] = collect([]);
+            $data['vendeurs'] = Vendeur::whereRaw('1 = 0')->paginate(8, ['*'], 'vendeurs_page');
+            \Log::error("Erreur Home Vendeurs: " . $e->getMessage());
         }
 
         // Plats du moment (ceux en promotion ou les plus récents)
@@ -45,7 +101,8 @@ class HomeController extends Controller
                 ->orderBy('date_creation', 'desc')
                 ->paginate(10, ['*'], 'plats_page');
         } catch (\Throwable $e) {
-            $data['plats'] = collect([]);
+            $data['plats'] = Plat::whereRaw('1 = 0')->paginate(10, ['*'], 'plats_page');
+            \Log::error("Erreur Home Plats: " . $e->getMessage());
         }
 
         // Catégories actives
@@ -86,6 +143,15 @@ class HomeController extends Controller
      */
     public function explore(Request $request)
     {
+        // 1. Initialisation de la localisation
+        $lat = $request->lat ?? session('user_lat');
+        $lng = $request->lng ?? session('user_lng');
+
+        if (Auth::check() && !$lat && !$lng) {
+            $lat = Auth::user()->latitude;
+            $lng = Auth::user()->longitude;
+        }
+
         $query = Vendeur::where('actif', 1)->with([
             'categories',
             'zone',
@@ -96,37 +162,53 @@ class HomeController extends Controller
             }
         ])->withCount('avisEvaluations');
 
-        // Filtre par catégorie (via relation)
+        // 2. Filtres
         if ($request->filled('category')) {
             $query->whereHas('categories', function ($q) use ($request) {
                 $q->where('categories_plats.id_categorie', $request->category);
             });
         }
 
-        // Filtre par catégorie de boutique (Type)
         if ($request->filled('type')) {
-            $query->where('id_category_vendeur', $request->type);
+            $query->where('type_vendeur', $request->type);
         }
 
-        // Filtre par zone
         if ($request->filled('zone')) {
             $query->where('id_zone', $request->zone);
         }
 
-        // Recherche
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nom_commercial', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhereHas('plats', function($sq) use ($search) {
+                        $sq->where('nom_plat', 'like', '%' . $search . '%')
+                          ->orWhere('description', 'like', '%' . $search . '%');
+                    });
             });
         }
 
-        $vendeurs = $query->orderBy('note_moyenne', 'desc')->paginate(12);
+        // 3. Logique de tri (Priorité Boost)
+        $query->orderBy('is_boosted', 'desc');
+
+        if ($lat && $lng) {
+            $query->selectRaw(
+                '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance',
+                [$lat, $lng, $lat]
+            )->orderBy('distance', 'asc');
+        } else {
+            $query->orderBy('note_moyenne', 'desc');
+        }
+
+        $vendeurs = $query->paginate(12);
 
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
         $zones = ZoneGeographique::where('actif', true)->orderBy('nom')->get();
-        $types = \App\Models\VendorCategory::where('is_active', true)->orderBy('name')->get();
+        // Optionnel: Récupérer les types uniques de vendeurs pour le filtre
+        $types = collect(['restaurant', 'boutique', 'epicerie', 'fast_food', 'autre'])->map(function($t) {
+            return (object) ['id_category_vendeur' => $t, 'name' => ucfirst($t)];
+        });
 
         return view('explore', compact('vendeurs', 'categories', 'zones', 'types'));
     }
@@ -140,6 +222,18 @@ class HomeController extends Controller
             ->with(['categorie', 'vendeur.zone', 'groupesVariantes.variantes'])
             ->join('vendeurs', 'plats.id_vendeur', '=', 'vendeurs.id_vendeur')
             ->select('plats.*');
+
+        // Localisation
+        $lat = $request->lat ?? session('user_lat');
+        $lng = $request->lng ?? session('user_lng');
+
+        if ($lat && $lng) {
+            $query->selectRaw(
+                'plats.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( vendeurs.latitude ) ) * cos( radians( vendeurs.longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( vendeurs.latitude ) ) ) ) AS distance',
+                [$lat, $lng, $lat]
+            );
+            $query->orderBy('distance', 'asc');
+        }
 
         // Algorithme de mise en avant (Merit-based)
         $query->orderBy('plats.en_promotion', 'desc')

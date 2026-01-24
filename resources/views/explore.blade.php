@@ -220,6 +220,13 @@
 
                                     <!-- Badges Overlay -->
                                     <div class="absolute top-4 left-4 flex flex-col gap-2">
+                                        @if($v->is_boosted)
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600/90 backdrop-blur-md rounded-lg text-white text-[9px] font-black uppercase tracking-widest shadow-xl">
+                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.46a1 1 0 00-.364 1.118l1.286 3.97a1 1 0 01-1.54 1.118l-3.39-2.46a1 1 0 00-1.175 0l-3.39 2.46a1 1 0 01-1.54-1.118l1.286-3.97a1 1 0 00-.364-1.118L2.34 9.397c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.951-.69l1.286-3.97z"/></svg>
+                                            Sponsorisé
+                                        </div>
+                                        @endif
+                                        
                                         @if($v->statut_verification === 'verifie')
                                         <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-600/90 backdrop-blur-md rounded-lg text-white text-[9px] font-black uppercase tracking-widest shadow-xl">
                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
@@ -269,6 +276,11 @@
                                         <span class="px-2.5 py-1.5 bg-gray-900 dark:bg-gray-800 text-white dark:text-gray-200 text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm">
                                             {{ $v->zone ? ($v->zone->nom_zone ?: $v->zone->nom) : 'Lomé' }}
                                         </span>
+                                        @if(isset($v->distance))
+                                        <span class="px-2.5 py-1.5 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-orange-200 dark:border-orange-800 animate-bounce-short">
+                                            À {{ number_format($v->distance, 1) }} km
+                                        </span>
+                                        @endif
                                     </div>
 
                                     <!-- Action Button -->

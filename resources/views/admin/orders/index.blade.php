@@ -10,62 +10,62 @@
             <h1 class="text-2xl font-black text-gray-900 tracking-tight">Suivi Opérationnel</h1>
             <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mt-1">Analyse financière & logistique</p>
         </div>
-        <div class="flex flex-wrap items-center gap-6">
-            <div class="text-right">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Panier Moyen</p>
-                <p class="text-lg font-black text-gray-900">{{ number_format($stats['avg_order'], 0, ',', ' ') }} F</p>
+        <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-4 md:mt-0">
+            <div class="text-left md:text-right">
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Panier Moyen</p>
+                <p class="text-base sm:text-lg font-black text-gray-900">{{ number_format($stats['avg_order'], 0, ',', ' ') }} F</p>
             </div>
-            <div class="w-px h-10 bg-gray-100 hidden md:block"></div>
-            <div class="text-right">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Commissions (Frais)</p>
-                <p class="text-lg font-black text-blue-600">{{ number_format($stats['total_fees'], 0, ',', ' ') }} F</p>
+            <div class="hidden sm:block w-px h-10 bg-gray-100"></div>
+            <div class="text-left md:text-right">
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Commissions</p>
+                <p class="text-base sm:text-lg font-black text-blue-600">{{ number_format($stats['total_fees'], 0, ',', ' ') }} F</p>
             </div>
-            <div class="w-px h-10 bg-gray-100 hidden md:block"></div>
-            <div class="text-right">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Volume d'affaires</p>
-                <p class="text-2xl font-black text-gray-900">{{ number_format($stats['total_revenue'], 0, ',', ' ') }} F</p>
+            <div class="hidden sm:block w-px h-10 bg-gray-100"></div>
+            <div class="text-left md:text-right">
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Volume</p>
+                <p class="text-xl sm:text-2xl font-black text-gray-900">{{ number_format($stats['total_revenue'], 0, ',', ' ') }} F</p>
             </div>
-            <button onclick="window.location.reload()" class="p-3 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition shadow-sm active:scale-95">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <button onclick="window.location.reload()" class="p-2.5 sm:p-3 bg-white border border-gray-100 rounded-xl sm:rounded-2xl hover:bg-gray-50 transition shadow-sm active:scale-95">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </button>
         </div>
     </div>
 
     <!-- Stats Overview -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <a href="{{ route('admin.orders.index') }}" class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm hover:border-black transition flex flex-col justify-between {{ !$status ? 'ring-4 ring-gray-900/10 border-gray-900' : '' }}">
+        <a href="{{ route('admin.orders.index') }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-black transition flex flex-col justify-between {{ !$status ? 'ring-4 ring-gray-900/10 border-gray-900' : '' }}">
             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Toutes</p>
             <p class="text-2xl font-black text-gray-900">{{ $stats['total'] }}</p>
         </a>
-        <a href="{{ route('admin.orders.index', ['status' => 'en_attente']) }}" class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm hover:border-orange-500 transition flex flex-col justify-between {{ $status == 'en_attente' ? 'ring-4 ring-orange-500/10 border-orange-500' : '' }}">
-            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-3">En attente</p>
+        <a href="{{ route('admin.orders.index', ['status' => 'en_attente']) }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-orange-500 transition flex flex-col justify-between {{ $status == 'en_attente' ? 'ring-4 ring-orange-500/10 border-orange-500' : '' }}">
+            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-3">Reçue</p>
             <div class="space-y-1">
                 <p class="text-2xl font-black text-gray-900">{{ $stats['en_attente']['count'] }}</p>
                 <p class="text-[10px] font-bold text-gray-400 italic">{{ number_format($stats['en_attente']['sum'], 0, ',', ' ') }} F</p>
             </div>
         </a>
-        <a href="{{ route('admin.orders.index', ['status' => 'termine']) }}" class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm hover:border-green-500 transition flex flex-col justify-between {{ $status == 'termine' ? 'ring-4 ring-green-500/10 border-green-500' : '' }}">
-            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-3">Validées</p>
+        <a href="{{ route('admin.orders.index', ['status' => 'termine']) }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-green-500 transition flex flex-col justify-between {{ $status == 'termine' ? 'ring-4 ring-green-500/10 border-green-500' : '' }}">
+            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-3">Livre</p>
             <div class="space-y-1">
                 <p class="text-2xl font-black text-gray-900">{{ $stats['termine']['count'] }}</p>
                 <p class="text-[10px] font-bold text-green-600 italic">{{ number_format($stats['termine']['sum'], 0, ',', ' ') }} F</p>
             </div>
         </a>
-        <div class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm space-y-4 col-span-1">
+        <div class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm space-y-4 col-span-1">
             <div>
                 <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Préparation</p>
                 <p class="text-xl font-black text-gray-900">{{ $stats['en_preparation'] }}</p>
             </div>
             <div class="pt-2 border-t border-gray-50">
-                <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">Prêtes</p>
+                <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">Prête</p>
                 <p class="text-xl font-black text-gray-900">{{ $stats['pret'] }}</p>
             </div>
         </div>
-        <div class="bg-white p-5 rounded-[2rem] border border-gray-100 shadow-sm col-span-1 flex flex-col justify-center">
+        <div class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm col-span-1 flex flex-col justify-center">
             <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Annulées</p>
             <p class="text-2xl font-black text-gray-900">{{ $stats['annule'] }}</p>
         </div>
-        <div class="bg-slate-900 p-5 rounded-[2rem] text-white flex flex-col justify-center">
+        <div class="bg-slate-900 p-5 rounded-4xl text-white flex flex-col justify-center">
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Ratio succès</p>
             <p class="text-2xl font-black">{{ $stats['total'] > 0 ? round(($stats['termine']['count'] / $stats['total']) * 100) : 0 }}%</p>
         </div>
@@ -115,48 +115,48 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-100">
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">N° COMMANDE</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">DETAILS</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">ÉTABLISSEMENT</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">MONTANT</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">STATUT</th>
-                        <th class="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">ACTION</th>
+                        <th class="px-4 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">N° COMMANDE</th>
+                        <th class="px-4 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">DETAILS</th>
+                        <th class="hidden lg:table-cell px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">ÉTABLISSEMENT</th>
+                        <th class="px-4 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">MONTANT</th>
+                        <th class="hidden sm:table-cell px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">STATUT</th>
+                        <th class="px-4 sm:px-6 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">ACTION</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @forelse($orders as $order)
                     <tr class="hover:bg-gray-50/50 transition border-l-4 {{ $order->date_commande->isToday() ? 'border-red-500 bg-red-50/10' : 'border-transparent' }}">
-                        <td class="px-6 py-4">
+                        <td class="px-4 sm:px-6 py-4">
                             <div class="flex items-center gap-2">
-                                <span class="text-sm font-black text-gray-900">#{{ $order->numero_commande }}</span>
+                                <span class="text-xs sm:text-sm font-black text-gray-900">#{{ $order->numero_commande }}</span>
                                 @if($order->date_commande->isToday())
-                                    <span class="px-2 py-0.5 bg-red-600 text-white text-[8px] font-black uppercase tracking-tighter rounded-full">Aujourd'hui</span>
+                                    <span class="hidden sm:inline-block px-2 py-0.5 bg-red-600 text-white text-[8px] font-black uppercase tracking-tighter rounded-full">Aujourd'hui</span>
                                 @endif
                             </div>
-                            <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">{{ $order->date_commande->format('d M, H:i') }}</p>
+                            <p class="text-[9px] sm:text-[10px] text-gray-400 mt-1 uppercase font-bold">{{ $order->date_commande->format('d M, H:i') }}</p>
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($order->client->name ?? 'User') }}&background=random" class="w-8 h-8 rounded-full">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-900">{{ $order->client->name ?? 'Client Inconnu' }}</p>
-                                    <div class="flex items-center gap-2 mt-0.5">
-                                        <p class="text-[10px] text-gray-500">{{ $order->type_recuperation == 'livraison' ? 'Livraison' : 'Emporter' }}</p>
-                                        <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">{{ $order->lignes->sum('quantite') }} Articles</p>
+                        <td class="px-4 sm:px-6 py-4">
+                            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($order->client->name ?? 'User') }}&background=random" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full shrink-0">
+                                <div class="min-w-0">
+                                    <p class="text-xs sm:text-sm font-bold text-gray-900 truncate max-w-[80px] sm:max-w-none">{{ $order->client->name ?? 'Client' }}</p>
+                                    <div class="flex items-center gap-1 sm:gap-2 mt-0.5">
+                                        <p class="text-[8px] sm:text-[10px] text-gray-500 hidden xs:block">{{ $order->type_recuperation == 'livraison' ? 'Liv' : 'Emp' }}</p>
+                                        <span class="hidden xs:block w-1 h-1 bg-gray-300 rounded-full"></span>
+                                        <p class="text-[8px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-tighter">{{ $order->lignes->sum('quantite') }} Art.</p>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-bold text-gray-900">{{ $order->vendeur->nom_commercial ?? 'Boutique Inconnue' }}</p>
+                        <td class="hidden lg:table-cell px-6 py-4">
+                            <p class="text-sm font-bold text-gray-900">{{ $order->vendeur->nom_commercial ?? 'Boutique' }}</p>
                             <p class="text-[10px] text-gray-500">{{ $order->vendeur->telephone_commercial ?? 'N/A' }}</p>
                         </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-black text-gray-900">{{ number_format($order->montant_total, 0, ',', ' ') }} F</p>
-                            <p class="text-[10px] text-gray-400 mt-0.5">{{ $order->mode_paiement_prevu }}</p>
+                        <td class="px-4 sm:px-6 py-4">
+                            <p class="text-xs sm:text-sm font-black text-gray-900">{{ number_format($order->montant_total, 0, ',', ' ') }} F</p>
+                            <p class="hidden sm:block text-[10px] text-gray-400 mt-0.5">{{ $order->mode_paiement_prevu }}</p>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="hidden sm:table-cell px-6 py-4">
                             @php
                                 $statusClasses = [
                                     'en_attente' => 'bg-orange-50 text-orange-600 border-orange-100',
@@ -166,18 +166,18 @@
                                     'annule' => 'bg-red-50 text-red-600 border-red-100',
                                 ];
                                 $statusLabels = [
-                                    'en_attente' => 'En attente',
+                                    'en_attente' => 'Reçue',
                                     'en_preparation' => 'Préparation',
-                                    'pret' => 'Prêt',
-                                    'termine' => 'Livré',
+                                    'pret' => 'Prête',
+                                    'termine' => 'Livre',
                                     'annule' => 'Annulé',
                                 ];
                             @endphp
-                            <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-full border {{ $statusClasses[$order->statut] ?? 'bg-gray-50 text-gray-600' }}">
+                            <span class="px-2 sm:px-3 py-1 text-[8px] sm:text-[10px] font-black uppercase tracking-wider rounded-full border {{ $statusClasses[$order->statut] ?? 'bg-gray-50 text-gray-600' }}">
                                 {{ $statusLabels[$order->statut] ?? $order->statut }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-4 sm:px-6 py-4 text-right">
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('admin.orders.show', $order->id_commande) }}" class="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>

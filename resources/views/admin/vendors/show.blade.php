@@ -8,30 +8,31 @@
 }">
     <!-- Header with Back Button and Actions -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="flex items-center gap-6">
-            <a href="{{ route('admin.vendors.index') }}" class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-100 transition-all shadow-sm">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+        <div class="flex items-center gap-4 sm:gap-6">
+            <a href="{{ route('admin.vendors.index') }}" class="w-10 h-10 sm:w-12 sm:h-12 bg-white border border-gray-100 rounded-xl sm:rounded-2xl flex items-center justify-center text-gray-400 hover:text-red-600 hover:border-red-100 transition-all shadow-sm shrink-0">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
             </a>
             <div>
-                <h1 class="text-3xl font-black text-gray-900 tracking-tight">{{ $vendeur->nom_commercial }}</h1>
-                <div class="flex items-center gap-3 mt-1">
+                <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight leading-tight">{{ $vendeur->nom_commercial }}</h1>
+                <div class="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
                     <span class="text-[10px] font-black uppercase text-gray-400 tracking-widest">ID: #{{ $vendeur->id_vendeur }}</span>
-                    <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                    <span class="hidden sm:inline w-1 h-1 bg-gray-300 rounded-full"></span>
                     <span class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Inscrit le {{ optional($vendeur->date_inscription)->format('d/m/Y') }}</span>
                 </div>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.vendors.edit', $vendeur->id_vendeur) }}" class="px-6 py-3 bg-white border border-gray-100 rounded-2xl text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 transition shadow-sm flex items-center gap-2">
+            <a href="{{ route('admin.vendors.edit', $vendeur->id_vendeur) }}" class="flex-1 sm:flex-none px-4 sm:px-6 py-3 bg-white border border-gray-100 rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 transition shadow-sm flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                Modifier le profil
+                <span class="hidden sm:inline">Modifier le profil</span>
+                <span class="sm:hidden">Modifier</span>
             </a>
             @if($vendeur->statut_verification === 'en_cours')
-                <form action="{{ route('admin.vendors.approve', $vendeur->id_vendeur) }}" method="POST">
+                <form action="{{ route('admin.vendors.approve', $vendeur->id_vendeur) }}" method="POST" class="flex-1 sm:flex-none">
                     @csrf
-                    <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-green-700 transition shadow-lg shadow-green-100 flex items-center gap-2">
+                    <button type="submit" class="w-full px-4 sm:px-6 py-3 bg-green-600 text-white rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest hover:bg-green-700 transition shadow-lg shadow-green-100 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                        Approuver le vendeur
+                        Approuver
                     </button>
                 </form>
             @endif
@@ -39,36 +40,36 @@
     </div>
 
     <!-- Quick Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 sm:w-20 sm:h-20 bg-red-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
             <div class="relative z-10">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Chiffre d'affaires</p>
-                <h3 class="text-3xl font-black text-gray-900">{{ number_format($totalRevenue, 0, ',', ' ') }} <span class="text-xs">{{ $currency }}</span></h3>
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Chiffre d'affaires</p>
+                <h3 class="text-2xl sm:text-3xl font-black text-gray-900">{{ number_format($totalRevenue, 0, ',', ' ') }} <span class="text-xs">{{ $currency }}</span></h3>
             </div>
         </div>
-        <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 sm:w-20 sm:h-20 bg-blue-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
             <div class="relative z-10">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Commandes totales</p>
-                <h3 class="text-3xl font-black text-blue-600">{{ $vendeur->commandes_count }}</h3>
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Commandes totales</p>
+                <h3 class="text-2xl sm:text-3xl font-black text-blue-600">{{ $vendeur->commandes_count }}</h3>
             </div>
         </div>
-        <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-yellow-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 sm:w-20 sm:h-20 bg-yellow-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
             <div class="relative z-10">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Note moyenne</p>
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Note moyenne</p>
                 <div class="flex items-center gap-2">
-                    <h3 class="text-3xl font-black text-yellow-500">{{ number_format($vendeur->note_moyenne, 1) }}</h3>
-                    <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                    <h3 class="text-2xl sm:text-3xl font-black text-yellow-500">{{ number_format($vendeur->note_moyenne, 1) }}</h3>
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
                 </div>
             </div>
         </div>
-        <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div class="absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 sm:w-20 sm:h-20 bg-green-50 rounded-full scale-100 group-hover:scale-110 transition duration-700"></div>
             <div class="relative z-10">
-                <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Portefeuille actuel</p>
-                <h3 class="text-3xl font-black text-green-600">{{ number_format($vendeur->wallet_balance, 0, ',', ' ') }} <span class="text-xs">{{ $currency }}</span></h3>
+                <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Portefeuille actuel</p>
+                <h3 class="text-2xl sm:text-3xl font-black text-green-600">{{ number_format($vendeur->wallet_balance, 0, ',', ' ') }} <span class="text-xs">{{ $currency }}</span></h3>
             </div>
         </div>
     </div>
@@ -77,26 +78,27 @@
     <div class="flex flex-col lg:flex-row gap-10">
         <!-- Sidebar Navigation -->
         <div class="lg:w-80 space-y-4">
-            <nav class="bg-white p-4 rounded-[2rem] border border-gray-100 shadow-sm space-y-1">
-                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <div class="lg:w-80">
+            <nav class="bg-white p-2 sm:p-4 lg:rounded-[2rem] border-b lg:border border-gray-100 shadow-sm flex lg:flex-col overflow-x-auto lg:overflow-visible no-scrollbar sticky top-0 lg:static z-20">
+                <button @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="whitespace-nowrap flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                     Vue d'ensemble
                 </button>
-                <button @click="activeTab = 'products'" :class="activeTab === 'products' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <button @click="activeTab = 'products'" :class="activeTab === 'products' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="whitespace-nowrap flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     Articles ({{ $vendeur->plats_count }})
                 </button>
-                <button @click="activeTab = 'orders'" :class="activeTab === 'orders' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    Commandes Récentes
+                <button @click="activeTab = 'orders'" :class="activeTab === 'orders' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="whitespace-nowrap flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Commandes
                 </button>
-                <button @click="activeTab = 'reviews'" :class="activeTab === 'reviews' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                    Avis clients ({{ $vendeur->avis_evaluations_count }})
+                <button @click="activeTab = 'reviews'" :class="activeTab === 'reviews' ? 'bg-red-50 text-red-600' : 'text-gray-500 hover:bg-gray-50'" class="whitespace-nowrap flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black uppercase text-[9px] sm:text-[10px] tracking-widest transition-all">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                    Avis ({{ $vendeur->avis_evaluations_count }})
                 </button>
             </nav>
 
-            <div class="bg-gray-900 p-8 rounded-[2.5rem] text-white space-y-6">
+            <div class="hidden lg:block bg-gray-900 p-8 rounded-[2.5rem] mt-6 text-white space-y-6">
                 <h4 class="text-[10px] font-black uppercase tracking-widest text-gray-500">Documents de vérification</h4>
                 <div class="space-y-4">
                     @if($vendeur->document_identite)
@@ -139,21 +141,21 @@
             <div x-show="activeTab === 'overview'" class="space-y-10 animate-fade-in">
                 <!-- Info Section -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
+                    <div class="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
                         <div>
                             <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Contact & Support</h3>
                             <div class="space-y-6">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
+                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <div>
+                                    <div class="min-w-0">
                                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email Responsable</p>
-                                        <p class="text-sm font-bold text-gray-900">{{ $vendeur->user->email ?? 'N/A' }}</p>
+                                        <p class="text-sm font-bold text-gray-900 truncate">{{ $vendeur->user->email ?? 'N/A' }}</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
+                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 5z"/></svg>
                                     </div>
                                     <div>
@@ -162,12 +164,12 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400">
+                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 shrink-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     </div>
-                                    <div>
+                                    <div class="min-w-0">
                                         <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Localisation</p>
-                                        <p class="text-sm font-bold text-gray-900">{{ $vendeur->adresse_complete }}</p>
+                                        <p class="text-sm font-bold text-gray-900 break-words">{{ $vendeur->adresse_complete }}</p>
                                         <p class="text-[11px] font-medium text-gray-400">{{ $vendeur->zone->nom ?? 'Hors zone' }}</p>
                                     </div>
                                 </div>
@@ -175,7 +177,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
+                    <div class="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8">
                         <div>
                             <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Profil Commercial</h3>
                             <div class="space-y-6">
@@ -197,10 +199,10 @@
                 </div>
 
                 <!-- Business Hours Card -->
-                <div class="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden relative group">
+                <div class="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden relative group">
                     <div class="absolute -right-16 -top-16 w-48 h-48 bg-gray-50 rounded-full scale-0 group-hover:scale-100 transition duration-700"></div>
                     
-                    <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10">
+                    <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8 mb-8 sm:mb-10">
                         <div>
                             <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest">Horaires d'ouverture</h3>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Disponibilité hebdomadaire du partenaire</p>
@@ -226,7 +228,7 @@
                             }
                         @endphp
 
-                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
+                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl w-fit">
                             <div class="w-10 h-10 {{ $isOpen ? 'bg-green-500' : 'bg-red-500' }} rounded-xl flex items-center justify-center text-white shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
@@ -237,12 +239,12 @@
                         </div>
                     </div>
 
-                    <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                    <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
                         @php
                             $jours = [
-                                1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 
-                                4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi', 
-                                0 => 'Dimanche'
+                                1 => 'Lun', 2 => 'Mar', 3 => 'Mer', 
+                                4 => 'Jeu', 5 => 'Ven', 6 => 'Sam', 
+                                0 => 'Dim'
                             ];
                         @endphp
                         @foreach($jours as $id => $nom)
@@ -253,17 +255,17 @@
                                 }
                                 $isCurrent = ($currentDay == $id);
                             @endphp
-                            <div class="p-5 {{ $isCurrent ? 'bg-red-600 text-white shadow-xl shadow-red-100 scale-105' : 'bg-gray-50 text-gray-900' }} rounded-3xl text-center transition-all duration-500 relative overflow-hidden group/day">
+                            <div class="p-4 sm:p-5 {{ $isCurrent ? 'bg-red-600 text-white shadow-xl shadow-red-100 scale-105' : 'bg-gray-50 text-gray-900' }} rounded-2xl sm:rounded-3xl text-center transition-all duration-500 relative overflow-hidden group/day">
                                 @if($isCurrent)
                                     <div class="absolute top-2 right-2 w-1.5 h-1.5 bg-white rounded-full animate-ping"></div>
                                 @endif
-                                <p class="text-[10px] font-black {{ $isCurrent ? 'text-white/60' : 'text-gray-400' }} uppercase tracking-widest mb-2">{{ $nom }}</p>
+                                <p class="text-[9px] sm:text-[10px] font-black {{ $isCurrent ? 'text-white/60' : 'text-gray-400' }} uppercase tracking-widest mb-2">{{ $nom }}</p>
                                 @if($dayData && !$dayData->ferme)
-                                    <p class="text-sm font-black">{{ substr($dayData->heure_ouverture, 0, 5) }}</p>
+                                    <p class="text-xs sm:text-sm font-black">{{ substr($dayData->heure_ouverture, 0, 5) }}</p>
                                     <div class="w-4 h-[1px] {{ $isCurrent ? 'bg-white/30' : 'bg-gray-200' }} mx-auto my-1"></div>
-                                    <p class="text-sm font-black">{{ substr($dayData->heure_fermeture, 0, 5) }}</p>
+                                    <p class="text-xs sm:text-sm font-black">{{ substr($dayData->heure_fermeture, 0, 5) }}</p>
                                 @else
-                                    <p class="text-[10px] font-black uppercase tracking-widest mt-3 opacity-50">Fermé</p>
+                                    <p class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest mt-3 opacity-50">Fermé</p>
                                 @endif
                             </div>
                         @endforeach
@@ -327,27 +329,27 @@
                         <table class="w-full text-left">
                             <thead class="bg-gray-50/50">
                                 <tr>
-                                    <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">N° COMMANDE</th>
-                                    <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Client</th>
-                                    <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Montant</th>
-                                    <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Statut</th>
-                                    <th class="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Date</th>
+                                    <th class="px-4 sm:px-8 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">N° COMMANDE</th>
+                                    <th class="px-4 sm:px-8 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Client</th>
+                                    <th class="hidden sm:table-cell px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Montant</th>
+                                    <th class="px-4 sm:px-8 py-4 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">Statut</th>
+                                    <th class="hidden md:table-cell px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Date</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-50">
                                 @foreach($recentOrders as $order)
-                                    <tr class="hover:bg-gray-50/30 transition">
-                                        <td class="px-8 py-6">
-                                            <span class="text-xs font-black text-gray-900">{{ $order->numero_commande }}</span>
+                                    <tr class="hover:bg-gray-50/30 transition border-b border-gray-50 sm:border-none">
+                                        <td class="px-4 sm:px-8 py-4 sm:py-6">
+                                            <span class="text-xs font-black text-gray-900">#{{ $order->numero_commande }}</span>
                                         </td>
-                                        <td class="px-8 py-6">
-                                            <p class="text-xs font-bold text-gray-900">{{ $order->client->name ?? 'Client Inconnu' }}</p>
-                                            <p class="text-[10px] text-gray-400 font-medium uppercase tracking-tight">{{ $order->client->phone ?? 'N/A' }}</p>
+                                        <td class="px-4 sm:px-8 py-4 sm:py-6">
+                                            <p class="text-xs font-bold text-gray-900 truncate max-w-[100px] sm:max-w-none">{{ $order->client->name ?? 'Client' }}</p>
+                                            <p class="text-[9px] sm:text-[10px] text-gray-400 font-medium uppercase tracking-tight">{{ $order->client->phone ?? 'N/A' }}</p>
                                         </td>
-                                        <td class="px-8 py-6">
+                                        <td class="hidden sm:table-cell px-8 py-6">
                                             <p class="text-sm font-black text-gray-900">{{ number_format($order->montant_total, 0, ',', ' ') }} {{ $currency }}</p>
                                         </td>
-                                        <td class="px-8 py-6">
+                                        <td class="px-4 sm:px-8 py-4 sm:py-6">
                                             @php
                                                 $statutColors = [
                                                     'en_attente' => 'bg-yellow-50 text-yellow-600 border-yellow-100',
@@ -359,11 +361,11 @@
                                                     'annulee' => 'bg-red-50 text-red-600 border-red-100',
                                                 ];
                                             @endphp
-                                            <span class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border {{ $statutColors[$order->statut] ?? 'bg-gray-50 text-gray-400 border-gray-100' }}">
+                                            <span class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-widest border {{ $statutColors[$order->statut] ?? 'bg-gray-50 text-gray-400 border-gray-100' }}">
                                                 {{ str_replace('_', ' ', $order->statut) }}
                                             </span>
                                         </td>
-                                        <td class="px-8 py-6 text-right">
+                                        <td class="hidden md:table-cell px-8 py-6 text-right">
                                             <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">{{ $order->date_commande->diffForHumans() }}</p>
                                         </td>
                                     </tr>
@@ -382,29 +384,29 @@
 
             <!-- Reviews Tab -->
             <div x-show="activeTab === 'reviews'" class="space-y-6 animate-fade-in" style="display: none;">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     @forelse($recentReviews as $review)
-                        <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-4">
+                        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 shadow-sm space-y-4">
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-red-600 font-black text-sm">
+                                <div class="flex items-center gap-3 sm:gap-4">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-50 rounded-lg sm:rounded-xl flex items-center justify-center text-red-600 font-black text-xs sm:text-sm shrink-0">
                                         {{ substr($review->client->name ?? 'C', 0, 1) }}
                                     </div>
-                                    <div>
-                                        <p class="text-sm font-black text-gray-900">{{ $review->client->name ?? 'Anonyme' }}</p>
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{{ $review->date_publication->format('d/m/Y') }}</p>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-black text-gray-900 truncate">{{ $review->client->name ?? 'Anonyme' }}</p>
+                                        <p class="text-[9px] sm:text-[10px] text-gray-400 font-bold uppercase tracking-widest">{{ $review->date_publication->format('d/m/Y') }}</p>
                                     </div>
                                 </div>
-                                <div class="flex gap-1 text-yellow-400">
+                                <div class="flex gap-0.5 sm:gap-1 text-yellow-400 shrink-0">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <svg class="w-3 h-3 {{ $i <= $review->note ? 'fill-current' : 'text-gray-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                                        <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 {{ $i <= $review->note ? 'fill-current' : 'text-gray-200 fill-current' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
                                     @endfor
                                 </div>
                             </div>
                             <p class="text-sm font-medium text-gray-600 leading-relaxed">"{{ $review->commentaire }}"</p>
                         </div>
                     @empty
-                        <div class="col-span-full py-20 bg-white rounded-[2.5rem] border-2 border-dashed border-gray-100 text-center">
+                        <div class="col-span-full py-12 sm:py-20 bg-white rounded-[2rem] sm:rounded-[2.5rem] border-2 border-dashed border-gray-100 text-center">
                             <p class="text-gray-400 font-medium italic">Aucun avis client pour le moment.</p>
                         </div>
                     @endforelse

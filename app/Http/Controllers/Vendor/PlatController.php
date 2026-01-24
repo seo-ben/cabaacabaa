@@ -38,7 +38,8 @@ class PlatController extends Controller
         $categories = $vendeur->categories;
 
         if ($categories->isEmpty()) {
-            return redirect()->route('vendeur.dashboard')->with('warning', 'Veuillez d\'abord configurer vos spécialités (menu) dans les paramètres de votre boutique.');
+            return redirect()->route('vendeur.slug.settings.index', ['vendor_slug' => $vendeur->slug])
+                ->with('warning', 'Avant d\'ajouter des articles, veuillez définir les catégories (spécialités) de votre menu ici.');
         }
 
         return view('vendeur.plats.create', compact('categories'));
@@ -101,13 +102,13 @@ class PlatController extends Controller
             }
         }
 
-        return redirect()->route('vendeur.plats.index')->with('success', 'Plat ajouté avec succès !');
+        return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $vendeur->slug])->with('success', 'Plat ajouté avec succès !');
     }
 
     /**
      * Formulaire de modification d'un plat.
      */
-    public function edit($id)
+    public function edit($vendor_slug, $id)
     {
         $vendeur = Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
@@ -119,7 +120,7 @@ class PlatController extends Controller
     /**
      * Mettre à jour un plat existant.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $vendor_slug, $id)
     {
         $vendeur = Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
@@ -149,19 +150,19 @@ class PlatController extends Controller
 
         $plat->save();
 
-        return redirect()->route('vendeur.plats.index')->with('success', 'Plat mis à jour !');
+        return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $vendeur->slug])->with('success', 'Plat mis à jour !');
     }
 
     /**
      * Supprimer un plat.
      */
-    public function destroy($id)
+    public function destroy($vendor_slug, $id)
     {
         $vendeur = Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $plat->delete();
 
-        return redirect()->route('vendeur.plats.index')->with('success', 'Plat supprimé.');
+        return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $vendeur->slug])->with('success', 'Plat supprimé.');
     }
 }

@@ -219,6 +219,21 @@ class VendorController extends Controller
             'actif' => true,
         ]);
 
+        // AUTO-SYNC: Add the vendor's main category to their "specialties" (categories_plats)
+        if ($vendeur->id_category_vendeur) {
+            $vendorCategory = \App\Models\VendorCategory::find($vendeur->id_category_vendeur);
+            if ($vendorCategory) {
+                // Find or create a matching CategoryPlat
+                $platCategory = \App\Models\CategoryPlat::firstOrCreate(
+                    ['nom_categorie' => $vendorCategory->name],
+                    ['actif' => true, 'ordre_affichage' => 10]
+                );
+
+                // Attach to vendor
+                $vendeur->categories()->syncWithoutDetaching([$platCategory->id_categorie]);
+            }
+        }
+
         // Mise à jour du rôle utilisateur si nécessaire
         if ($vendeur->user && $vendeur->user->role !== 'admin') {
             $vendeur->user->update(['role' => 'vendeur']);
@@ -238,13 +253,15 @@ class VendorController extends Controller
         }
 
         // Send Approval Email
-        if ($vendeur->user) {
+        if ($vendeur->user && $vendeur->user->email) {
             try {
+                // Using send() directly can be slow. Using queue() is better but requires queue worker.
+                // For now, we wrap in try-catch to prevent timeouts from blocking the UI.
                 \Illuminate\Support\Facades\Mail::to($vendeur->user->email)->send(new \App\Mail\VendorApproved($vendeur));
-            } catch (\Throwable $e) {
-                // Log error or just continue, we don't want to break the approval flow
+            } catch (\Exception $e) {
+                // Log error but continue execution
                 \Illuminate\Support\Facades\Log::error('Failed to send vendor approval email: ' . $e->getMessage());
-                return back()->with('success', 'Vendeur approuvé et notification envoyée, mais l\'envoi de l\'email a échoué. Vérifiez les logs.');
+                return back()->with('success', 'Vendeur approuvé et notification envoyée, mais l\'envoi de l\'email a échoué. (Timeout ou erreur SMTP)');
             }
         }
 

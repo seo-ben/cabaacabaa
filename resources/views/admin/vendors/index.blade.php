@@ -9,10 +9,10 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div class="space-y-2">
-                <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 via-pink-900 to-rose-900 bg-clip-text text-transparent">
+                <h1 class="text-3xl md:text-5xl font-bold bg-gradient-to-r from-purple-900 via-pink-900 to-rose-900 bg-clip-text text-transparent">
                     Gestion des Vendeurs
                 </h1>
-                <p class="text-slate-600 text-lg">Contrôlez et validez les partenaires de la plateforme</p>
+                <p class="text-slate-600 text-sm md:text-lg">Contrôlez et validez les partenaires de la plateforme</p>
             </div>
             
             <button @click="showAddModal = true" class="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
@@ -176,11 +176,11 @@
                     <table class="w-full">
                         <thead>
                             <tr class="bg-gradient-to-r from-slate-50 to-purple-50 border-b border-slate-200">
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Boutique</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Type & Zone</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Statut</th>
-                                <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">État</th>
-                                <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-600">Actions</th>
+                                <th class="px-4 md:px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Boutique</th>
+                                <th class="hidden sm:table-cell px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Type & Zone</th>
+                                <th class="px-4 md:px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">Statut</th>
+                                <th class="hidden lg:table-cell px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-600">État</th>
+                                <th class="px-4 md:px-6 py-4 text-right text-xs font-bold uppercase tracking-wider text-slate-600">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
@@ -208,7 +208,7 @@
                                     </td>
 
                                     <!-- Type & Zone -->
-                                    <td class="px-6 py-5">
+                                    <td class="hidden sm:table-cell px-6 py-5">
                                         <div class="space-y-1">
                                             <span class="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">
                                                 {{ $v->category ? $v->category->name : ($v->type_vendeur ?? 'Non défini') }}
@@ -266,7 +266,7 @@
                                     </td>
 
                                     <!-- Active Status -->
-                                    <td class="px-6 py-5">
+                                    <td class="hidden lg:table-cell px-6 py-5">
                                         @if($v->actif)
                                             <div class="inline-flex items-center gap-2 px-3 py-2 bg-emerald-50 rounded-lg">
                                                 <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>

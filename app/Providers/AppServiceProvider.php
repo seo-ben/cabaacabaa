@@ -74,5 +74,33 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             view()->share('currency', 'XOF');
         }
+
+        // View Composer for Vendor Layout stats
+        view()->composer('layouts.vendor', function ($view) {
+            $user = auth()->user();
+            if ($user) {
+                // Determine which vendor we are looking at
+                $vendeur = request()->get('current_vendor') ?? ($user->vendeur ?? null);
+                
+                if ($vendeur) {
+                    $activeOrdersCount = \App\Models\Commande::where('id_vendeur', $vendeur->id_vendeur)
+                        ->whereIn('statut', ['en_attente', 'en_preparation', 'pret'])
+                        ->count();
+                        
+                    $unreadMessagesCount = \App\Models\OrderMessage::whereHas('commande', function($q) use ($vendeur) {
+                            $q->where('id_vendeur', $vendeur->id_vendeur);
+                        })
+                        ->where('is_read', false)
+                        ->where(function($q) use ($user) {
+                            $q->where('id_user', '!=', $user->id_user)
+                              ->orWhereNull('id_user');
+                        })
+                        ->count();
+                        
+                    $view->with('activeOrders', $activeOrdersCount);
+                    $view->with('unreadChatMessagesCount', $unreadMessagesCount);
+                }
+            }
+        });
     }
 }

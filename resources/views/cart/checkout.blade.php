@@ -140,7 +140,7 @@
                                     <span class="text-[10px] font-black uppercase tracking-widest">Articles ({{ count($cart) }})</span>
                                     <span class="text-sm font-bold">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
                                 </div>
-                                <div id="delivery-fee-line" class="flex justify-between text-white/60 hidden">
+                                <div id="delivery-fee-line" class="hidden justify-between text-white/60">
                                     <span class="text-[10px] font-black uppercase tracking-widest">Livraison</span>
                                     <span class="text-sm font-bold"><span id="summary-fee">0</span> FCFA</span>
                                 </div>
@@ -230,7 +230,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.out_of_range) {
-                alert("Désolé, votre adresse est trop éloignée (" + data.distance + " km) pour une livraison. La distance maximale est de " + data.max_distance + " km.");
+                window.showToast("Désolé, votre adresse est trop éloignée (" + data.distance + " km) pour une livraison. La distance maximale est de " + data.max_distance + " km.", 'error');
                 document.querySelector('input[name="type_recuperation"][value="emporter"]').checked = true;
                 toggleDelivery(false);
                 return;

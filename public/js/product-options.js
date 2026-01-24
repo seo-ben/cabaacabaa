@@ -157,12 +157,32 @@ function productOptionsManager() {
                             window.showToast(data.success, 'success');
                         }
                     } else if (data.error) {
-                        alert(data.error);
+                        if (data.can_clear && confirm(data.error)) {
+                            // Logic to clear cart could be added here or via a separate call
+                            fetch('/panier/vider', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }).then(() => this.confirmAddToCart()); // Retry after clearing
+                            return;
+                        }
+
+                        if (window.showToast) {
+                            window.showToast(data.error, 'error');
+                        } else {
+                            alert(data.error);
+                        }
                     }
                 })
                 .catch(error => {
                     console.error('Error adding to cart:', error);
-                    alert('Une erreur est survenue. Veuillez réessayer.');
+                    if (window.showToast) {
+                        window.showToast('Une erreur est survenue. Veuillez réessayer.', 'error');
+                    } else {
+                        alert('Une erreur est survenue. Veuillez réessayer.');
+                    }
                 });
         },
 

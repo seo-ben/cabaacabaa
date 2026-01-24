@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterController;
@@ -13,7 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 // Home routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
-Route::get('/plats', [HomeController::class, 'explorePlats'])->name('explore.plats');
+Route::get('/produits', [HomeController::class, 'explorePlats'])->name('explore.plats');
 Route::get('/vendor/{id}-{slug?}', [HomeController::class, 'vendor'])->name('vendor.show');
 
 // Static pages
@@ -69,11 +70,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::put('/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password.update');
 
-    // Order Chat
-    Route::get('/api/orders/{orderId}/messages', [\App\Http\Controllers\OrderChatController::class, 'getMessages'])->name('orders.chat.messages');
-    Route::post('/api/orders/{orderId}/messages', [\App\Http\Controllers\OrderChatController::class, 'sendMessage'])->name('orders.chat.send');
-    Route::get('/api/orders/{orderId}/messages/unread', [\App\Http\Controllers\OrderChatController::class, 'getUnreadCount'])->name('orders.chat.unread');
 });
+
+// Order Chat (Authorization handled inside controller to support guests)
+Route::get('/api/orders/{orderId}/messages', [\App\Http\Controllers\OrderChatController::class, 'getMessages'])->name('orders.chat.messages');
+Route::post('/api/orders/{orderId}/messages', [\App\Http\Controllers\OrderChatController::class, 'sendMessage'])->name('orders.chat.send');
+Route::get('/api/orders/{orderId}/messages/unread', [\App\Http\Controllers\OrderChatController::class, 'getUnreadCount'])->name('orders.chat.unread');
 
 // Vendor application
 Route::middleware('auth')->group(function () {
@@ -131,28 +133,33 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
 // Legacy Vendeur routes (backward compatibility - redirects to slug-based URLs)
 Route::prefix('vendeur')->middleware(['auth', \App\Http\Middleware\EnsureUserIsVendeur::class])->group(function () {
     Route::get('/dashboard', function () {
-        $slug = auth()->user()->vendeur->slug;
-        return redirect()->route('vendeur.slug.dashboard', ['vendor_slug' => $slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.dashboard', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.dashboard');
 
     Route::get('/plats', function () {
-        return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => auth()->user()->vendeur->slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.plats.index');
 
     Route::get('/commandes', function () {
-        return redirect()->route('vendeur.slug.orders.index', ['vendor_slug' => auth()->user()->vendeur->slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.orders.index', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.orders.index');
 
     Route::get('/parametres', function () {
-        return redirect()->route('vendeur.slug.settings.index', ['vendor_slug' => auth()->user()->vendeur->slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.settings.index', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.settings.index');
 
     Route::get('/payouts', function () {
-        return redirect()->route('vendeur.slug.payouts.index', ['vendor_slug' => auth()->user()->vendeur->slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.payouts.index', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.payouts.index');
 
     Route::get('/coupons', function () {
-        return redirect()->route('vendeur.slug.coupons.index', ['vendor_slug' => auth()->user()->vendeur->slug]);
+        $user = Auth::user();
+        return redirect()->route('vendeur.slug.coupons.index', ['vendor_slug' => $user->vendeur->slug]);
     })->name('vendeur.coupons.index');
 
     // Keep POST/PATCH/DELETE routes for forms that still use old routes

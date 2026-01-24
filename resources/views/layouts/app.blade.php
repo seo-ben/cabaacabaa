@@ -109,20 +109,28 @@
         },
         mobileMenuOpen: false,
         cartCount: {{ session('cart') ? count(session('cart')) : 0 }},
-        showToast: false,
-        toastMessage: '',
-        toastType: 'success',
+        showModal: false,
+        modalTitle: '',
+        modalMessage: '',
+        modalType: 'success', // success, error, info
         notifications: [],
         unreadCount: 0,
         
         init() {
-
-            window.showToast = (message, type = 'success') => {
-                this.toastMessage = message;
-                this.toastType = type;
-                this.showToast = true;
-                setTimeout(() => this.showToast = false, type === 'success' ? 3000 : 5000);
+            window.showToast = (message, type = 'success', title = '') => {
+                this.modalMessage = message;
+                this.modalType = type;
+                this.modalTitle = title || (type === 'success' ? 'Succès' : (type === 'error' ? 'Erreur' : 'Information'));
+                this.showModal = true;
             };
+
+            // Session Messages
+            @if(session('success') || session('status'))
+                setTimeout(() => window.showToast('{{ session('success') ?? session('status') }}', 'success'), 500);
+            @endif
+            @if(session('error'))
+                setTimeout(() => window.showToast('{{ session('error') }}', 'error'), 500);
+            @endif
 
             window.addEventListener('cart-updated', (e) => {
                 this.cartCount = e.detail.count;
@@ -214,25 +222,61 @@
         }
       }">
 
-    <!-- Global Toast Notification -->
-    <div x-show="showToast" 
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 translate-y-4"
-         class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] min-w-[320px]"
+    <!-- Global Modal Alert -->
+    <div x-show="showModal" 
+         class="fixed inset-0 z-[100] overflow-y-auto" 
          x-cloak>
-        <div :class="toastType === 'success' ? 'bg-gray-900' : 'bg-red-600'" 
-             class="px-8 py-2 rounded-[2rem] shadow-2xl flex items-center gap-4 text-white">
-            <template x-if="toastType === 'success'">
-                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </template>
-            <template x-if="toastType === 'error'">
-                <svg class="w-6 h-6 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            </template>
-            <p class="text-xs font-black uppercase tracking-widest" x-text="toastMessage"></p>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Overlay -->
+            <div x-show="showModal" 
+                 x-transition:enter="ease-out duration-300" 
+                 x-transition:enter-start="opacity-0" 
+                 x-transition:enter-end="opacity-100" 
+                 x-transition:leave="ease-in duration-200" 
+                 x-transition:leave-start="opacity-100" 
+                 x-transition:leave-end="opacity-0" 
+                 class="fixed inset-0 transition-opacity bg-gray-900/60 backdrop-blur-sm" 
+                 @click="showModal = false"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+            <!-- Modal Body -->
+            <div x-show="showModal" 
+                 x-transition:enter="ease-out duration-300" 
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
+                 x-transition:leave="ease-in duration-200" 
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                 class="relative inline-block px-8 py-10 overflow-hidden text-center align-bottom transition-all transform bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl sm:my-8 sm:align-middle sm:max-w-md w-full border border-gray-100 dark:border-gray-800">
+                
+                <div class="flex flex-col items-center">
+                    <!-- Icon -->
+                    <div :class="{
+                        'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400': modalType === 'success',
+                        'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400': modalType === 'error',
+                        'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400': modalType === 'info'
+                    }" class="w-20 h-20 rounded-3xl flex items-center justify-center mb-8">
+                        <template x-if="modalType === 'success'">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </template>
+                        <template x-if="modalType === 'error'">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        </template>
+                        <template x-if="modalType === 'info'">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </template>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4 tracking-tight" x-text="modalTitle"></h3>
+                    <p class="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-loose mb-10" x-text="modalMessage"></p>
+
+                    <button @click="showModal = false" 
+                            class="w-full py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-black dark:hover:bg-gray-100 transition-all shadow-xl shadow-gray-200 dark:shadow-none">
+                        D'accord
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -269,19 +313,14 @@
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('explore') ? 'w-full' : '' }}"></span>
                         </a>
                         <a href="{{ route('explore.plats') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-red-600 transition-colors group">
-                            Plats
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('plats*') ? 'w-full' : '' }}"></span>
+                            Produits
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('produits*') ? 'w-full' : '' }}"></span>
                         </a>
                         <a href="{{ route('orders.track') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->routeIs('orders.track') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Suivre commande
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->routeIs('orders.track') ? 'w-full' : '' }}"></span>
                         </a>
-                        @auth
-                            <a href="{{ route('orders.index') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->routeIs('orders.index') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
-                                Mes commandes
-                                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->routeIs('orders.index') ? 'w-full' : '' }}"></span>
-                            </a>
-                        @endauth
+
                     </nav>
                 </div>
 
@@ -405,6 +444,9 @@
                                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
                                         Mon profil
                                     </a>
+                                    <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
+                                        Mes commandes
+                                    </a>
                                     <a href="{{ route('orders.track') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-xl transition-all">
                                         Suivre une commande
                                     </a>
@@ -446,28 +488,7 @@
 
     <!-- Main Content -->
     <main class="relative pb-24 lg:pb-0">
-        <!-- Floating Alerts (Premium Toast Look) -->
-        <div class="fixed top-24 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none">
-            @if(session('status') || session('success'))
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
-                     class="pointer-events-auto bg-green-950 text-green-300 p-5 rounded-[2rem] shadow-2xl border border-green-800 flex items-center gap-4 animate-bounce-short">
-                    <div class="w-10 h-10 bg-green-800 rounded-xl flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    </div>
-                    <span class="text-xs font-black uppercase tracking-widest leading-none">{{ session('status') ?? session('success') }}</span>
-                </div>
-            @endif
 
-            @if(session('error'))
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" 
-                     class="pointer-events-auto bg-red-950 text-red-300 p-5 rounded-[2rem] shadow-2xl border border-red-800 flex items-center gap-4">
-                    <div class="w-10 h-10 bg-red-800 rounded-xl flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </div>
-                    <span class="text-xs font-black uppercase tracking-widest leading-none">{{ session('error') }}</span>
-                </div>
-            @endif
-        </div>
 
         <div class="w-full">
             @yield('content')
@@ -604,5 +625,10 @@
     </nav>
 
     @yield('scripts')
+    
+    <!-- Google Maps API -->
+    @if(env('GOOGLE_MAPS_API_KEY'))
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places"></script>
+    @endif
 </body>
 </html>

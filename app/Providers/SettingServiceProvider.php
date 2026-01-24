@@ -27,20 +27,25 @@ class SettingServiceProvider extends ServiceProvider
             return;
         }
 
-        // Load all settings
-        $settings = AppSetting::all();
+        try {
+            // Load all settings
+            $settings = AppSetting::all();
 
-        foreach ($settings as $setting) {
-            // Mapping settings to config
-            switch ($setting->key) {
-                case 'site_name':
-                    Config::set('app.name', $setting->value);
-                    break;
-                case 'contact_email':
-                    Config::set('mail.from.address', $setting->value);
-                    break;
-                // Add more mappings here if needed
+            foreach ($settings as $setting) {
+                // Mapping settings to config
+                switch ($setting->key) {
+                    case 'site_name':
+                        Config::set('app.name', $setting->value);
+                        break;
+                    case 'contact_email':
+                        Config::set('mail.from.address', $setting->value);
+                        break;
+                    // Add more mappings here if needed
+                }
             }
+        } catch (\Exception $e) {
+            // In case of DB errors (like table not found or corrupted), we silently fail
+            // to allow the app to function with default config values.
         }
     }
 }

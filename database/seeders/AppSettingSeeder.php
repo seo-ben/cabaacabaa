@@ -45,9 +45,9 @@ class AppSettingSeeder extends Seeder
             ['key' => 'site_favicon_url', 'value' => null, 'label' => 'Favicon du site (URL)', 'group' => 'branding', 'type' => 'text'],
 
             // SEO
-            ['key' => 'meta_title', 'value' => 'CabaaCabaa - Votre plateforme de livraison préférée', 'label' => 'Titre Meta (SEO)', 'group' => 'seo', 'type' => 'text'],
-            ['key' => 'meta_description', 'value' => 'Découvrez les meilleurs restaurants et épiceries près de chez vous. Livraison rapide et fiable.', 'label' => 'Description Meta (SEO)', 'group' => 'seo', 'type' => 'textarea'],
-            ['key' => 'meta_keywords', 'value' => 'food, livraison, restaurant, épicerie, repas, rapide', 'label' => 'Mots-clés Meta', 'group' => 'seo', 'type' => 'text'],
+            ['key' => 'meta_title', 'value' => 'CabaaCabaa - Votre marketplace locale', 'label' => 'Titre Meta (SEO)', 'group' => 'seo', 'type' => 'text'],
+            ['key' => 'meta_description', 'value' => 'Découvrez les meilleurs commerces près de chez vous : restaurants, boutiques, épiceries et plus. Livraison, emporter ou sur place.', 'label' => 'Description Meta (SEO)', 'group' => 'seo', 'type' => 'textarea'],
+            ['key' => 'meta_keywords', 'value' => 'marketplace, commerce local, restaurant, boutique, épicerie, livraison, emporter, sur place', 'label' => 'Mots-clés Meta', 'group' => 'seo', 'type' => 'text'],
             ['key' => 'seo_google_analytics', 'value' => null, 'label' => 'Google Analytics ID', 'group' => 'seo', 'type' => 'text'],
 
             // Email Notifications

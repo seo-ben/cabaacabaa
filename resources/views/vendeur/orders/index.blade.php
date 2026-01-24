@@ -14,19 +14,19 @@
         </div>
         <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center border-l-4 border-l-orange-500">
             <span class="text-2xl font-black text-orange-600">{{ $stats['en_attente'] }}</span>
-            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Nouvelles</span>
+            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Reçue</span>
         </div>
         <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center border-l-4 border-l-blue-500">
             <span class="text-2xl font-black text-blue-600">{{ $stats['en_preparation'] }}</span>
-            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">En Cuisine</span>
+            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Préparation</span>
         </div>
         <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center border-l-4 border-l-orange-400">
             <span class="text-2xl font-black text-orange-400">{{ $stats['pret'] }}</span>
-            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Prêtes</span>
+            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Prête</span>
         </div>
         <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center border-l-4 border-l-green-500">
             <span class="text-2xl font-black text-green-600">{{ $stats['termine'] }}</span>
-            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Livrées</span>
+            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Livre</span>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
                class="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all {{ !$status ? 'bg-gray-900 text-white shadow-lg' : 'bg-gray-50 text-gray-400 hover:bg-gray-100' }}">
                Toutes
             </a>
-            @foreach(['en_attente' => 'Nouvelle', 'en_preparation' => 'Cuisine', 'pret' => 'Prête', 'termine' => 'Livrée', 'annule' => 'Annulée'] as $key => $label)
+            @foreach(['en_attente' => 'Reçue', 'en_preparation' => 'Préparation', 'pret' => 'Prête', 'termine' => 'Livre', 'annule' => 'Annulée'] as $key => $label)
                 <a href="{{ vendor_route('vendeur.slug.orders.index', ['status' => $key]) }}" 
                    class="px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all 
                    {{ $status === $key ? 'bg-orange-600 text-white shadow-lg' : 'bg-gray-50 text-gray-400 hover:bg-gray-100' }}">
@@ -108,16 +108,30 @@
                                 @elseif($order->statut == 'pret') bg-amber-50 text-amber-600 border-amber-100
                                 @elseif($order->statut == 'termine') bg-green-50 text-green-600 border-green-100
                                 @else bg-gray-50 text-gray-400 border-gray-100 @endif">
-                                {{ str_replace('_', ' ', $order->statut) }}
+                                @php
+                                    $statusLabels = [
+                                        'en_attente' => 'Reçue',
+                                        'en_preparation' => 'Préparation',
+                                        'pret' => 'Prête',
+                                        'termine' => 'Livre',
+                                        'annule' => 'Annulée'
+                                    ];
+                                @endphp
+                                {{ $statusLabels[$order->statut] ?? $order->statut }}
                             </span>
                         </td>
                         <td class="px-8 py-6 text-right">
                             <div class="inline-flex gap-2">
                                 <!-- Chat Button -->
                                 <button @click="$dispatch('open-chat-modal', { orderId: {{ $order->id_commande }} })" 
-                                        class="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white transition-all border border-orange-100" 
+                                        class="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white transition-all border border-orange-100 relative" 
                                         title="Discuter avec le client">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                    @if($order->unread_messages_count > 0)
+                                        <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-600 text-white text-[8px] font-black rounded-full flex items-center justify-center animate-pulse">
+                                            {{ $order->unread_messages_count }}
+                                        </span>
+                                    @endif
                                 </button>
 
                                 <!-- View Details Button -->
@@ -147,15 +161,15 @@
                                     @method('PATCH')
                                     
                                     @if($order->statut === 'en_attente')
-                                        <button type="submit" name="statut" value="en_preparation" class="p-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all shadow-sm" title="Accepter & Préparer">
+                                        <button type="submit" name="statut" value="en_preparation" class="p-2 bg-gray-900 text-white rounded-lg hover:bg-blue-600 transition-all shadow-sm" title="Préparation">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                         </button>
                                     @elseif($order->statut === 'en_preparation')
-                                        <button type="submit" name="statut" value="pret" class="p-2 bg-blue-600 text-white rounded-lg hover:bg-orange-500 transition-all shadow-sm" title="Prêt à récupérer">
+                                        <button type="submit" name="statut" value="pret" class="p-2 bg-blue-600 text-white rounded-lg hover:bg-orange-500 transition-all shadow-sm" title="Prête">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                                         </button>
                                     @elseif($order->statut === 'pret')
-                                        <button type="submit" name="statut" value="termine" class="p-2 bg-orange-500 text-white rounded-lg hover:bg-green-600 transition-all shadow-sm" title="Terminer / Livré">
+                                        <button type="submit" name="statut" value="termine" class="p-2 bg-orange-500 text-white rounded-lg hover:bg-green-600 transition-all shadow-sm" title="Livre">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>
                                         </button>
                                     @endif
@@ -339,7 +353,7 @@
          x-transition:enter-start="opacity-0" 
          x-transition:enter-end="opacity-100"
          class="fixed inset-0 bg-black/50 backdrop-blur-sm" 
-         @click="open = false"></div>
+         @click="open = false; orderId = null"></div>
     
     <!-- Modal Panel -->
     <div class="flex items-center justify-center min-h-screen p-4">
@@ -357,26 +371,22 @@
                             <h2 class="text-xl font-black text-gray-900">Discussion avec le client</h2>
                             <p class="text-xs font-bold text-gray-400 uppercase mt-1">Commande <span x-text="'#' + orderId"></span></p>
                         </div>
-                        <button @click="open = false" class="p-2 bg-white rounded-full hover:bg-gray-100 transition-all">
+                        <button @click="open = false; orderId = null" class="p-2 bg-white rounded-full hover:bg-gray-100 transition-all">
                             <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
 
-                    <!-- Chat Component -->
-                    <div class="flex-1 overflow-hidden">
-                        <div x-html="getChatComponent(orderId)"></div>
-                    </div>
+            <div x-show="orderId" class="flex-1 overflow-hidden">
+                <template x-if="orderId">
+                    @include('partials.order-chat', ['orderId' => 'orderId'])
+                </template>
+            </div>
                 </div>
             </template>
         </div>
     </div>
 </div>
 
-<script>
-function getChatComponent(orderId) {
-    return `@include('partials.order-chat', ['orderId' => '${orderId}'])`;
-}
-</script>
 
 <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }

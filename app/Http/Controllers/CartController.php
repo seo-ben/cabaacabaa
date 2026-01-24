@@ -143,7 +143,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => 'Plat ajouté au panier !',
                 'cart_count' => count($cart)
