@@ -1,488 +1,490 @@
 @extends('layouts.app')
 
-@section('title', 'Vendeurs Proches - Trouvez les restaurants autour de vous')
+@section('title', 'Vendeurs Proches - Localisez vos restaurants')
 
 @section('head')
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
+    /* Reset and base map styles */
+    #map-container {
+        position: relative;
+        height: calc(100vh - 80px); /* Ajusté pour le header standard */
+        width: 100%;
+        overflow: hidden;
+    }
+
     #map {
-        height: calc(100vh - 120px);
+        height: 100%;
         width: 100%;
-        border-radius: 16px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        z-index: 1;
     }
 
-    .vendor-popup {
-        min-width: 280px;
-    }
-
-    .vendor-popup-image {
+    /* Floating controls like Gozem/Uber */
+    .floating-ui {
+        position: absolute;
+        z-index: 1000;
+        pointer-events: none;
         width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-bottom: 12px;
+        padding: 16px;
     }
 
-    .vendor-popup-title {
-        font-size: 16px;
+    .top-ui {
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .bottom-ui {
+        bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        pointer-events: auto;
+    }
+
+    /* Search Radius Controls */
+    .radius-selector {
+        display: flex;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 4px;
+        border-radius: 12px;
+        pointer-events: auto;
+        overflow-x: auto;
+        max-width: calc(100vw - 32px);
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .radius-selector::-webkit-scrollbar {
+        display: none;
+    }
+
+    .radius-item {
+        padding: 8px 16px;
+        border-radius: 10px;
         font-weight: 800;
-        color: #1f2937;
-        margin-bottom: 6px;
+        font-size: 13px;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #4b5563;
     }
 
-    .vendor-popup-specialty {
-        font-size: 12px;
-        color: #f97316;
-        font-weight: 700;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .radius-item.active {
+        background: #f97316;
+        color: white;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
     }
 
-    .vendor-popup-distance {
-        font-size: 11px;
-        color: #6b7280;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-
-    .vendor-popup-rating {
+    /* Action Buttons */
+    .map-action-btn {
+        width: 50px;
+        height: 50px;
         display: flex;
         align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        color: #fbbf24;
-        margin-bottom: 12px;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #1f2937;
     }
 
-    .vendor-popup-btn {
-        display: inline-block;
-        width: 100%;
-        padding: 10px 16px;
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        color: white;
-        text-align: center;
-        border-radius: 8px;
-        font-weight: 700;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        text-decoration: none;
-        transition: all 0.3s;
+    .map-action-btn:active {
+        transform: scale(0.9);
     }
 
-    .vendor-popup-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
-    }
-
+    /* Vendor Popup Styling */
     .leaflet-popup-content-wrapper {
-        border-radius: 12px;
+        border-radius: 20px;
         padding: 0;
+        overflow: hidden;
     }
 
     .leaflet-popup-content {
-        margin: 16px;
+        margin: 0 !important;
+        width: 280px !important;
     }
 
-    /* Custom marker icon */
+    .popup-card {
+        padding: 0;
+    }
+
+    .popup-img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+    }
+
+    .popup-body {
+        padding: 15px;
+    }
+
+    .popup-title {
+        font-weight: 800;
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #111827;
+    }
+
+    .popup-meta {
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+
+    .popup-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: #f97316;
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 13px;
+        transition: background 0.3s;
+    }
+
+    /* Custom Markers */
     .custom-marker {
         background: #f97316;
         border: 3px solid white;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         font-size: 20px;
+        color: white;
     }
 
     .user-marker {
+        width: 24px;
+        height: 24px;
         background: #3b82f6;
-        border: 3px solid white;
+        border: 4px solid white;
         border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.2);
-        animation: pulse 2s infinite;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        position: relative;
     }
 
-    @keyframes pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.2);
-        }
-        50% {
-            box-shadow: 0 0 0 15px rgba(59, 130, 246, 0.1);
-        }
+    .user-marker::after {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.2);
+        animation: pulse-ring 2s infinite;
     }
 
-    .loading-overlay {
+    @keyframes pulse-ring {
+        0% { transform: scale(0.7); opacity: 0.8; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    /* Loading Overlay */
+    .loader-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.95);
+        inset: 0;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(4px);
+        z-index: 2000;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        z-index: 9999;
-        backdrop-filter: blur(10px);
     }
 
-    .loading-spinner {
-        width: 60px;
-        height: 60px;
-        border: 4px solid #f3f4f6;
-        border-top: 4px solid #f97316;
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f4f6;
+        border-top: 5px solid #f97316;
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        to { transform: rotate(360deg); }
     }
 
-    .stats-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-    }
-
-    .radius-control {
-        display: flex;
-        gap: 10px;
-        margin-top: 16px;
-    }
-
-    .radius-btn {
-        flex: 1;
-        padding: 10px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        background: white;
-        font-weight: 700;
-        font-size: 12px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .radius-btn.active {
-        border-color: #f97316;
-        background: #fff7ed;
-        color: #f97316;
-    }
-
-    .radius-btn:hover {
-        border-color: #f97316;
-    }
-
-    /* Tooltip styling */
-    .leaflet-tooltip-top:before {
-        border-top-color: #fff;
-    }
-    .vendor-label {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-    }
-    .custom-marker {
-        transition: transform 0.3s;
-    }
-    .custom-marker:hover {
-        transform: scale(1.2) rotate(10deg);
+    @media (max-width: 640px) {
+        #map-container {
+            height: calc(100vh - 60px);
+        }
+        .top-ui {
+            padding: 10px;
+        }
+        .radius-selector {
+            border-radius: 10px;
+        }
     }
 </style>
 @endsection
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 py-24 transition-colors duration-300">
-    <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
+<div id="map-container">
+    <!-- UI Layer -->
+    <div class="floating-ui top-ui">
+        <div class="radius-selector glass-card scrollbar-hide">
+            <div class="radius-item active" data-radius="0.5">500m</div>
+            <div class="radius-item" data-radius="1">1km</div>
+            <div class="radius-item" data-radius="2">2km</div>
+            <div class="radius-item" data-radius="5">5km</div>
+            <div class="radius-item" data-radius="10">10km</div>
+        </div>
         
-        <!-- Header -->
-        <div class="mb-10 text-center">
-            <h1 class="text-5xl font-black text-gray-900 dark:text-white tracking-tighter mb-4">
-                📍 Vendeurs Proches
-            </h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400 font-medium max-w-2xl mx-auto">
-                Découvrez les restaurants et boutiques autour de vous grâce à la géolocalisation
-            </p>
+        <div id="stats-pill" class="glass-card px-4 py-2 self-start hidden">
+            <span class="text-xs font-black uppercase tracking-widest text-gray-500">Vendeurs : </span>
+            <span id="vendor-count" class="text-sm font-bold text-orange-600">0</span>
         </div>
-
-        <!-- Stats Card -->
-        <div class="stats-card" id="stats-card" style="display: none;">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-black uppercase tracking-widest text-gray-400 mb-2">Vendeurs trouvés</p>
-                    <p class="text-4xl font-black text-gray-900 dark:text-white" id="vendor-count">0</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-sm font-black uppercase tracking-widest text-gray-400 mb-2">Rayon de recherche</p>
-                    <p class="text-2xl font-black text-orange-600" id="radius-display">200 m</p>
-                </div>
-            </div>
-
-            <!-- Radius Control -->
-            <div class="radius-control">
-                <button class="radius-btn active" data-radius="0.2" data-text="200 m">200 m</button>
-                <button class="radius-btn" data-radius="0.5" data-text="500 m">500 m</button>
-                <button class="radius-btn" data-radius="1" data-text="1 km">1 km</button>
-                <button class="radius-btn" data-radius="2" data-text="2 km">2 km</button>
-                <button class="radius-btn" data-radius="5" data-text="5 km">5 km</button>
-            </div>
-        </div>
-
-        <!-- Map Container -->
-        <div id="map"></div>
-
-        <!-- No Location Permission -->
-        <div id="no-location" class="text-center py-20 bg-white dark:bg-gray-900 rounded-2xl shadow-lg" style="display: none;">
-            <div class="max-w-md mx-auto">
-                <div class="text-6xl mb-6">📍</div>
-                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Géolocalisation requise</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">
-                    Veuillez autoriser l'accès à votre position pour voir les vendeurs proches de vous.
-                </p>
-                <button onclick="requestLocation()" class="px-8 py-4 bg-orange-600 text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-orange-700 transition-all shadow-xl">
-                    Activer la géolocalisation
-                </button>
-            </div>
-        </div>
-
     </div>
-</div>
 
-<!-- Loading Overlay -->
-<div id="loading-overlay" class="loading-overlay">
-    <div class="text-center">
-        <div class="loading-spinner mx-auto mb-4"></div>
-        <p class="text-sm font-black uppercase tracking-widest text-gray-600">Recherche en cours...</p>
+    <div class="floating-ui bottom-ui">
+        <div class="glass-card map-action-btn" onclick="recenterMap()" title="Ma position">
+            🎯
+        </div>
+        <div class="glass-card map-action-btn" onclick="requestLocation()" title="Rafraîchir">
+            🔄
+        </div>
+    </div>
+
+    <!-- Map div -->
+    <div id="map"></div>
+
+    <!-- Permissions Overlay -->
+    <div id="permission-card" class="loader-overlay hidden">
+        <div class="glass-card p-8 text-center max-w-sm mx-4">
+            <div class="text-5xl mb-4">📍</div>
+            <h2 class="text-XL font-black mb-2">Localisation requise</h2>
+            <p class="text-gray-600 text-sm mb-6">Pour voir les vendeurs autour de vous, nous avons besoin de votre position GPS.</p>
+            <button onclick="requestLocation()" class="w-full py-3 bg-orange-600 text-white rounded-xl font-bold shadow-lg shadow-orange-200">
+                Autoriser l'accès
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay hidden">
+        <div class="spinner mb-4"></div>
+        <p class="text-xs font-black uppercase tracking-widest text-gray-500">Recherche de vendeurs...</p>
     </div>
 </div>
 @endsection
 
 @section('scripts')
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let map;
-let userMarker;
-let vendorMarkers = [];
-let currentRadius = 0.2; // 200 mètres par défaut
-let userLat, userLng;
+    let map, userMarker, radiusCircle;
+    let vendorMarkers = [];
+    let currentRadius = 0.5;
+    let userLat, userLng;
+    let isInitialLoad = true;
 
-// Initialiser la carte
-function initMap(lat, lng) {
-    // Créer la carte centrée sur la position de l'utilisateur
-    map = L.map('map').setView([lat, lng], 16);
+    // Configuration de la carte
+    function initMap(lat, lng) {
+        if (!map) {
+            map = L.map('map', {
+                zoomControl: false,
+                tap: false // Aide pour mobile
+            }).setView([lat, lng], 15);
 
-    // Ajouter les tuiles OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19,
-    }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
 
-    // Ajouter le marqueur de l'utilisateur
-    const userIcon = L.divIcon({
-        className: 'user-marker',
-        iconSize: [20, 20],
-    });
+            // Ajouter le bouton de zoom en bas à gauche pour ne pas gêner
+            L.control.zoom({ position: 'bottomleft' }).addTo(map);
+        } else {
+            map.setView([lat, lng]);
+        }
 
-    userMarker = L.marker([lat, lng], { icon: userIcon })
-        .addTo(map)
-        .bindPopup('<div class="text-center font-bold">📍 Vous êtes ici</div>');
+        updateUserMarker(lat, lng);
+        updateRadiusCircle(lat, lng);
+    }
 
-    // Ajouter un cercle pour visualiser le rayon
-    L.circle([lat, lng], {
-        color: '#f97316',
-        fillColor: '#f97316',
-        fillOpacity: 0.1,
-        radius: currentRadius * 1000 // Convertir km en mètres
-    }).addTo(map);
-}
-
-// Charger les vendeurs proches
-async function loadNearbyVendors(lat, lng, radius = 0.2) {
-    try {
-        const response = await fetch('{{ route('vendors.nearby') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                lat: lat,
-                lng: lng,
-                radius: radius
-            })
+    function updateUserMarker(lat, lng) {
+        const userIcon = L.divIcon({
+            className: 'user-marker-container',
+            html: '<div class="user-marker"></div>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         });
 
-        const data = await response.json();
+        if (userMarker) {
+            userMarker.setLatLng([lat, lng]);
+        } else {
+            userMarker = L.marker([lat, lng], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
+        }
+    }
 
-        if (data.success) {
-            // Mettre à jour les stats
-            document.getElementById('vendor-count').textContent = data.count;
-            document.getElementById('radius-display').textContent = data.radius_text;
-            document.getElementById('stats-card').style.display = 'block';
+    function updateRadiusCircle(lat, lng) {
+        if (radiusCircle) map.removeLayer(radiusCircle);
+        
+        radiusCircle = L.circle([lat, lng], {
+            color: '#3b82f6',
+            fillColor: '#3b82f6',
+            fillOpacity: 0.05,
+            weight: 1,
+            dashArray: '5, 5',
+            radius: currentRadius * 1000
+        }).addTo(map);
+    }
 
-            // Supprimer les anciens marqueurs de vendeurs
-            vendorMarkers.forEach(marker => map.removeLayer(marker));
-            vendorMarkers = [];
+    // Demande de géolocalisation optimisée
+    function requestLocation() {
+        const loader = document.getElementById('loader');
+        const permissionCard = document.getElementById('permission-card');
+        
+        loader.classList.remove('hidden');
+        permissionCard.classList.add('hidden');
 
-            // Ajouter les nouveaux marqueurs
-            data.vendors.forEach(vendor => {
-                const vendorIcon = L.divIcon({
-                    className: 'custom-marker',
-                    html: '🍽️',
-                    iconSize: [40, 40],
-                });
+        const geoOptions = {
+            enableHighAccuracy: false, // Plus rapide et moins bloqué que "true"
+            timeout: 8000,
+            maximumAge: 30000 // Cache de 30 secondes
+        };
 
-                const popupContent = `
-                    <div class="vendor-popup">
-                        <img src="${vendor.image}" alt="${vendor.nom}" class="vendor-popup-image" onerror="this.src='/images/default-vendor.jpg'">
-                        <div class="vendor-popup-title">${vendor.nom}</div>
-                        <div class="vendor-popup-specialty">🍕 ${vendor.specialties_text}</div>
-                        <div class="vendor-popup-distance">📍 ${vendor.distance_text} de vous</div>
-                        ${vendor.note_moyenne > 0 ? `
-                            <div class="vendor-popup-rating">
-                                ⭐ ${vendor.note_moyenne.toFixed(1)} (${vendor.nombre_avis} avis)
-                            </div>
-                        ` : ''}
-                        <a href="${vendor.url}" class="vendor-popup-btn">
-                            Voir le menu →
-                        </a>
-                    </div>
-                `;
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    userLat = pos.coords.latitude;
+                    userLng = pos.coords.longitude;
+                    
+                    initMap(userLat, userLng);
+                    loadVendors();
+                    loader.classList.add('hidden');
+                },
+                (err) => {
+                    console.error("Geo Error:", err);
+                    loader.classList.add('hidden');
+                    if (isInitialLoad) permissionCard.classList.remove('hidden');
+                    
+                    // Fallback IP si possible ou message d'erreur
+                    window.showToast("Localisation impossible. Vérifiez vos paramètres.", "error");
+                },
+                geoOptions
+            );
+        } else {
+            window.showToast("Votre navigateur ne supporte pas la géolocalisation.", "error");
+        }
+        isInitialLoad = false;
+    }
 
-                const marker = L.marker([vendor.latitude, vendor.longitude], { icon: vendorIcon })
-                    .addTo(map)
-                    .bindPopup(popupContent, {
-                        maxWidth: 300,
-                        className: 'vendor-popup-container'
-                    })
-                    .bindTooltip(`<div class="font-black text-[10px] uppercase tracking-tighter text-orange-600 bg-white px-2 py-1 rounded-lg shadow-sm border border-orange-100">${vendor.specialties_text}</div>`, {
-                        permanent: true,
-                        direction: 'top',
-                        className: 'vendor-label',
-                        offset: [0, -20]
+    async function loadVendors() {
+        const pill = document.getElementById('stats-pill');
+        const countDisplay = document.getElementById('vendor-count');
+        
+        try {
+            const response = await fetch('{{ route('vendors.nearby') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    lat: userLat,
+                    lng: userLng,
+                    radius: currentRadius
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Nettoyage
+                vendorMarkers.forEach(m => map.removeLayer(m));
+                vendorMarkers = [];
+
+                // Affichage count
+                countDisplay.textContent = data.count;
+                pill.classList.remove('hidden');
+
+                data.vendors.forEach(v => {
+                    const icon = L.divIcon({
+                        className: 'custom-marker-wrapper',
+                        html: `<div class="custom-marker">🍽️</div>`,
+                        iconSize: [44, 44],
+                        iconAnchor: [22, 22]
                     });
 
-                vendorMarkers.push(marker);
-            });
+                    const popupHtml = `
+                        <div class="popup-card">
+                            <img src="${v.image}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">
+                            <div class="popup-body">
+                                <div class="popup-title">${v.nom}</div>
+                                <div class="popup-meta">
+                                    <span>📍 ${v.distance_text}</span>
+                                    <span>•</span>
+                                    <span class="text-orange-600 font-bold">${v.category}</span>
+                                </div>
+                                <a href="${v.url}" class="popup-btn">Commander</a>
+                            </div>
+                        </div>
+                    `;
 
-            // Ajuster la vue pour inclure tous les marqueurs
-            if (data.count > 0) {
-                const bounds = L.latLngBounds(
-                    data.vendors.map(v => [v.latitude, v.longitude])
-                );
-                bounds.extend([lat, lng]); // Inclure la position de l'utilisateur
-                map.fitBounds(bounds, { padding: [50, 50] });
-            }
+                    const marker = L.marker([v.latitude, v.longitude], { icon: icon })
+                        .addTo(map)
+                        .bindPopup(popupHtml);
+                    
+                    vendorMarkers.push(marker);
+                });
 
-            // Afficher un message si aucun vendeur trouvé
-            if (data.count === 0) {
-                window.showToast('Aucun vendeur trouvé dans ce rayon. Essayez d\'augmenter la distance.', 'info');
-            }
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement des vendeurs:', error);
-        window.showToast('Erreur lors du chargement des vendeurs proches.', 'error');
-    } finally {
-        document.getElementById('loading-overlay').style.display = 'none';
-    }
-}
-
-// Demander la géolocalisation
-function requestLocation() {
-    if ("geolocation" in navigator) {
-        document.getElementById('loading-overlay').style.display = 'flex';
-        
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                userLat = position.coords.latitude;
-                userLng = position.coords.longitude;
-
-                // Masquer le message "no location"
-                document.getElementById('no-location').style.display = 'none';
-                document.getElementById('map').style.display = 'block';
-
-                // Initialiser la carte
-                initMap(userLat, userLng);
-
-                // Charger les vendeurs proches
-                loadNearbyVendors(userLat, userLng, currentRadius);
-            },
-            function(error) {
-                document.getElementById('loading-overlay').style.display = 'none';
-                document.getElementById('no-location').style.display = 'block';
-                document.getElementById('map').style.display = 'none';
-                
-                let errorMessage = 'Impossible d\'obtenir votre position.';
-                if (error.code === error.PERMISSION_DENIED) {
-                    errorMessage = 'Vous avez refusé l\'accès à votre position. Veuillez l\'autoriser dans les paramètres de votre navigateur.';
+                if (data.count > 0 && isInitialLoad) {
+                    const group = new L.featureGroup([...vendorMarkers, userMarker]);
+                    map.fitBounds(group.getBounds().pad(0.1));
                 }
-                window.showToast(errorMessage, 'error');
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
             }
-        );
-    } else {
-        window.showToast('La géolocalisation n\'est pas supportée par votre navigateur.', 'error');
-        document.getElementById('no-location').style.display = 'block';
-        document.getElementById('loading-overlay').style.display = 'none';
+        } catch (e) {
+            console.error(e);
+        }
     }
-}
 
-// Gestion des boutons de rayon
-document.querySelectorAll('.radius-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Retirer la classe active de tous les boutons
-        document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
-        
-        // Ajouter la classe active au bouton cliqué
-        this.classList.add('active');
-        
-        // Mettre à jour le rayon
-        currentRadius = parseFloat(this.dataset.radius);
-        
-        // Recharger les vendeurs avec le nouveau rayon
+    function recenterMap() {
         if (userLat && userLng) {
-            document.getElementById('loading-overlay').style.display = 'flex';
-            
-            // Supprimer l'ancien cercle et en créer un nouveau
-            map.eachLayer(layer => {
-                if (layer instanceof L.Circle) {
-                    map.removeLayer(layer);
-                }
-            });
-            
-            L.circle([userLat, userLng], {
-                color: '#f97316',
-                fillColor: '#f97316',
-                fillOpacity: 0.1,
-                radius: currentRadius * 1000
-            }).addTo(map);
-            
-            loadNearbyVendors(userLat, userLng, currentRadius);
+            map.flyTo([userLat, userLng], 16);
+        } else {
+            requestLocation();
         }
-    });
-});
+    }
 
-// Démarrer automatiquement au chargement de la page
-document.addEventListener('DOMContentLoaded', function() {
-    requestLocation();
-});
+    // Event Listeners
+    document.querySelectorAll('.radius-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.radius-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            currentRadius = parseFloat(this.dataset.radius);
+            
+            if (userLat) {
+                updateRadiusCircle(userLat, userLng);
+                loadVendors();
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', requestLocation);
 </script>
 @endsection
