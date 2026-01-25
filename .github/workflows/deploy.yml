@@ -1,0 +1,33 @@
+name: 🚀 Deploy to LWS
+
+on:
+  push:
+    branches:
+      - main  # Ou le nom de votre branche principale si c'est 'master'
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+    
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ./var/www/digitalforges.org/htdocs/cabaacabaa/ # ⚠️ Vérifiez si c'est le bon dossier sur LWS (parfois c'est www/)
+        # server-dir: ./public_html/ # ⚠️ Vérifiez si c'est le bon dossier sur LWS (parfois c'est www/)
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          .env
+          .env.example
+          .editorconfig
+          phpunit.xml
+          README.md
+          tests/**

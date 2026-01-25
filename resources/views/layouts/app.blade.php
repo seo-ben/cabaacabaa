@@ -496,7 +496,7 @@
     </main>
 
     <!-- Footer Premium -->
-    <footer class="bg-white border-t border-gray-100 mt-32 relative overflow-hidden">
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-32 relative overflow-hidden transition-colors duration-300">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-24">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16">
                 
@@ -512,22 +512,22 @@
                         @endif
                         <span class="text-2xl font-display font-black tracking-tighter bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">{{ $siteName }}</span>
                     </a>
-                    <p class="text-gray-500 font-medium leading-relaxed mb-10 max-w-sm italic">
+                    <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed mb-10 max-w-sm italic">
                         La destination privilégiée pour découvrir les trésors culinaires de votre région. Savourez l'authenticité à chaque bouchée.
                     </p>
                     <div class="flex gap-4">
-                        <a href="#" class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-                        <a href="#" class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:bg-pink-50 hover:text-pink-600 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072z"/></svg></a>
+                        <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                        <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:text-pink-600 dark:hover:text-pink-400 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072z"/></svg></a>
                     </div>
                 </div>
 
                 <!-- Fast Links -->
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 mb-8">Plateforme</h4>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Plateforme</h4>
                     <ul class="space-y-4">
-                        <li><a href="/" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Accueil</a></li>
-                        <li><a href="{{ route('explore') }}" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Explorer</a></li>
-                        <li><a href="{{ route('vendors.map') }}" class="text-[13px] font-bold text-orange-600 hover:text-orange-700 transition-colors flex items-center gap-2">
+                        <li><a href="/" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Accueil</a></li>
+                        <li><a href="{{ route('explore') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Explorer</a></li>
+                        <li><a href="{{ route('vendors.map') }}" class="text-[13px] font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-colors flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                             Vendeurs les plus proches
                         </a></li>
@@ -540,30 +540,30 @@
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 mb-8">Aide & Plus</h4>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Aide & Plus</h4>
                     <ul class="space-y-4">
-                        <li><a href="#" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Notre FAQ</a></li>
-                        <li><a href="{{ route('terms') }}" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Conditions d'Utilisation</a></li>
-                        <li><a href="{{ route('privacy') }}" class="text-[13px] font-bold text-gray-400 hover:text-red-600 transition-colors">Politique de Confidentialité</a></li>
+                        <li><a href="#" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Notre FAQ</a></li>
+                        <li><a href="{{ route('terms') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Conditions d'Utilisation</a></li>
+                        <li><a href="{{ route('privacy') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Politique de Confidentialité</a></li>
                     </ul>
                 </div>
 
                 <!-- Newsletter Column -->
                 <div class="md:col-span-2 lg:col-span-1">
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 mb-8">Newsletter</h4>
-                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-6">Savourez les offres exclusives</p>
+                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Newsletter</h4>
+                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">Savourez les offres exclusives</p>
                     <form action="{{ route('newsletter.subscribe') }}" method="POST" class="relative group">
                         @csrf
                         <input type="email" name="email" placeholder="Votre email" required
-                               class="w-full px-6 py-4 bg-gray-50 border border-transparent rounded-[1.5rem] text-sm font-bold text-gray-900 placeholder-gray-400 focus:bg-white focus:ring-2 focus:ring-red-500 transition-all outline-none">
-                        <button type="submit" class="absolute right-2 top-2 bottom-2 px-4 bg-gray-900 text-white rounded-2xl hover:bg-black transition-colors font-black text-xs">OK</button>
+                               class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700/50 rounded-[1.5rem] text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-2 focus:ring-red-500 transition-all outline-none">
+                        <button type="submit" class="absolute right-2 top-2 bottom-2 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-100 transition-colors font-black text-xs">OK</button>
                     </form>
                 </div>
 
             </div>
             
-            <div class="mt-24 pt-10 border-t border-gray-50">
-                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 text-center">
+            <div class="mt-24 pt-10 border-t border-gray-50 dark:border-gray-800">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center">
                     &copy; {{ date('Y') }} {{ $siteName }}. Made with passion for food.
                 </p>
             </div>
