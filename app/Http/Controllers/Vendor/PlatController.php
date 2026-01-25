@@ -69,7 +69,7 @@ class PlatController extends Controller
         $plat->id_vendeur = $vendeur->id_vendeur;
 
         if ($request->hasFile('image')) {
-            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats');
+            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats', 80, 1200, true);
         }
 
         $plat->save();
@@ -145,7 +145,7 @@ class PlatController extends Controller
         $plat->disponible = $request->has('disponible');
 
         if ($request->hasFile('image')) {
-            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats');
+            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats', 80, 1200, true);
         }
 
         $plat->save();

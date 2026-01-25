@@ -75,6 +75,9 @@ class VendorMapController extends Controller
                     ? round($vendeur->distance * 1000) . ' m' 
                     : $vendeur->distance . ' km',
                 'image' => $vendeur->image_principale 
+                    ? asset('storage/' . str_replace($vendeur->image_principale, dirname($vendeur->image_principale) . '/thumbnails/' . basename($vendeur->image_principale), $vendeur->image_principale))
+                    : asset('images/default-vendor.jpg'),
+                'image_full' => $vendeur->image_principale 
                     ? asset('storage/' . $vendeur->image_principale) 
                     : asset('images/default-vendor.jpg'),
                 'note_moyenne' => $vendeur->note_moyenne ?? 0,
