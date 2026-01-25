@@ -21,6 +21,10 @@ Route::get('/vendor/{id}-{slug?}', [HomeController::class, 'vendor'])->name('ven
 Route::get('/conditions-utilisation', [HomeController::class, 'terms'])->name('terms');
 Route::get('/politique-confidentialite', [HomeController::class, 'privacy'])->name('privacy');
 
+// Vendor Map - Géolocalisation
+Route::get('/vendeurs-proches', [\App\Http\Controllers\VendorMapController::class, 'index'])->name('vendors.map');
+Route::post('/api/vendeurs-proches', [\App\Http\Controllers\VendorMapController::class, 'getNearbyVendors'])->name('vendors.nearby');
+
 // Cart routes
 Route::get('/panier', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
 Route::post('/panier/ajouter/{id}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');

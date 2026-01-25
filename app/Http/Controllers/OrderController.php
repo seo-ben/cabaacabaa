@@ -140,7 +140,13 @@ class OrderController extends Controller
             'nom_complet' => 'required|string|max:200',
             'phone' => 'required|string|max:20',
             'type_recuperation' => 'required|in:emporter,sur_place,livraison',
-            'mode_paiement' => 'required|in:espece,mobile_money',
+            // ============================================================================
+            // PAIEMENT EN LIGNE - TEMPORAIREMENT DÉSACTIVÉ
+            // ============================================================================
+            // TODO: Réactiver 'mobile_money' quand Tmoney, Flooz seront opérationnels
+            // Ancienne validation: 'mode_paiement' => 'required|in:espece,mobile_money',
+            // ============================================================================
+            'mode_paiement' => 'required|in:espece', // Seul espèces accepté pour le moment
             'notes' => 'nullable|string',
         ];
 
@@ -236,6 +242,13 @@ class OrderController extends Controller
                 ]);
             }
 
+            // ============================================================================
+            // PAIEMENT EN LIGNE MOBILE MONEY - TEMPORAIREMENT DÉSACTIVÉ
+            // ============================================================================
+            // TODO: Réactiver quand l'intégration QOSPAY (Tmoney, Flooz) sera prête
+            // ============================================================================
+            
+            /*
             if ($request->mode_paiement == 'mobile_money') {
                 try {
                     // Call QOSPAY API
@@ -261,6 +274,7 @@ class OrderController extends Controller
                     return redirect()->back()->with('error', 'Erreur technique QOSPAY : ' . $e->getMessage());
                 }
             }
+            */
 
             session()->forget('cart');
             return redirect()->route('order.confirmation', $commande->id_commande)->with('success', 'Votre commande a été passée avec succès !');

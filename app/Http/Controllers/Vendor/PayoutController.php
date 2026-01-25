@@ -10,18 +10,33 @@ use Illuminate\Support\Facades\Validator;
 
 class PayoutController extends Controller
 {
+    // ============================================================================
+    // FONCTIONNALITÉ WALLET/PAYOUT - TEMPORAIREMENT DÉSACTIVÉE
+    // ============================================================================
+    // TODO: Réactiver quand le système de paiement en ligne sera opérationnel
+    // ============================================================================
+    
     public function index()
     {
+        // Fonctionnalité désactivée temporairement
+        return redirect()->back()->with('info', 'La fonctionnalité de retrait n\'est pas encore disponible. Les paiements se font actuellement en espèces uniquement.');
+        
+        /*
         $vendeur = Auth::user()->vendeur;
         $payouts = PayoutRequest::where('id_vendeur', $vendeur->id_vendeur)
             ->latest()
             ->paginate(10);
 
         return view('vendeur.payouts.index', compact('vendeur', 'payouts'));
+        */
     }
 
     public function store(Request $request)
     {
+        // Fonctionnalité désactivée temporairement
+        return redirect()->back()->with('info', 'La fonctionnalité de retrait n\'est pas encore disponible. Les paiements se font actuellement en espèces uniquement.');
+        
+        /*
         $vendeur = Auth::user()->vendeur;
 
         $validator = Validator::make($request->all(), [
@@ -52,5 +67,6 @@ class PayoutController extends Controller
         $vendeur->save();
 
         return redirect()->back()->with('success', 'Votre demande de paiement a été soumise.');
+        */
     }
 }

@@ -82,6 +82,14 @@ class OrderController extends Controller
 
         $order->save();
 
+        // ============================================================================
+        // LOGIQUE FINANCIÈRE WALLET - TEMPORAIREMENT DÉSACTIVÉE
+        // ============================================================================
+        // TODO: Réactiver quand le système de paiement en ligne sera opérationnel
+        // Cette section gère le crédit automatique du wallet vendeur après commande
+        // ============================================================================
+        
+        /*
         // LOGIQUE FINANCIÈRE : Créditer le wallet si la commande est terminée et payée en ligne
         if ($request->statut === 'termine' && $previousStatus !== 'termine') {
             if ($order->mode_paiement_prevu === 'mobile_money') {
@@ -114,6 +122,7 @@ class OrderController extends Controller
                 ]);
             }
         }
+        */
 
         // Notify customer in real-time
         event(new \App\Events\OrderStatusChanged($order));

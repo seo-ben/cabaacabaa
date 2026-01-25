@@ -155,19 +155,36 @@
 
                             <div class="pt-4 space-y-4">
                                 <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Mode de paiement</h3>
-                                <div class="grid grid-cols-2 gap-3">
+                                
+                                {{-- ============================================================================ --}}
+                                {{-- PAIEMENT EN LIGNE - TEMPORAIREMENT DÉSACTIVÉ --}}
+                                {{-- ============================================================================ --}}
+                                {{-- TODO: Réactiver quand Tmoney, Flooz, carte bancaire seront opérationnels --}}
+                                {{-- ============================================================================ --}}
+                                
+                                <div class="grid grid-cols-1 gap-3">
                                     <label class="cursor-pointer group">
                                         <input type="radio" name="mode_paiement" value="espece" class="peer sr-only" checked>
                                         <div class="py-3 px-4 bg-white/5 border border-white/10 peer-checked:border-orange-500 peer-checked:bg-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center transition-all">
-                                            Espèces
+                                            💵 Paiement en Espèces (Uniquement disponible)
                                         </div>
                                     </label>
-                                    <label class="cursor-pointer group">
-                                        <input type="radio" name="mode_paiement" value="mobile_money" class="peer sr-only">
-                                        <div class="py-3 px-4 bg-white/5 border border-white/10 peer-checked:border-orange-500 peer-checked:bg-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center transition-all">
-                                            Mobile Money
+                                    
+                                    {{-- Option Mobile Money désactivée temporairement --}}
+                                    {{--
+                                    <label class="cursor-pointer group opacity-50 cursor-not-allowed">
+                                        <input type="radio" name="mode_paiement" value="mobile_money" class="peer sr-only" disabled>
+                                        <div class="py-3 px-4 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center">
+                                            Mobile Money (Bientôt disponible)
                                         </div>
                                     </label>
+                                    --}}
+                                </div>
+                                
+                                <div class="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+                                    <p class="text-[9px] font-bold text-orange-300 leading-relaxed">
+                                        ℹ️ <strong>Information:</strong> Le paiement en ligne (Tmoney, Flooz, carte bancaire) sera bientôt disponible. Pour le moment, seul le paiement en espèces est accepté.
+                                    </p>
                                 </div>
                             </div>
 

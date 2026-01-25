@@ -44,6 +44,8 @@ class VendorSettingsController extends Controller
             'tiktok_url' => 'nullable|url|max:255',
             'whatsapp_number' => 'nullable|string|max:20',
             'website_url' => 'nullable|url|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ];
 
         // Only allow setting category if not already set

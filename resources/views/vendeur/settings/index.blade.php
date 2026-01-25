@@ -3,6 +3,14 @@
 @section('title', 'Paramètres Boutique')
 @section('page_title', 'Configuration Boutique')
 
+@section('extra_head')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    .leaflet-container { font-family: inherit; }
+</style>
+@endsection
+
 @section('content')
 <div class="max-w-7xl mx-auto space-y-6">
     
@@ -119,8 +127,35 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full px-4 py-2.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-md hover:shadow-lg">
-                        Enregistrer
+                    <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-bold text-gray-700 dark:text-gray-300">Localisation GPS (Carte)</h4>
+                            <button type="button" onclick="detectMyPosition()" class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest flex items-center gap-1 hover:underline">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                Détecter ma position
+                            </button>
+                        </div>
+                        
+                        <p class="text-[9px] text-gray-400 mb-3 italic">Déplacez le marqueur sur la carte pour définir votre position exacte. Les coordonnées seront mises à jour automatiquement.</p>
+                        
+                        <div id="vendor-map-settings" class="w-full h-48 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 z-0"></div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Latitude</label>
+                                <input type="text" name="latitude" id="lat-input" value="{{ $vendeur->latitude }}" readonly
+                                       class="w-full px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-mono text-gray-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Longitude</label>
+                                <input type="text" name="longitude" id="lng-input" value="{{ $vendeur->longitude }}" readonly
+                                       class="w-full px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-mono text-gray-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full px-4 py-2.5 bg-gray-900 border-none hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-lg text-xs font-bold uppercase tracking-wide transition-all shadow-md hover:shadow-lg">
+                        Enregistrer les modifications
                     </button>
                 </form>
             </div>
@@ -278,4 +313,79 @@
 </div>
 @endif
 
+@endsection
+
+@section('scripts')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initial coordinates (current vendor position or default)
+        let lat = {{ $vendeur->latitude ?? 6.1319 }}; // Default to Lome if empty
+        let lng = {{ $vendeur->longitude ?? 1.2227 }};
+        let zoom = {{ $vendeur->latitude ? 16 : 12 }};
+
+        const map = L.map('vendor-map-settings').setView([lat, lng], zoom);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Custom icon
+        const vendorIcon = L.divIcon({
+            className: 'custom-vendor-marker',
+            html: '<div style="background:#f97316; width:30px; height:30px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2); display:flex; items-center; justify-content:center; color:white; font-size:16px;">🏢</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+
+        const marker = L.marker([lat, lng], {
+            draggable: true,
+            icon: vendorIcon
+        }).addTo(map);
+
+        // Update inputs on drag end
+        marker.on('dragend', function(event) {
+            const position = marker.getLatLng();
+            document.getElementById('lat-input').value = position.lat.toFixed(6);
+            document.getElementById('lng-input').value = position.lng.toFixed(6);
+        });
+
+        // Click on map to move marker
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            document.getElementById('lat-input').value = e.latlng.lat.toFixed(6);
+            document.getElementById('lng-input').value = e.latlng.lng.toFixed(6);
+        });
+
+        // Function to detect position
+        window.detectMyPosition = function() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const newLat = position.coords.latitude;
+                    const newLng = position.coords.longitude;
+                    
+                    map.setView([newLat, newLng], 16);
+                    marker.setLatLng([newLat, newLng]);
+                    
+                    document.getElementById('lat-input').value = newLat.toFixed(6);
+                    document.getElementById('lng-input').value = newLng.toFixed(6);
+                    
+                    window.showToast('Position détectée avec succès !', 'success');
+                }, function(error) {
+                    window.showToast('Impossible de détecter votre position : ' + error.message, 'error');
+                }, {
+                    enableHighAccuracy: true
+                });
+            } else {
+                window.showToast('La géolocalisation n\'est pas supportée par votre navigateur.', 'error');
+            }
+        }
+        
+        // Fix map size issues if hidden initially
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 500);
+    });
+</script>
 @endsection
