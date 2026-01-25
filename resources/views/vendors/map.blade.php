@@ -12,6 +12,7 @@
         height: calc(100vh - 80px); /* Ajusté pour le header standard */
         width: 100%;
         overflow: hidden;
+        background: #f3f4f6;
     }
 
     #map {
@@ -20,7 +21,7 @@
         z-index: 1;
     }
 
-    /* Floating controls like Gozem/Uber */
+    /* Floating controls - Premium Look */
     .floating-ui {
         position: absolute;
         z-index: 1000;
@@ -33,6 +34,7 @@
         top: 0;
         display: flex;
         flex-direction: column;
+        align-items: center; /* Centré au milieu en haut */
         gap: 12px;
     }
 
@@ -44,43 +46,44 @@
         gap: 12px;
     }
 
+    /* Style des Cartes vitrées (Glassmorphism) */
     .glass-card {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 20px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         pointer-events: auto;
+        transition: all 0.3s ease;
     }
 
-    /* Search Radius Controls */
+    /* Menu de sélection de rayon */
     .radius-selector {
         display: flex;
-        background: rgba(255, 255, 255, 0.9);
         padding: 4px;
-        border-radius: 12px;
-        pointer-events: auto;
+        border-radius: 16px;
         overflow-x: auto;
         max-width: calc(100vw - 32px);
-        -ms-overflow-style: none;
         scrollbar-width: none;
     }
     
-    .radius-selector::-webkit-scrollbar {
-        display: none;
-    }
+    .radius-selector::-webkit-scrollbar { display: none; }
 
     .radius-item {
-        padding: 8px 16px;
-        border-radius: 10px;
+        padding: 10px 18px;
+        border-radius: 12px;
         font-weight: 800;
-        font-size: 13px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         white-space: nowrap;
         cursor: pointer;
         transition: all 0.3s;
-        color: #4b5563;
+        color: #6b7280;
     }
+
+    .radius-item:hover { color: #1f2937; }
 
     .radius-item.active {
         background: #f97316;
@@ -88,157 +91,73 @@
         box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
     }
 
-    /* Action Buttons */
+    /* Badge compteur de vendeurs */
+    #stats-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 50px; /* Forme pilule */
+    }
+
+    .pill-label {
+        font-[Outfit] font-black text-[10px] uppercase tracking-[0.1em] text-gray-500;
+    }
+
+    .pill-value {
+        font-bold text-orange-600 text-sm;
+    }
+
+    /* Boutons d'action (Position, Refresh) */
     .map-action-btn {
-        width: 50px;
-        height: 50px;
+        width: 52px;
+        height: 52px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
         cursor: pointer;
-        transition: all 0.2s;
         color: #1f2937;
     }
 
-    .map-action-btn:active {
-        transform: scale(0.9);
+    .map-action-btn:hover {
+        background: #fff;
+        transform: scale(1.05);
     }
+    
+    .map-action-btn:active { transform: scale(0.95); }
 
-    /* Vendor Popup Styling */
-    .leaflet-popup-content-wrapper {
-        border-radius: 20px;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .leaflet-popup-content {
-        margin: 0 !important;
-        width: 280px !important;
-    }
-
-    .popup-card {
-        padding: 0;
-    }
-
-    .popup-img {
-        width: 100%;
-        height: 140px;
-        object-fit: cover;
-    }
-
-    .popup-body {
-        padding: 15px;
-    }
-
-    .popup-title {
-        font-weight: 800;
-        font-size: 16px;
-        margin-bottom: 4px;
-        color: #111827;
-    }
-
-    .popup-meta {
-        font-size: 12px;
-        color: #6b7280;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        margin-bottom: 12px;
-    }
-
-    .popup-btn {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        background: #f97316;
-        color: white;
-        text-align: center;
-        border-radius: 10px;
-        font-weight: 700;
-        text-decoration: none;
-        font-size: 13px;
-        transition: background 0.3s;
-    }
-
-    /* Custom Markers */
-    .custom-marker {
-        background: #f97316;
-        border: 3px solid white;
-        border-radius: 50%;
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        font-size: 20px;
-        color: white;
-    }
-
-    .user-marker {
+    .map-action-btn svg {
         width: 24px;
         height: 24px;
-        background: #3b82f6;
-        border: 4px solid white;
-        border-radius: 50%;
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-        position: relative;
     }
 
+    /* Style des Popups (Vendeurs sur la carte) */
+    .leaflet-popup-content-wrapper { border-radius: 20px; padding: 0; overflow: hidden; }
+    .leaflet-popup-content { margin: 0 !important; width: 280px !important; }
+    .popup-card { padding: 0; }
+    .popup-img { width: 100%; height: 140px; object-fit: cover; }
+    .popup-body { padding: 15px; }
+    .popup-title { font-weight: 800; font-size: 16px; margin-bottom: 4px; color: #111827; }
+    .popup-meta { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+    .popup-btn { display: block; width: 100%; padding: 10px; background: #f97316; color: white; text-align: center; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 13px; }
+
+    /* Marqueurs */
+    .custom-marker { background: #f97316; border: 3px solid white; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; shadow-lg; font-size: 20px; color: white; }
+    .user-marker { width: 24px; height: 24px; background: #3b82f6; border: 4px solid white; border-radius: 50%; shadow-lg; position: relative; }
     .user-marker::after {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        right: -8px;
-        bottom: -8px;
-        border-radius: 50%;
-        background: rgba(59, 130, 246, 0.2);
-        animation: pulse-ring 2s infinite;
+        content: ''; position: absolute; inset: -8px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); animation: pulse-ring 2s infinite;
     }
+    @keyframes pulse-ring { 0% { transform: scale(0.7); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
 
-    @keyframes pulse-ring {
-        0% { transform: scale(0.7); opacity: 0.8; }
-        100% { transform: scale(1.5); opacity: 0; }
-    }
-
-    /* Loading Overlay */
-    .loader-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(4px);
-        z-index: 2000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid #f3f4f6;
-        border-top: 5px solid #f97316;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
+    /* Loader Overlay */
+    .loader-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.8); backdrop-blur-sm; z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #f3f4f6; border-top: 5px solid #f97316; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 640px) {
-        #map-container {
-            height: calc(100vh - 60px);
-        }
-        .top-ui {
-            padding: 10px;
-        }
-        .radius-selector {
-            border-radius: 10px;
-        }
+        #map-container { height: calc(100vh - 60px); }
+        .top-ui { padding: 10px; }
+        .radius-selector { border-radius: 10px; }
     }
 </style>
 @endsection
@@ -247,7 +166,7 @@
 <div id="map-container">
     <!-- UI Layer -->
     <div class="floating-ui top-ui">
-        <div class="radius-selector glass-card scrollbar-hide">
+        <div class="radius-selector glass-card">
             <div class="radius-item active" data-radius="0.5">500m</div>
             <div class="radius-item" data-radius="1">1km</div>
             <div class="radius-item" data-radius="2">2km</div>
@@ -255,18 +174,18 @@
             <div class="radius-item" data-radius="10">10km</div>
         </div>
         
-        <div id="stats-pill" class="glass-card px-4 py-2 self-start hidden">
-            <span class="text-xs font-black uppercase tracking-widest text-gray-500">Vendeurs : </span>
-            <span id="vendor-count" class="text-sm font-bold text-orange-600">0</span>
+        <div id="stats-pill" class="glass-card hidden">
+            <span class="pill-label">Vendeurs à proximité</span>
+            <span id="vendor-count" class="pill-value">0</span>
         </div>
     </div>
 
     <div class="floating-ui bottom-ui">
         <div class="glass-card map-action-btn" onclick="recenterMap()" title="Ma position">
-            🎯
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <div class="glass-card map-action-btn" onclick="requestLocation()" title="Rafraîchir">
-            🔄
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </div>
     </div>
 
