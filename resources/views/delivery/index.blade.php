@@ -28,10 +28,18 @@
                 @foreach($requests as $request)
                     <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-xl border border-gray-100 dark:border-gray-800 group hover:shadow-2xl transition-all duration-300">
                         <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $request->vendeur->image_principale ?? 'https://via.placeholder.com/400x200' }}" 
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                                 alt="{{ $request->vendeur->nom_commercial }}">
-                            <div class="absolute inset-0 bg-linear-to-t from-gray-900/60 to-transparent"></div>
+                            @if($request->vendeur->image_principale)
+                                <img src="{{ asset('storage/'.$request->vendeur->image_principale) }}" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                                     alt="{{ $request->vendeur->nom_commercial }}">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                                    <span class="text-6xl font-black text-gray-300 dark:text-gray-600 uppercase">
+                                        {{ mb_substr($request->vendeur->nom_commercial, 0, 1) }}
+                                    </span>
+                                </div>
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
                             <div class="absolute bottom-6 left-6">
                                 <span class="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-lg">
                                     {{ $request->vendeur->type_vendeur ?? 'Boutique' }}

@@ -56,6 +56,16 @@
                 <form action="{{ vendor_route('vendeur.slug.settings.profile') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
                     @csrf
                     
+                    @if($errors->any())
+                        <div class="p-3 bg-red-50 border border-red-200 rounded-xl">
+                            <ul class="list-disc list-inside text-[11px] text-red-600 font-bold">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
                     <div class="flex gap-5">
                         <div class="flex-shrink-0">
                             <label class="block text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Photo</label>
@@ -116,13 +126,13 @@
                     <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
                         <h4 class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-3">Réseaux Sociaux</h4>
                         <div class="grid grid-cols-2 gap-3">
-                            <input type="url" name="facebook_url" value="{{ $vendeur->facebook_url }}" placeholder="Facebook"
+                            <input type="text" name="facebook_url" value="{{ old('facebook_url', $vendeur->facebook_url) }}" placeholder="Lien Facebook (ex: facebook.com/votrepage)"
                                    class="px-3 py-2 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-blue-500 outline-none transition-all font-semibold text-gray-900 dark:text-white placeholder-gray-400">
-                            <input type="url" name="instagram_url" value="{{ $vendeur->instagram_url }}" placeholder="Instagram"
+                            <input type="text" name="instagram_url" value="{{ old('instagram_url', $vendeur->instagram_url) }}" placeholder="Lien Instagram"
                                    class="px-3 py-2 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-pink-500 outline-none transition-all font-semibold text-gray-900 dark:text-white placeholder-gray-400">
-                            <input type="text" name="whatsapp_number" value="{{ $vendeur->whatsapp_number }}" placeholder="WhatsApp"
+                            <input type="text" name="whatsapp_number" value="{{ old('whatsapp_number', $vendeur->whatsapp_number) }}" placeholder="Numéro WhatsApp"
                                    class="px-3 py-2 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-green-500 outline-none transition-all font-semibold text-gray-900 dark:text-white placeholder-gray-400">
-                            <input type="url" name="website_url" value="{{ $vendeur->website_url }}" placeholder="Site Web"
+                            <input type="text" name="website_url" value="{{ old('website_url', $vendeur->website_url) }}" placeholder="Site Web"
                                    class="px-3 py-2 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-gray-500 outline-none transition-all font-semibold text-gray-900 dark:text-white placeholder-gray-400">
                         </div>
                     </div>
@@ -301,6 +311,28 @@
         </div>
     </div>
 </div>
+
+@if($errors->any())
+<div class="fixed bottom-4 right-4 z-50 animate-slide-in">
+    <div class="bg-red-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="text-sm font-bold">Veuillez corriger les erreurs dans le formulaire.</span>
+    </div>
+</div>
+@endif
+
+@if(session('error'))
+<div class="fixed bottom-4 right-4 z-50 animate-slide-in">
+    <div class="bg-red-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="text-sm font-bold">{{ session('error') }}</span>
+    </div>
+</div>
+@endif
 
 @if(session('success'))
 <div class="fixed bottom-4 right-4 z-50 animate-slide-in">

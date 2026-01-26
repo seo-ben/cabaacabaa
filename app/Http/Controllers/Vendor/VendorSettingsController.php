@@ -38,12 +38,12 @@ class VendorSettingsController extends Controller
             'description' => 'nullable|string',
             'adresse_complete' => 'nullable|string',
             'image_principale' => 'nullable|image|max:2048',
-            'facebook_url' => 'nullable|url|max:255',
-            'instagram_url' => 'nullable|url|max:255',
-            'twitter_url' => 'nullable|url|max:255',
-            'tiktok_url' => 'nullable|url|max:255',
+            'facebook_url' => 'nullable|string|max:255',
+            'instagram_url' => 'nullable|string|max:255',
+            'twitter_url' => 'nullable|string|max:255',
+            'tiktok_url' => 'nullable|string|max:255',
             'whatsapp_number' => 'nullable|string|max:20',
-            'website_url' => 'nullable|url|max:255',
+            'website_url' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
         ];
@@ -60,13 +60,17 @@ class VendorSettingsController extends Controller
             unset($validated['id_category_vendeur']);
         }
 
-        if ($request->hasFile('image_principale')) {
-            $validated['image_principale'] = ImageHelper::uploadAndConvert($request->file('image_principale'), 'vendeurs');
+        try {
+            if ($request->hasFile('image_principale')) {
+                $validated['image_principale'] = ImageHelper::uploadAndConvert($request->file('image_principale'), 'vendeurs');
+            }
+
+            $vendeur->update($validated);
+
+            return back()->with('success', 'Profil boutique mis à jour !');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Une erreur est survenue lors de la mise à jour de votre profil. Veuillez réessayer.');
         }
-
-        $vendeur->update($validated);
-
-        return back()->with('success', 'Profil boutique mis à jour !');
     }
 
     /**
