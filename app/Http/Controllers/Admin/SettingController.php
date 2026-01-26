@@ -26,7 +26,7 @@ class SettingController extends Controller
             if ($setting->type === 'image') {
                 if ($request->hasFile($key)) {
                     $file = $request->file($key);
-                    $path = \App\Helpers\ImageHelper::uploadAndConvert($file, 'settings');
+                    $path = \App\Helpers\ImageHelper::uploadAndConvert($file, 'control');
                     $setting->update(['value' => $path]);
                 }
             } else {
