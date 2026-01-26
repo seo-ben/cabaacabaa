@@ -8,14 +8,15 @@ use Illuminate\Support\Str;
 class ImageHelper
 {
     /**
-     * Convert an uploaded image to WebP and save it.
+     * Upload an image, resize it if necessary, and save it.
+     * We avoid WebP as it causes Forbidden errors on the server.
      *
      * @param \Illuminate\Http\UploadedFile|string $file
      * @param string $directory
      * @param int $quality
      * @param int|null $maxWidth
      * @param bool $createThumbnail
-     * @return string|false The path to the saved WebP image relative to 'public' disk
+     * @return string|false The path to the saved image relative to 'public' disk
      */
     public static function uploadAndConvert($file, $directory, $quality = 80, $maxWidth = 1200, $createThumbnail = false)
     {
@@ -24,36 +25,31 @@ class ImageHelper
             $extension = $isFilePath ? pathinfo($file, PATHINFO_EXTENSION) : strtolower($file->getClientOriginalExtension());
             $realPath = $isFilePath ? $file : $file->getRealPath();
             
-            // Normalize extension
-            if ($extension === 'jpeg') $extension = 'jpg';
-            
-            $imageName = Str::random(40) . '.' . $extension;
+            $imageName = Str::random(40) . '.webp';
             $filePath = $directory . '/' . $imageName;
 
             // Load the image based on its type
             switch ($extension) {
-                case 'jpg':
                 case 'jpeg':
                     $image = imagecreatefromjpeg($realPath);
+                    $saveFunc = 'imagejpeg';
                     break;
                 case 'png':
                     $image = imagecreatefrompng($realPath);
                     imagepalettetotruecolor($image);
                     imagealphablending($image, true);
                     imagesavealpha($image, true);
+                    $saveFunc = 'imagepng';
                     break;
                 case 'gif':
                     $image = imagecreatefromgif($realPath);
+                    $saveFunc = 'imagegif';
                     break;
                 case 'webp':
                     $image = imagecreatefromwebp($realPath);
+                    $saveFunc = 'imagejpeg'; // Force jpg for webp inputs
                     break;
                 default:
-                    // If extension is not handled by GD, but we still want to save it
-                    if (!$isFilePath && $file instanceof \Illuminate\Http\UploadedFile) {
-                        Storage::disk('public')->putFileAs($directory, $file, $imageName);
-                        return $filePath;
-                    }
                     return false;
             }
 
@@ -67,20 +63,16 @@ class ImageHelper
                 $newWidth = $maxWidth;
                 $newHeight = floor($height * ($maxWidth / $width));
                 $tmpImage = imagecreatetruecolor($newWidth, $newHeight);
-                
-                if (in_array($extension, ['png', 'webp', 'gif'])) {
-                    imagealphablending($tmpImage, false);
-                    imagesavealpha($tmpImage, true);
-                }
-                
+                imagealphablending($tmpImage, false);
+                imagesavealpha($tmpImage, true);
                 imagecopyresampled($tmpImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
                 imagedestroy($image);
                 $image = $tmpImage;
             }
 
-            // Save Main Image in original format
-            $tempPath = tempnam(sys_get_temp_dir(), 'img');
-            self::saveImageByExtension($image, $tempPath, $extension, $quality);
+            // Save Main Image as WebP
+            $tempPath = tempnam(sys_get_temp_dir(), 'webp');
+            imagewebp($image, $tempPath, $quality);
             Storage::disk('public')->putFileAs($directory, new \Illuminate\Http\File($tempPath), $imageName);
             
             // Thumbnail Logic
@@ -88,16 +80,12 @@ class ImageHelper
                 $thumbWidth = 400;
                 $thumbHeight = floor(imagesy($image) * ($thumbWidth / imagesx($image)));
                 $thumbImage = imagecreatetruecolor($thumbWidth, $thumbHeight);
-                
-                if (in_array($extension, ['png', 'webp', 'gif'])) {
-                    imagealphablending($thumbImage, false);
-                    imagesavealpha($thumbImage, true);
-                }
-                
+                imagealphablending($thumbImage, false);
+                imagesavealpha($thumbImage, true);
                 imagecopyresampled($thumbImage, $image, 0, 0, 0, 0, $thumbWidth, $thumbHeight, imagesx($image), imagesy($image));
                 
                 $thumbTempPath = tempnam(sys_get_temp_dir(), 'thumb');
-                self::saveImageByExtension($thumbImage, $thumbTempPath, $extension, 60);
+                imagewebp($thumbImage, $thumbTempPath, 60); // Moins de qualité pour la miniature
                 Storage::disk('public')->putFileAs($directory . '/thumbnails', new \Illuminate\Http\File($thumbTempPath), $imageName);
                 
                 imagedestroy($thumbImage);
