@@ -11,6 +11,34 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\UserController;
 
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+
+    if (!File::exists($filePath)) {
+        abort(404);
+    }
+
+    $mimeType = File::mimeType($filePath);
+    $lastModified = File::lastModified($filePath);
+    $etag = md5_file($filePath);
+
+    $response = Response::make(File::get($filePath), 200);
+    $response->header("Content-Type", $mimeType);
+    $response->header("Cache-Control", "public, max-age=31536000"); // Cache 1 an
+    $response->header("Last-Modified", gmdate('D, d M Y H:i:s', $lastModified) . " GMT");
+    $response->header("ETag", $etag);
+
+    // Gestion du cache côté client (If-Modified-Since et If-None-Match)
+    if (
+        request()->headers->get('If-Modified-Since') == gmdate('D, d M Y H:i:s', $lastModified) . " GMT" ||
+        request()->headers->get('If-None-Match') == $etag
+    ) {
+        return response('', 304)->header('Cache-Control', 'public, max-age=31536000');
+    }
+
+    return $response;
+})->where('path', '.*');
+
 // Home routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
