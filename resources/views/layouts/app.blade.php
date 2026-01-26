@@ -193,7 +193,7 @@
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
-                    this.cartCount = data.cart_count;
+                    window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
                     window.showToast(data.success, 'success');
                 } else if(data.error) {
                     window.showToast(data.error, 'error');

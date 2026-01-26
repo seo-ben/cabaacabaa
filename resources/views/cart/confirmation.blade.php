@@ -330,7 +330,7 @@
 
     // Polling fallback (every 30 seconds instead of 5)
     setInterval(() => {
-        fetch(`/api/order-status/${orderCode}`)
+        fetch(`/commande/check-status/${orderCode}`)
             .then(res => res.json())
             .then(data => {
                 if (data.statut) {

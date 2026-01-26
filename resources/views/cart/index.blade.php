@@ -246,12 +246,8 @@
                 $("#final-total-val").text(response.final_total || response.cart_total);
                 $("#cart-item-count-badge").text(response.cart_count + " Articles");
                 
-                if (window.Alpine) {
-                    const body = document.querySelector('body');
-                    if (body && body.__x) {
-                         body.__x.$data.cartCount = response.cart_count;
-                    }
-                }
+                // Dispatch event for AlpineJS to update cart count
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: response.cart_count } }));
             }
         });
     }
@@ -298,10 +294,8 @@
                         $("#final-total-val").text(response.final_total || response.cart_total);
                         $("#cart-item-count-badge").text(response.cart_count + " Articles");
                         
-                        const body = document.querySelector('body');
-                        if (body && body.__x) {
-                             body.__x.$data.cartCount = response.cart_count;
-                        }
+                        // Dispatch event for AlpineJS to update cart count
+                        window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: response.cart_count } }));
 
                         if(response.cart_count == 0) {
                             window.location.reload();

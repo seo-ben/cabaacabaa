@@ -193,7 +193,7 @@
                                 <span class="px-2 py-1 bg-slate-900/90 text-white text-[8px] font-black uppercase tracking-widest rounded-lg shadow-xl backdrop-blur-md">ÉPUISÉ</span>
                             </div>
                         @endif
-                        <button onclick="addCart({{ $plat->id_plat }})" 
+                        <button @click="addCart({{ $plat->id_plat }})" 
                                 {{ !$plat->is_available ? 'disabled' : '' }}
                                 class="absolute bottom-2 right-2 w-8 h-8 {{ $plat->is_available ? 'bg-red-600' : 'bg-gray-300 cursor-not-allowed' }} text-white rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
@@ -399,31 +399,6 @@
                 window.showToast("Impossible de vous localiser. Veuillez vérifier vos paramètres.", 'error');
             }
         );
-    }
-    
-    function addCart(id) {
-        fetch(`/panier/ajouter/${id}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                // Dispatch event for AlpineJS to update cart count
-                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
-                window.showToast(data.success, 'success');
-            } else {
-                window.showToast(data.error || 'Erreur lors de l\'ajout', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            window.showToast('Une erreur est survenue', 'error');
-        });
     }
 </script>
 
