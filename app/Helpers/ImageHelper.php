@@ -24,13 +24,16 @@ class ImageHelper
             $extension = $isFilePath ? pathinfo($file, PATHINFO_EXTENSION) : strtolower($file->getClientOriginalExtension());
             $realPath = $isFilePath ? $file : $file->getRealPath();
             
-            $imageName = Str::random(40) . '.webp';
+            // Normalize extension
+            if ($extension === 'jpeg') $extension = 'jpg';
+            
+            $imageName = Str::random(40) . '.' . $extension;
             $filePath = $directory . '/' . $imageName;
 
             // Load the image based on its type
             switch ($extension) {
-                case 'jpeg':
                 case 'jpg':
+                case 'jpeg':
                     $image = imagecreatefromjpeg($realPath);
                     break;
                 case 'png':
@@ -46,6 +49,11 @@ class ImageHelper
                     $image = imagecreatefromwebp($realPath);
                     break;
                 default:
+                    // If extension is not handled by GD, but we still want to save it
+                    if (!$isFilePath && $file instanceof \Illuminate\Http\UploadedFile) {
+                        Storage::disk('public')->putFileAs($directory, $file, $imageName);
+                        return $filePath;
+                    }
                     return false;
             }
 
@@ -59,16 +67,20 @@ class ImageHelper
                 $newWidth = $maxWidth;
                 $newHeight = floor($height * ($maxWidth / $width));
                 $tmpImage = imagecreatetruecolor($newWidth, $newHeight);
-                imagealphablending($tmpImage, false);
-                imagesavealpha($tmpImage, true);
+                
+                if (in_array($extension, ['png', 'webp', 'gif'])) {
+                    imagealphablending($tmpImage, false);
+                    imagesavealpha($tmpImage, true);
+                }
+                
                 imagecopyresampled($tmpImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
                 imagedestroy($image);
                 $image = $tmpImage;
             }
 
-            // Save Main Image as WebP
-            $tempPath = tempnam(sys_get_temp_dir(), 'webp');
-            imagewebp($image, $tempPath, $quality);
+            // Save Main Image in original format
+            $tempPath = tempnam(sys_get_temp_dir(), 'img');
+            self::saveImageByExtension($image, $tempPath, $extension, $quality);
             Storage::disk('public')->putFileAs($directory, new \Illuminate\Http\File($tempPath), $imageName);
             
             // Thumbnail Logic
@@ -76,12 +88,16 @@ class ImageHelper
                 $thumbWidth = 400;
                 $thumbHeight = floor(imagesy($image) * ($thumbWidth / imagesx($image)));
                 $thumbImage = imagecreatetruecolor($thumbWidth, $thumbHeight);
-                imagealphablending($thumbImage, false);
-                imagesavealpha($thumbImage, true);
+                
+                if (in_array($extension, ['png', 'webp', 'gif'])) {
+                    imagealphablending($thumbImage, false);
+                    imagesavealpha($thumbImage, true);
+                }
+                
                 imagecopyresampled($thumbImage, $image, 0, 0, 0, 0, $thumbWidth, $thumbHeight, imagesx($image), imagesy($image));
                 
                 $thumbTempPath = tempnam(sys_get_temp_dir(), 'thumb');
-                imagewebp($thumbImage, $thumbTempPath, 60); // Moins de qualité pour la miniature
+                self::saveImageByExtension($thumbImage, $thumbTempPath, $extension, 60);
                 Storage::disk('public')->putFileAs($directory . '/thumbnails', new \Illuminate\Http\File($thumbTempPath), $imageName);
                 
                 imagedestroy($thumbImage);
@@ -94,6 +110,33 @@ class ImageHelper
             return $filePath;
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    /**
+     * Save GD image to path based on extension.
+     */
+    private static function saveImageByExtension($image, $path, $extension, $quality)
+    {
+        switch ($extension) {
+            case 'jpg':
+            case 'jpeg':
+                imagejpeg($image, $path, $quality);
+                break;
+            case 'png':
+                $pngQuality = (int)round((100 - $quality) / 10);
+                if ($pngQuality > 9) $pngQuality = 9;
+                imagepng($image, $path, $pngQuality);
+                break;
+            case 'gif':
+                imagegif($image, $path);
+                break;
+            case 'webp':
+                imagewebp($image, $path, $quality);
+                break;
+            default:
+                imagejpeg($image, $path, $quality);
+                break;
         }
     }
 }
