@@ -69,7 +69,7 @@ class VendorSettingsController extends Controller
 
             return back()->with('success', 'Profil boutique mis à jour !');
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Une erreur est survenue lors de la mise à jour de votre profil. Veuillez réessayer.');
+            return back()->withInput()->with('error', 'Une erreur est survenue : ' . $e->getMessage());
         }
     }
 
