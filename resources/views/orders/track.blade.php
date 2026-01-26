@@ -198,41 +198,48 @@
         'termine': 3
     };
 
-    function updateTrackingUI(status) {
+    function updateTrackingUI(status, label = null) {
         const rank = statusRanks[status] ?? 0;
         const progress = (rank / 3) * 100;
         
         // Update line
-        document.getElementById('active-line').style.width = progress + '%';
+        const activeLine = document.getElementById('active-line');
+        if (activeLine) activeLine.style.width = progress + '%';
         
         // Update steps
         document.querySelectorAll('.step-item').forEach(item => {
             const itemRank = parseInt(item.getAttribute('data-rank'));
             const icon = item.querySelector('.step-icon');
-            const label = item.querySelector('.step-label');
+            const labelEl = item.querySelector('.step-label');
             
             if (itemRank <= rank) {
                 icon.classList.remove('bg-white', 'dark:bg-gray-800', 'border-2', 'border-gray-100', 'dark:border-gray-700', 'text-gray-300', 'dark:text-gray-600');
                 icon.classList.add('bg-orange-500', 'text-white', 'shadow-lg', 'shadow-orange-200', 'scale-110');
-                label.classList.remove('text-gray-400', 'dark:text-gray-600');
-                label.classList.add('text-orange-600', 'dark:text-orange-400');
+                if (labelEl) {
+                    labelEl.classList.remove('text-gray-400', 'dark:text-gray-600');
+                    labelEl.classList.add('text-orange-600', 'dark:text-orange-400');
+                }
             } else {
                 icon.classList.add('bg-white', 'dark:bg-gray-800', 'border-2', 'border-gray-100', 'dark:border-gray-700', 'text-gray-300', 'dark:text-gray-600');
                 icon.classList.remove('bg-orange-500', 'text-white', 'shadow-lg', 'shadow-orange-200', 'scale-110');
-                label.classList.add('text-gray-400', 'dark:text-gray-600');
-                label.classList.remove('text-orange-600', 'dark:text-orange-400');
+                if (labelEl) {
+                    labelEl.classList.add('text-gray-400', 'dark:text-gray-600');
+                    labelEl.classList.remove('text-orange-600', 'dark:text-orange-400');
+                }
             }
         });
 
         // Update badge
         const badge = document.getElementById('current-status-badge');
-        badge.innerText = status.replace('_', ' ').toUpperCase();
+        if (badge) {
+            const displayLabel = label || status.replace('_', ' ');
+            badge.innerText = displayLabel.charAt(0).toUpperCase() + displayLabel.slice(1);
+        }
         
         // Handle rating form appearance
         if (status === 'termine') {
             const ratingSection = document.getElementById('rating-section');
             const thankYouSection = document.getElementById('thank-you-section');
-            // Only show rating if thank you isn't already visible
             if (ratingSection && thankYouSection && thankYouSection.classList.contains('hidden')) {
                 ratingSection.classList.remove('hidden');
             }
@@ -240,32 +247,45 @@
 
         // Handle canceled
         if (status === 'annule' || status === 'annulee') {
-            document.getElementById('tracking-content').innerHTML = `
-                <div class="py-20 text-center animate-in fade-in zoom-in duration-500">
-                    <div class="w-24 h-24 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            const trackingContent = document.getElementById('tracking-content');
+            if (trackingContent) {
+                trackingContent.innerHTML = `
+                    <div class="py-20 text-center animate-in fade-in zoom-in duration-500">
+                        <div class="w-24 h-24 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-2">Commande Annulée</h3>
+                        <p class="text-gray-500 dark:text-gray-400 font-medium">Cette commande a été annulée.</p>
                     </div>
-                    <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-2">Commande Annulée</h3>
-                    <p class="text-gray-500 dark:text-gray-400 font-medium">Cette commande a été annulée.</p>
-                </div>
-            `;
+                `;
+            }
         }
     }
 
     // Initial load
     updateTrackingUI("{{ $commande->statut }}");
 
-    // Real-time polling
+    // 1. Real-time updates with Laravel Echo (Reverb/Pusher)
+    if (window.Echo) {
+        window.Echo.channel('order.' + orderCode)
+            .listen('.order.status.changed', (e) => {
+                console.log('Real-time update:', e);
+                updateTrackingUI(e.statut, e.label);
+            });
+    }
+
+    // 2. Fallback Polling (Every 10 seconds if Echo is not active, or 30s as safety)
+    const pollInterval = window.Echo ? 30000 : 10000;
     setInterval(() => {
-        fetch(`/api/order-status/${orderCode}`)
+        fetch(`/commande/check-status/${orderCode}`)
             .then(res => res.json())
             .then(data => {
                 if (data.statut) {
-                    updateTrackingUI(data.statut);
+                    updateTrackingUI(data.statut, data.statut_label);
                 }
             })
-            .catch(err => console.error('Erreur de tracking:', err));
-    }, 5000); // Check every 5 seconds
+            .catch(err => console.error('Erreur de tracking fallback:', err));
+    }, pollInterval);
 </script>
 @endsection
 @endif

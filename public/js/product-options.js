@@ -142,8 +142,7 @@ function productOptionsManager() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const cartCountEl = document.querySelector('[x-text="cartCount"]');
-                        if (cartCountEl && data.cart_count) {
+                        if (data.cart_count !== undefined) {
                             window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
                         }
 
