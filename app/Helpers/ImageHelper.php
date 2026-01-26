@@ -25,29 +25,26 @@ class ImageHelper
             $extension = $isFilePath ? pathinfo($file, PATHINFO_EXTENSION) : strtolower($file->getClientOriginalExtension());
             $realPath = $isFilePath ? $file : $file->getRealPath();
             
-            $imageName = Str::random(40) . '.webp';
+            $imageName = Str::random(40) . '.jpg';
             $filePath = $directory . '/' . $imageName;
 
             // Load the image based on its type
             switch ($extension) {
+                case 'jpg':
                 case 'jpeg':
                     $image = imagecreatefromjpeg($realPath);
-                    $saveFunc = 'imagejpeg';
                     break;
                 case 'png':
                     $image = imagecreatefrompng($realPath);
                     imagepalettetotruecolor($image);
                     imagealphablending($image, true);
                     imagesavealpha($image, true);
-                    $saveFunc = 'imagepng';
                     break;
                 case 'gif':
                     $image = imagecreatefromgif($realPath);
-                    $saveFunc = 'imagegif';
                     break;
                 case 'webp':
                     $image = imagecreatefromwebp($realPath);
-                    $saveFunc = 'imagejpeg'; // Force jpg for webp inputs
                     break;
                 default:
                     return false;
@@ -63,16 +60,19 @@ class ImageHelper
                 $newWidth = $maxWidth;
                 $newHeight = floor($height * ($maxWidth / $width));
                 $tmpImage = imagecreatetruecolor($newWidth, $newHeight);
+                
+                // Keep transparency support for temporary resizing
                 imagealphablending($tmpImage, false);
                 imagesavealpha($tmpImage, true);
+                
                 imagecopyresampled($tmpImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
                 imagedestroy($image);
                 $image = $tmpImage;
             }
 
-            // Save Main Image as WebP
-            $tempPath = tempnam(sys_get_temp_dir(), 'webp');
-            imagewebp($image, $tempPath, $quality);
+            // Save Main Image as JPG (Avoid WebP on server)
+            $tempPath = tempnam(sys_get_temp_dir(), 'img');
+            imagejpeg($image, $tempPath, $quality);
             Storage::disk('public')->putFileAs($directory, new \Illuminate\Http\File($tempPath), $imageName);
             
             // Thumbnail Logic
@@ -85,7 +85,7 @@ class ImageHelper
                 imagecopyresampled($thumbImage, $image, 0, 0, 0, 0, $thumbWidth, $thumbHeight, imagesx($image), imagesy($image));
                 
                 $thumbTempPath = tempnam(sys_get_temp_dir(), 'thumb');
-                imagewebp($thumbImage, $thumbTempPath, 60); // Moins de qualité pour la miniature
+                imagejpeg($thumbImage, $thumbTempPath, 60); 
                 Storage::disk('public')->putFileAs($directory . '/thumbnails', new \Illuminate\Http\File($thumbTempPath), $imageName);
                 
                 imagedestroy($thumbImage);
