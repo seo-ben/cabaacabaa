@@ -165,4 +165,19 @@ class PlatController extends Controller
 
         return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $vendeur->slug])->with('success', 'Plat supprimé.');
     }
+
+    /**
+     * Basculer la disponibilité d'un plat (Rupture de stock).
+     */
+    public function toggleAvailability($vendor_slug, $id)
+    {
+        $vendeur = Auth::user()->vendeur;
+        $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
+
+        $plat->is_available = !$plat->is_available;
+        $plat->save();
+
+        $msg = $plat->is_available ? 'Article à nouveau disponible !' : 'Article marqué comme épuisé.';
+        return back()->with('success', $msg);
+    }
 }

@@ -224,6 +224,11 @@
                                             <div class="px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl">
                                                 {{ $plat->categorie->nom_categorie ?? 'Produit' }}
                                             </div>
+                                            @if(!$plat->is_available)
+                                                <div class="px-4 py-2 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl">
+                                                    ÉPUISÉ
+                                                </div>
+                                            @endif
                                         </div>
                                         
                                         <button 
@@ -265,13 +270,15 @@
                                                     ])
                                                 ])
                                             ]) }})"
-                                                    class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-100 shadow-2xl transition-all">
-                                                Choisir les options
+                                                    {{ !$plat->is_available ? 'disabled' : '' }}
+                                                    class="w-full py-4 {{ $plat->is_available ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'bg-gray-300 text-white cursor-not-allowed' }} rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-100 shadow-2xl transition-all">
+                                                {{ $plat->is_available ? 'Choisir les options' : 'Stock Épuisé' }}
                                             </button>
                                         @else
                                             <button @click="addCart({{ $plat->id_plat }})"
-                                                    class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-100 shadow-2xl transition-all">
-                                                Ajouter au panier
+                                                    {{ !$plat->is_available ? 'disabled' : '' }}
+                                                    class="w-full py-4 {{ $plat->is_available ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'bg-gray-300 text-white cursor-not-allowed' }} rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-100 shadow-2xl transition-all">
+                                                {{ $plat->is_available ? 'Ajouter au panier' : 'Stock Épuisé' }}
                                             </button>
                                         @endif
                                     </div>
@@ -322,9 +329,11 @@
                                             </div>
                                         </a>
 
-                                        <div class="flex gap-1">
-                                            <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                                            <span class="text-[9px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Disponible</span>
+                                        <div class="flex gap-1 items-center">
+                                            <div class="w-1.5 h-1.5 rounded-full {{ $plat->is_available ? 'bg-green-500 animate-pulse' : 'bg-red-500' }}"></div>
+                                            <span class="text-[9px] font-black {{ $plat->is_available ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }} uppercase tracking-widest">
+                                                {{ $plat->is_available ? 'Disponible' : 'Vendu' }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

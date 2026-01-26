@@ -78,6 +78,9 @@
           sidebarOpen: window.innerWidth >= 1024,
           darkMode: localStorage.getItem('darkMode') === 'true',
           newOrder: null,
+          notifications: [],
+          unreadCount: 0,
+          notificationPermission: Notification.permission,
           toggleDarkMode() {
               this.darkMode = !this.darkMode;
               localStorage.setItem('darkMode', this.darkMode);
@@ -100,6 +103,28 @@
                           }
                       });
               }
+
+              this.fetchNotifications();
+              setInterval(() => this.fetchNotifications(), 30000);
+          },
+          fetchNotifications() {
+              fetch('{{ route('notifications.unread') }}')
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.length > this.unreadCount) {
+                          this.playNotificationSound();
+                      }
+                      this.notifications = data;
+                      this.unreadCount = data.length;
+                  });
+          },
+          requestNotificationPermission() {
+              Notification.requestPermission().then(permission => {
+                  this.notificationPermission = permission;
+                  if (permission === 'granted') {
+                    this.playNotificationSound();
+                  }
+              });
           },
           playNotificationSound() {
               const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
@@ -199,9 +224,15 @@
 
                 <a href="{{ vendor_route('vendeur.slug.plats.index') }}" 
                    class="flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 dark:text-gray-400 transition-all hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white {{ request()->routeIs('vendeur.slug.plats.*') || request()->routeIs('vendeur.plats.*') ? 'sidebar-active' : '' }}">
-                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                   Produits & Menu
-                </a>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Produits & Menu
+                 </a>
+
+                 <a href="{{ vendor_route('vendeur.slug.delivery.index') }}" 
+                   class="flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 dark:text-gray-400 transition-all hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white {{ request()->routeIs('vendeur.slug.delivery.*') ? 'sidebar-active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Livreurs
+                 </a>
 
                 <p class="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mt-10 mb-4">Configuration</p>
 
@@ -271,11 +302,18 @@
                     </a>
                     @endif
 
-                    <!-- Dark Mode Toggle -->
+                     <!-- Dark Mode Toggle -->
                     <button @click="toggleDarkMode()" class="p-2.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/30">
                         <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                         <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-cloak><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l-.707-.707M6.343 6.343l-.707-.707ZM12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
                     </button>
+
+                    <!-- Notification Permission -->
+                    <template x-if="notificationPermission !== 'granted'">
+                        <button @click="requestNotificationPermission()" class="p-2.5 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-2xl hover:bg-orange-100 dark:hover:bg-orange-900/50 transition-all border border-transparent animate-pulse" title="Activer les notifications sonores">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        </button>
+                    </template>
 
                     <a href="{{ route('vendor.show', [Auth::user()->vendeur->id_vendeur, \Str::slug(Auth::user()->vendeur->nom_commercial ?? 'boutique')]) }}" target="_blank" class="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-all flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>

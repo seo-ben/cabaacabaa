@@ -107,6 +107,16 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'id_utilisateur', 'id_user');
     }
 
+    public function livraisons()
+    {
+        return $this->hasMany(Commande::class, 'id_livreur', 'id_user');
+    }
+
+    public function deliveryApplications()
+    {
+        return $this->hasMany(DeliveryApplication::class, 'id_user', 'id_user');
+    }
+
     public function loginAttempts()
     {
         return $this->hasMany(LoginAttempt::class, 'id_user', 'id_user');

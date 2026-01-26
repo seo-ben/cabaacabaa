@@ -131,9 +131,17 @@
                             <span class="text-xs font-bold text-slate-800">{{ number_format($vendor->note_moyenne, 1) }}</span>
                         </div>
                         @if($vendor->is_boosted)
-                        <div class="absolute top-4 right-4 bg-red-600 text-white px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 z-20">
                             <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.46a1 1 0 00-.364 1.118l1.286 3.97a1 1 0 01-1.54 1.118l-3.39-2.46a1 1 0 00-1.175 0l-3.39 2.46a1 1 0 01-1.54-1.118l1.286-3.97a1 1 0 00-.364-1.118L2.34 9.397c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.951-.69l1.286-3.97z"/></svg>
                             <span class="text-[9px] font-bold uppercase tracking-wider">Mis en avant</span>
+                        </div>
+                        @endif
+
+                        @if(!$vendor->actif || $vendor->is_busy)
+                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] flex items-center justify-center z-10 transition-all group-hover:backdrop-blur-sm">
+                            <span class="px-4 py-2 {{ $vendor->is_busy ? 'bg-orange-600' : 'bg-red-600' }} text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-2xl">
+                                {{ $vendor->is_busy ? 'DÉBORDÉ' : 'FERMÉ' }}
+                            </span>
                         </div>
                         @endif
                     </div>
@@ -180,7 +188,14 @@
                     <div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
                         <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <button onclick="addCart({{ $plat->id_plat }})" class="absolute bottom-2 right-2 w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                        @if(!$plat->is_available)
+                            <div class="absolute inset-0 bg-white/20 dark:bg-slate-900/20 flex items-center justify-center pointer-events-none">
+                                <span class="px-2 py-1 bg-slate-900/90 text-white text-[8px] font-black uppercase tracking-widest rounded-lg shadow-xl backdrop-blur-md">ÉPUISÉ</span>
+                            </div>
+                        @endif
+                        <button onclick="addCart({{ $plat->id_plat }})" 
+                                {{ !$plat->is_available ? 'disabled' : '' }}
+                                class="absolute bottom-2 right-2 w-8 h-8 {{ $plat->is_available ? 'bg-red-600' : 'bg-gray-300 cursor-not-allowed' }} text-white rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         </button>
                     </div>

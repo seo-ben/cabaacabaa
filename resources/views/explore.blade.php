@@ -240,6 +240,14 @@
                                             En Promo
                                         </div>
                                         @endif
+
+                                        @if(!$v->actif || $v->is_busy)
+                                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] flex items-center justify-center z-10 transition-all group-hover:backdrop-blur-sm">
+                                            <span class="px-4 py-2 {{ $v->is_busy ? 'bg-orange-600' : 'bg-red-600' }} text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-2xl">
+                                                {{ $v->is_busy ? 'DÉBORDÉ' : 'FERMÉ' }}
+                                            </span>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
 

@@ -54,7 +54,15 @@ class OrderController extends Controller
 
         $orders = $query->paginate(10);
 
-        return view('vendeur.orders.index', compact('orders', 'status', 'search', 'stats'));
+        // Fetch accepted delivery drivers for assignment
+        $acceptedDrivers = \App\Models\DeliveryApplication::whereHas('request', function($q) use ($vendeur) {
+                $q->where('id_vendeur', $vendeur->id_vendeur);
+            })
+            ->where('status', 'accepted')
+            ->with('user')
+            ->get();
+
+        return view('vendeur.orders.index', compact('orders', 'status', 'search', 'stats', 'acceptedDrivers'));
     }
 
     /**
@@ -81,6 +89,20 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        if ($request->statut === 'termine' && $previousStatus !== 'termine') {
+            $receiptUrl = route('order.receipt', ['code' => $order->numero_commande]);
+            
+            \App\Models\Notification::create([
+                'id_utilisateur' => $order->id_client,
+                'type_notification' => 'commande',
+                'titre' => 'Commande Livrée',
+                'message' => "Votre commande #{$order->numero_commande} a été livrée avec succès. Merci de votre confiance ! Consultez votre reçu ici : {$receiptUrl}",
+                'id_commande' => $order->id_commande,
+                'id_vendeur' => $order->id_vendeur,
+                'date_creation' => now()
+            ]);
+        }
 
         // ============================================================================
         // LOGIQUE FINANCIÈRE WALLET - TEMPORAIREMENT DÉSACTIVÉE

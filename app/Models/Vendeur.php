@@ -42,7 +42,8 @@ class Vendeur extends Model
         'id_category_vendeur',
         'is_boosted',
         'boost_expires_at',
-        'actif'
+        'actif',
+        'is_busy'
     ];
 
     protected $casts = [
@@ -137,5 +138,10 @@ class Vendeur extends Model
     public function staff()
     {
         return $this->hasMany(VendorStaff::class, 'id_vendeur', 'id_vendeur');
+    }
+
+    public function deliveryRequests()
+    {
+        return $this->hasMany(DeliveryRequest::class, 'id_vendeur', 'id_vendeur');
     }
 }

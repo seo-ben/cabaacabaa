@@ -27,6 +27,13 @@ class CartController extends Controller
     public function add(Request $request, $id)
     {
         $plat = Plat::with(['vendeur', 'groupesVariantes.variantes'])->findOrFail($id);
+
+        if (!$plat->is_available) {
+            return response()->json([
+                'error' => 'Désolé, cet article est actuellement en rupture de stock.'
+            ], 400);
+        }
+
         $cart = session()->get('cart', []);
 
         // If we are editing/replacing an item

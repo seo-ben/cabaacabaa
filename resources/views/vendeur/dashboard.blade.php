@@ -184,6 +184,31 @@
                 </a>
             </div>
 
+            <!-- Busy Mode Toggle (New) -->
+            <div class="{{ $vendeur->is_busy ? 'bg-orange-600' : 'bg-white dark:bg-gray-900' }} rounded-2xl p-10 border {{ $vendeur->is_busy ? 'border-transparent' : 'border-gray-100 dark:border-gray-800' }} shadow-xl transition-all duration-500">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-xs font-black uppercase tracking-widest {{ $vendeur->is_busy ? 'text-white/60' : 'text-gray-400' }}">Mode Cuisine</h3>
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $vendeur->is_busy ? 'bg-white' : 'bg-orange-400' }} opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 {{ $vendeur->is_busy ? 'bg-white' : 'bg-orange-500' }}"></span>
+                    </span>
+                </div>
+                <div class="space-y-4 mb-8">
+                    <h4 class="text-xl font-black {{ $vendeur->is_busy ? 'text-white' : 'text-gray-900 dark:text-white' }}">
+                        {{ $vendeur->is_busy ? 'DÉBORDÉ !' : 'Cuisine Zen' }}
+                    </h4>
+                    <p class="text-sm font-medium {{ $vendeur->is_busy ? 'text-white/80' : 'text-gray-500' }}">
+                        {{ $vendeur->is_busy ? 'Les clients voient que vous êtes occupé. Pas de nouvelles commandes.' : 'Activer le mode occupé si vous avez trop de commandes en cours.' }}
+                    </p>
+                </div>
+                <form action="{{ vendor_route('vendeur.slug.settings.toggle-busy') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full py-4 {{ $vendeur->is_busy ? 'bg-white text-orange-600' : 'bg-orange-600 text-white' }} rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-lg active:scale-95">
+                        {{ $vendeur->is_busy ? 'Désactiver Mode Rush' : 'Activer Mode Rush' }}
+                    </button>
+                </form>
+            </div>
+
             <!-- Ad Card -->
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/10 dark:to-orange-950/20 rounded-2xl p-10 border border-orange-200 dark:border-orange-900/30">
                 <p class="text-xs font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-4">Conseil Pro</p>

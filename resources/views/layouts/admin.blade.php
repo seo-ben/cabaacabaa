@@ -53,6 +53,7 @@
             activeDropdown: '{{ request()->routeIs('admin.vendors*') ? 'vendors' : (request()->routeIs('admin.orders*') ? 'orders' : (request()->routeIs('admin.users*') ? 'users' : (request()->routeIs('admin.settings*') || request()->routeIs('admin.countries*') ? 'settings' : ''))) }}',
             notifications: [],
             unreadCount: 0,
+            notificationPermission: Notification.permission,
             
             init() {
                 this.fetchNotifications();
@@ -89,9 +90,17 @@
                 fetch('{{ route('notifications.unread') }}')
                     .then(response => response.json())
                     .then(data => {
+                        if (data.length > this.unreadCount) {
+                            this.playNotificationSound();
+                        }
                         this.notifications = data;
                         this.unreadCount = data.length;
                     });
+            },
+
+            playNotificationSound() {
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play().catch(e => console.log('Audio error or autoplay blocked'));
             },
 
             markNotificationsRead() {
@@ -106,6 +115,15 @@
                 }).then(() => {
                     this.notifications = [];
                     this.unreadCount = 0;
+                });
+            },
+
+            requestNotificationPermission() {
+                Notification.requestPermission().then(permission => {
+                    this.notificationPermission = permission;
+                    if (permission === 'granted') {
+                      this.playNotificationSound();
+                    }
                 });
             }
          }">
@@ -749,6 +767,13 @@
                     </div>
 
                     <div class="flex items-center gap-4">
+                        <!-- Notification Permission -->
+                        <template x-if="notificationPermission !== 'granted'">
+                            <button @click="requestNotificationPermission()" class="p-2 bg-orange-50 text-orange-600 rounded-lg hover:bg-orange-100 transition-all animate-pulse" title="Activer les notifications sonores">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            </button>
+                        </template>
+
                         <!-- Notifications -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open; if(open) markNotificationsRead()" 

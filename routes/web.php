@@ -42,8 +42,9 @@ Route::match(['get', 'post'], '/checkout/callback', [\App\Http\Controllers\Order
 Route::get('/mes-commandes/{id}/annuler', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 Route::get('/mes-commandes/{id}/re-commander', [\App\Http\Controllers\OrderController::class, 'reorder'])->name('orders.reorder');
 Route::get('/commande-confirmee/{id}', [\App\Http\Controllers\OrderController::class, 'confirmation'])->name('order.confirmation');
-Route::get('/suivre-ma-commande', [\App\Http\Controllers\OrderController::class, 'trackOrder'])->name('orders.track');
-Route::get('/api/order-status/{code}', [\App\Http\Controllers\OrderController::class, 'checkStatus'])->name('orders.status.api');
+Route::get('/commande/suivi', [\App\Http\Controllers\OrderController::class, 'trackOrder'])->name('orders.track');
+Route::get('/commande/recu/{code}', [\App\Http\Controllers\OrderController::class, 'showReceipt'])->name('order.receipt');
+Route::get('/commande/check-status/{code}', [\App\Http\Controllers\OrderController::class, 'checkStatus'])->name('order.check-status');
 Route::post('/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 
 // Newsletter subscription
@@ -104,6 +105,7 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
     Route::post('/plats', [\App\Http\Controllers\Vendor\PlatController::class, 'store'])->name('vendeur.slug.plats.store');
     Route::get('/plats/{id}/modifier', [\App\Http\Controllers\Vendor\PlatController::class, 'edit'])->name('vendeur.slug.plats.edit');
     Route::put('/plats/{id}', [\App\Http\Controllers\Vendor\PlatController::class, 'update'])->name('vendeur.slug.plats.update');
+    Route::post('/plats/{id}/toggle-availability', [\App\Http\Controllers\Vendor\PlatController::class, 'toggleAvailability'])->name('vendeur.slug.plats.toggle-availability');
     Route::delete('/plats/{id}', [\App\Http\Controllers\Vendor\PlatController::class, 'destroy'])->name('vendeur.slug.plats.destroy');
 
     // Order management
@@ -116,6 +118,7 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
     Route::post('/parametres/horaires', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'updateHours'])->name('vendeur.slug.settings.hours');
     Route::post('/parametres/categories', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'updateCategories'])->name('vendeur.slug.settings.categories');
     Route::post('/parametres/toggle-status', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'toggleStatus'])->name('vendeur.slug.settings.toggle');
+    Route::post('/parametres/toggle-busy', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'toggleBusy'])->name('vendeur.slug.settings.toggle-busy');
 
     // Wallet & Payouts
     Route::get('/payouts', [\App\Http\Controllers\Vendor\PayoutController::class, 'index'])->name('vendeur.slug.payouts.index');
@@ -132,6 +135,21 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
     Route::get('/team/create', [\App\Http\Controllers\Vendor\TeamController::class, 'create'])->name('vendeur.slug.team.create');
     Route::post('/team', [\App\Http\Controllers\Vendor\TeamController::class, 'store'])->name('vendeur.slug.team.store');
     Route::delete('/team/{id}', [\App\Http\Controllers\Vendor\TeamController::class, 'destroy'])->name('vendeur.slug.team.destroy');
+
+    // Delivery Management for Vendor
+    Route::get('/livreurs', [\App\Http\Controllers\DeliveryController::class, 'vendorIndex'])->name('vendeur.slug.delivery.index');
+    Route::post('/livreurs/request', [\App\Http\Controllers\DeliveryController::class, 'storeRequest'])->name('vendeur.slug.delivery.request');
+    Route::post('/livreurs/request/close', [\App\Http\Controllers\DeliveryController::class, 'closeRequest'])->name('vendeur.slug.delivery.request.close');
+    Route::post('/livreurs/application/{id}/{action}', [\App\Http\Controllers\DeliveryController::class, 'handleApplication'])->name('vendeur.slug.delivery.application');
+    Route::post('/commandes/{id}/assign', [\App\Http\Controllers\DeliveryController::class, 'assignOrder'])->name('vendeur.slug.delivery.assign');
+});
+
+// Public/Driver Routes
+Route::get('/devenir-livreur', [\App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery.index');
+    Route::middleware('auth')->group(function () {
+    Route::post('/devenir-livreur/apply/{id}', [\App\Http\Controllers\DeliveryController::class, 'apply'])->name('delivery.apply');
+    Route::get('/mes-livraisons', [\App\Http\Controllers\DeliveryController::class, 'myDeliveries'])->name('delivery.my-deliveries');
+    Route::post('/mes-livraisons/{id}/complete', [\App\Http\Controllers\DeliveryController::class, 'completeDelivery'])->name('delivery.complete');
 });
 
 // Legacy Vendeur routes (backward compatibility - redirects to slug-based URLs)

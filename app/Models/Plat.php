@@ -9,7 +9,7 @@ class Plat extends Model
     protected $table = 'plats';
     protected $primaryKey = 'id_plat';
     public $timestamps = false;
-    protected $fillable = ['id_vendeur', 'id_categorie', 'nom_plat', 'description', 'prix', 'devise', 'disponible', 'stock_limite', 'quantite_disponible', 'temps_preparation_min', 'image_principale', 'images_supplementaires', 'nombre_commandes', 'nombre_vues', 'en_promotion', 'prix_promotion', 'date_debut_promotion', 'date_fin_promotion', 'date_creation', 'date_modification'];
+    protected $fillable = ['id_vendeur', 'id_categorie', 'nom_plat', 'description', 'prix', 'devise', 'disponible', 'is_available', 'stock_limite', 'quantite_disponible', 'temps_preparation_min', 'image_principale', 'images_supplementaires', 'nombre_commandes', 'nombre_vues', 'en_promotion', 'prix_promotion', 'date_debut_promotion', 'date_fin_promotion', 'date_creation', 'date_modification'];
 
     protected $casts = [
         'images_supplementaires' => 'array',

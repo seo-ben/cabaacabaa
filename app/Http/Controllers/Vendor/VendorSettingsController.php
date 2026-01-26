@@ -146,4 +146,17 @@ class VendorSettingsController extends Controller
         $msg = $vendeur->actif ? 'Boutique ouverte !' : 'Boutique fermée !';
         return back()->with('success', $msg);
     }
+
+    /**
+     * Mettre en mode "Occupé" (Pause temporaire).
+     */
+    public function toggleBusy()
+    {
+        $vendeur = Auth::user()->vendeur;
+        $vendeur->is_busy = !$vendeur->is_busy;
+        $vendeur->save();
+
+        $msg = $vendeur->is_busy ? 'Mode Occupé activé (Pause) !' : 'Mode Normal activé !';
+        return back()->with('success', $msg);
+    }
 }

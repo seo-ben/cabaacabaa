@@ -110,6 +110,16 @@
                                 <p class="text-xl font-black text-orange-600 dark:text-orange-400">{{ number_format($commande->montant_total, 0) }} FCFA</p>
                             </div>
                         </div>
+
+                        @if($commande->statut == 'termine')
+                        <div class="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800">
+                             <a href="{{ route('order.receipt', ['code' => $commande->numero_commande]) }}" target="_blank"
+                               class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-black dark:hover:bg-gray-200 transition-all flex items-center justify-center gap-3 shadow-xl">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                                Consulter mon reçu de commande
+                            </a>
+                        </div>
+                        @endif
                     </div>
                 </div>
 

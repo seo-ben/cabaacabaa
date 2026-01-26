@@ -6,18 +6,26 @@
      x-data="productOptionsManager()">
     
     <!-- Closed State Modal -->
-    @if(!$vendeur->actif)
+    @if(!$vendeur->actif || $vendeur->is_busy)
     <div class="fixed inset-0 z-100 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in duration-300">
-            <div class="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mx-auto">
-                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+            <div class="w-20 h-20 {{ $vendeur->is_busy ? 'bg-orange-50 dark:bg-orange-900/20' : 'bg-red-50 dark:bg-red-900/20' }} rounded-xl flex items-center justify-center mx-auto">
+                @if($vendeur->is_busy)
+                    <svg class="w-10 h-10 text-orange-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                @else
+                    <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                @endif
             </div>
             <div>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Actuellement Fermé</h2>
-                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Ce vendeur a terminé son service pour le moment. Revenez pendant les heures d'ouverture.
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                    {{ $vendeur->is_busy ? 'Chef très occupé !' : 'Actuellement Fermé' }}
+                </h2>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                    {{ $vendeur->is_busy ? 'Nous avons temporairement suspendu les nouvelles commandes pour garantir la qualité de service. De retour dans quelques minutes !' : 'Ce vendeur a terminé son service pour le moment. Revenez pendant les heures d\'ouverture.' }}
                 </p>
             </div>
             <a href="{{ route('explore') }}" 
@@ -234,8 +242,15 @@
                                                         </div>
                                                     @endif
                                                     @if($plat->en_promotion)
-                                                        <div class="absolute top-2 left-2 px-2 py-1 bg-red-600 text-white text-xs font-bold rounded-lg">
+                                                        <div class="absolute top-2 left-2 px-2 py-1 bg-red-600 text-white text-[9px] font-black uppercase rounded-lg shadow-lg">
                                                             -{{ round((($plat->prix - $plat->prix_promotion)/$plat->prix)*100) }}%
+                                                        </div>
+                                                    @endif
+                                                    @if(!$plat->is_available)
+                                                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                            <span class="px-4 py-2 bg-slate-900/90 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-2xl backdrop-blur-md">
+                                                                ÉPUISÉ
+                                                            </span>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -295,14 +310,18 @@
                                                                             ])
                                                                         ])
                                                                     ]) }})"
+                                                                    ]) }})"
                                                                 @else
                                                                     @click="addCart({{ $plat->id_plat }})"
                                                                 @endif
-                                                                class="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-sm">
-                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                                            </svg>
-                                                            {{ $hasOptions ? 'Choisir' : 'Ajouter' }}
+                                                                :disabled="{{ !$plat->is_available ? 'true' : 'false' }}"
+                                                                class="px-6 py-2.5 {{ $plat->is_available ? 'bg-orange-600 hover:bg-orange-700' : 'bg-slate-200 text-slate-400 cursor-not-allowed' }} text-white rounded-xl font-semibold transition-all flex items-center gap-2 shadow-sm">
+                                                            @if($plat->is_available)
+                                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                                                </svg>
+                                                            @endif
+                                                            {{ !$plat->is_available ? 'Indisponible' : ($hasOptions ? 'Choisir' : 'Ajouter') }}
                                                         </button>
                                                     </div>
                                                 </div>

@@ -180,6 +180,15 @@
                                         </button>
                                     @endif
                                 </form>
+
+                                <!-- Assign Driver Button -->
+                                @if($order->type_recuperation === 'livraison' && $order->statut !== 'termine' && $order->statut !== 'annule')
+                                    <button @click="$dispatch('open-assign-modal', { orderId: {{ $order->id_commande }}, currentDriver: {{ $order->id_livreur ?? 'null' }} })"
+                                            class="p-2 {{ $order->id_livreur ? 'bg-green-50 text-green-600 border-green-100' : 'bg-indigo-50 text-indigo-600 border-indigo-100' }} rounded-lg hover:{{ $order->id_livreur ? 'bg-green-600' : 'bg-indigo-600' }} hover:text-white transition-all border"
+                                            title="{{ $order->id_livreur ? 'Changer de livreur' : 'Assigner un livreur' }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    </button>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -392,4 +401,89 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
+</div>
+
+<!-- Assign Driver Modal -->
+<div x-data="{ 
+    open: false, 
+    orderId: null,
+    currentDriver: null,
+    init() {
+        this.$watch('open', value => {
+            document.body.style.overflow = value ? 'hidden' : 'auto';
+        });
+    }
+}" 
+     @open-assign-modal.window="orderId = $event.detail.orderId; currentDriver = $event.detail.currentDriver; open = true"
+     x-show="open" 
+     class="fixed inset-0 z-50 overflow-y-auto" 
+     style="display: none;">
+    
+    <!-- Overlay -->
+    <div x-show="open" 
+         x-transition:enter="ease-out duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100"
+         class="fixed inset-0 bg-black/50 backdrop-blur-sm" 
+         @click="open = false; orderId = null"></div>
+    
+    <!-- Modal Panel -->
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div x-show="open"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             class="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden">
+            
+            <div class="flex flex-col">
+                <!-- Header -->
+                <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-black text-gray-900">Assigner un livreur</h2>
+                        <p class="text-xs font-bold text-gray-400 uppercase mt-1">Commande <span x-text="'#' + orderId"></span></p>
+                    </div>
+                    <button @click="open = false; orderId = null" class="p-2 bg-white rounded-full hover:bg-gray-100 transition-all">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                <div class="p-8">
+                    @if($acceptedDrivers->isEmpty())
+                        <div class="text-center py-8">
+                            <p class="text-sm text-gray-500 mb-4">Vous n'avez aucun livreur accepté pour le moment.</p>
+                            <a href="{{ vendor_route('vendeur.slug.delivery.index') }}" class="text-xs font-black text-orange-600 uppercase tracking-widest hover:underline">Gérer mes livreurs &rarr;</a>
+                        </div>
+                    @else
+                        <form :action="'{{ route('vendeur.slug.delivery.assign', ['vendor_slug' => $vendeur->slug, 'id' => ':id']) }}'.replace(':id', orderId)" method="POST" class="space-y-6">
+                            @csrf
+                            <div>
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Choisir un partenaire livreur</label>
+                                <div class="grid grid-cols-1 gap-3 overflow-y-auto max-h-60 custom-scrollbar">
+                                    @foreach($acceptedDrivers as $driver)
+                                        <label class="relative flex items-center gap-4 p-4 border-2 rounded-2xl cursor-pointer transition-all hover:bg-gray-50"
+                                               :class="currentDriver == {{ $driver->id_user }} ? 'border-orange-500 bg-orange-50/30' : 'border-gray-100'">
+                                            <input type="radio" name="id_livreur" value="{{ $driver->id_user }}" class="hidden" x-model="currentDriver">
+                                            <img src="{{ $driver->user->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode($driver->user->name) }}" class="w-10 h-10 rounded-xl object-cover">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-black text-gray-900 truncate">{{ $driver->user->name }}</p>
+                                                <p class="text-[10px] text-gray-400 font-bold">{{ $driver->user->telephone }}</p>
+                                            </div>
+                                            <div x-show="currentDriver == {{ $driver->id_user }}" class="text-orange-600">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-4 bg-gray-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">
+                                Valider l'assignation
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

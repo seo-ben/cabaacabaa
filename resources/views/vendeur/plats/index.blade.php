@@ -47,11 +47,17 @@
                             @endif
                         </div>
 
-                        <!-- Availability Toggle (Placeholder for now) -->
+                        <!-- Availability Toggle -->
                         <div class="absolute top-4 right-4 group/toggle">
-                            <div class="bg-white/95 backdrop-blur-md p-1 rounded-2xl shadow-xl flex gap-1">
-                                <span class="w-2.5 h-2.5 rounded-full {{ $plat->disponible ? 'bg-green-500' : 'bg-gray-300' }} border-2 border-white"></span>
-                            </div>
+                            <form action="{{ vendor_route('vendeur.slug.plats.toggle-availability', $plat->id_plat) }}" method="POST">
+                                @csrf
+                                <button type="submit" 
+                                        class="p-2 {{ $plat->is_available ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-400' }} rounded-xl shadow-xl flex items-center gap-2 border-2 border-white transition-all hover:scale-105"
+                                        title="{{ $plat->is_available ? 'Marquer comme épuisé' : 'Réactiver l\'article' }}">
+                                    <div class="w-2 h-2 rounded-full bg-white {{ $plat->is_available ? 'animate-pulse' : '' }}"></div>
+                                    <span class="text-[9px] font-black uppercase tracking-widest">{{ $plat->is_available ? 'En Stock' : 'Épuisé' }}</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
 

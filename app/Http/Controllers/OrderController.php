@@ -432,4 +432,16 @@ class OrderController extends Controller
             'numero' => $commande->numero_commande
         ]);
     }
+
+    /**
+     * Show the printable receipt for an order.
+     */
+    public function showReceipt($code)
+    {
+        $commande = Commande::with(['vendeur', 'lignes', 'client'])
+            ->where('numero_commande', $code)
+            ->firstOrFail();
+
+        return view('orders.receipt', compact('commande'));
+    }
 }
