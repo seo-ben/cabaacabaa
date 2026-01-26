@@ -38,6 +38,7 @@ class Vendeur extends Model
         'twitter_url',
         'tiktok_url',
         'whatsapp_number',
+        'website_url',
         'wallet_balance',
         'id_category_vendeur',
         'is_boosted',
