@@ -10,7 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    { 
         // Table for vendors seeking delivery drivers
         Schema::create('delivery_requests', function (Blueprint $table) {
             $table->id();
