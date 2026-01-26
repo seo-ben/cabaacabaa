@@ -242,6 +242,21 @@ class OrderController extends Controller
                 ]);
             }
 
+            // Notify Vendor persistent dashboard
+            $vendeurModel = \App\Models\Vendeur::find($id_vendeur);
+            if ($vendeurModel && $vendeurModel->id_user) {
+                \App\Models\Notification::create([
+                    'id_utilisateur' => $vendeurModel->id_user,
+                    'type_notification' => 'nouvelle_commande',
+                    'titre' => 'Nouvelle commande !',
+                    'message' => "Vous avez reçu une nouvelle commande #{$commande->numero_commande} ({$commande->montant_total} FCFA).",
+                    'id_commande' => $commande->id_commande,
+                    'id_vendeur' => $id_vendeur,
+                    'lue' => false,
+                    'date_creation' => now(),
+                ]);
+            }
+
             // ============================================================================
             // PAIEMENT EN LIGNE MOBILE MONEY - TEMPORAIREMENT DÉSACTIVÉ
             // ============================================================================

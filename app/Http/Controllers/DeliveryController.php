@@ -93,7 +93,7 @@ class DeliveryController extends Controller
     /**
      * Vendor: Toggle or create delivery request
      */
-    public function storeRequest(Request $request)
+    public function storeRequest(Request $request, $vendor_slug)
     {
         $vendeur = Auth::user()->vendeur;
         
@@ -108,7 +108,7 @@ class DeliveryController extends Controller
     /**
      * Vendor: Close delivery request
      */
-    public function closeRequest()
+    public function closeRequest($vendor_slug)
     {
         $vendeur = Auth::user()->vendeur;
         DeliveryRequest::where('id_vendeur', $vendeur->id_vendeur)
@@ -121,7 +121,7 @@ class DeliveryController extends Controller
     /**
      * Vendor: Accept/Reject application
      */
-    public function handleApplication($id, $action)
+    public function handleApplication($vendor_slug, $id, $action)
     {
         $application = DeliveryApplication::findOrFail($id);
         $status = ($action === 'accept') ? 'accepted' : 'rejected';
@@ -147,7 +147,7 @@ class DeliveryController extends Controller
     /**
      * Vendor: Assign order to driver
      */
-    public function assignOrder(Request $request, $orderId)
+    public function assignOrder(Request $request, $vendor_slug, $orderId)
     {
         $commande = Commande::findOrFail($orderId);
         $commande->update(['id_livreur' => $request->id_livreur]);
