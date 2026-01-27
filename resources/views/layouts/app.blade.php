@@ -620,10 +620,10 @@
         
         <!-- Main Navigation Container -->
         <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-100/50 dark:border-gray-800/50 shadow-2xl shadow-black/10">
-            <div class="relative grid grid-cols-5 items-end px-1 pt-2 pb-2">
+            <div class="relative flex justify-between items-end px-2 pt-2 pb-2">
                 
                 <!-- Home -->
-                <a href="/" class="relative flex flex-col items-center justify-center w-full py-1.5 group transition-all duration-300">
+                <a href="/" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
                         <div class="{{ request()->is('/') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('/') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
                         <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('/') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="{{ request()->is('/') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
@@ -637,7 +637,7 @@
                 </a>
 
                 <!-- Explore/Search -->
-                <a href="{{ route('explore') }}" class="relative flex flex-col items-center justify-center w-full py-1.5 group transition-all duration-300">
+                <a href="{{ route('explore') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
                         <div class="{{ request()->is('explore*') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('explore*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
                         <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -651,7 +651,7 @@
                 </a>
 
                 <!-- Cart Button (Central - Elevated) -->
-                <div class="relative -mt-6 flex justify-center w-full">
+                <div class="relative -mt-6 flex-1 flex justify-center">
                     <a href="{{ route('cart.index') }}" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl shadow-xl shadow-red-500/30 transform active:scale-90 transition-all duration-300 group">
                         <!-- Animated ring on hover -->
                         <div class="absolute inset-0 rounded-2xl border-2 border-white/20 group-active:border-white/40 transition-colors"></div>
@@ -672,7 +672,7 @@
                 </div>
 
                 <!-- Track Order (Suivi) -->
-                <a href="{{ route('orders.track') }}" class="relative flex flex-col items-center justify-center w-full py-1.5 group transition-all duration-300">
+                <a href="{{ route('orders.track') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
                         <div class="{{ request()->routeIs('orders.track') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->routeIs('orders.track') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
                         <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->routeIs('orders.track') ? 'text-orange-600 dark:text-orange-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="{{ request()->routeIs('orders.track') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
@@ -688,7 +688,7 @@
 
                 <!-- Profile/Account with Dropdown -->
                 @auth
-                <div class="relative w-full flex justify-center" x-data="{ accountMenu: false }">
+                <div class="relative flex-1 flex justify-center" x-data="{ accountMenu: false }">
                     <!-- Account Button -->
                     <button @click="accountMenu = !accountMenu" class="relative flex flex-col items-center justify-center w-full py-1.5 group transition-all duration-300">
                         <div class="relative">
@@ -823,7 +823,7 @@
                     </div>
                 </div>
                 @else
-                <a href="{{ route('login') }}" class="relative flex flex-col items-center justify-center w-full py-1.5 group transition-all duration-300">
+                <a href="{{ route('login') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
                         <div class="{{ request()->is('login') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('login') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
                         <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('login') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
