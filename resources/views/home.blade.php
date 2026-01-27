@@ -92,17 +92,64 @@
         </div>
     </section>
 
-    <!-- 2. Categories - Balanced Pill Layout -->
-    <section class="py-8 bg-gray-50 dark:bg-slate-900/50">
+    <!-- 2. Categories - Visual Cards with Images -->
+    <section class="py-16 bg-gray-50 dark:bg-slate-900/50">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
-            <div class="flex items-center gap-4 overflow-x-auto scrollbar-hide py-2">
-                <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap mr-2">Catégories :</span>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">Explorez par catégorie</h2>
+                <p class="text-sm text-gray-500">Trouvez rapidement ce que vous cherchez</p>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
                 @foreach($categories as $category)
                 <a href="{{ route('explore', ['category' => $category->id_categorie]) }}" 
-                   class="bg-white dark:bg-slate-800 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:border-red-500 hover:text-red-600 transition-all whitespace-nowrap shadow-sm active:scale-95">
-                    {{ $category->nom_categorie }}
+                   class="group relative bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <!-- Category Image -->
+                    <div class="aspect-square relative overflow-hidden">
+                        @if($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}" 
+                                 alt="{{ $category->nom_categorie }}" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 flex items-center justify-center">
+                                <span class="text-5xl transform group-hover:scale-125 transition-transform duration-300">{{ $category->icone ?: '🍽️' }}</span>
+                            </div>
+                        @endif
+                        
+                        <!-- Hover Overlay -->
+                        <div class="absolute inset-0 bg-red-600/0 group-hover:bg-red-600/20 transition-all duration-300 flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <div class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Name -->
+                    <div class="p-4 text-center">
+                        <h3 class="text-sm md:text-base font-bold text-slate-900 dark:text-white truncate group-hover:text-red-600 transition-colors">
+                            {{ $category->nom_categorie }}
+                        </h3>
+                        @if($category->description)
+                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1 truncate">{{ $category->description }}</p>
+                        @endif
+                    </div>
                 </a>
                 @endforeach
+            </div>
+            
+            <!-- View All Link -->
+            <div class="text-center mt-10">
+                <a href="{{ route('explore') }}" class="inline-flex items-center gap-2 text-red-600 font-bold text-sm hover:gap-3 transition-all">
+                    Voir toutes les catégories
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
