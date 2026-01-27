@@ -165,6 +165,23 @@ class User extends Authenticatable
         return true;
     }
 
+    /**
+     * Check if user is an active delivery driver
+     * A user is a driver if they have accepted delivery applications or assigned deliveries
+     */
+    public function isDriver()
+    {
+        // Check if user has any accepted delivery applications
+        $hasAcceptedApplication = $this->deliveryApplications()
+            ->where('status', 'accepted')
+            ->exists();
+
+        // Check if user has any deliveries assigned to them
+        $hasAssignedDeliveries = $this->livraisons()->exists();
+
+        return $hasAcceptedApplication || $hasAssignedDeliveries;
+    }
+
     // ===== PERMISSIONS =====
 
     public function permissions()

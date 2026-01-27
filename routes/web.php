@@ -90,6 +90,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Auth-dependent routes
 Route::middleware('auth')->group(function () {
     // Favorites
+    Route::get('/favoris', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('favoris.index');
     Route::post('/favoris/toggle/{vendorId}', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favoris.toggle');
     Route::get('/favoris/check/{vendorId}', [\App\Http\Controllers\FavoriteController::class, 'check'])->name('favoris.check');
 

@@ -479,9 +479,11 @@
                                     <a href="{{ route('orders.track') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-xl transition-all">
                                         Suivre une commande
                                     </a>
+                                    @if(auth()->user()->isDriver())
                                     <a href="{{ route('delivery.my-deliveries') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl transition-all">
                                         Espace Livreur
                                     </a>
+                                    @endif
                                 </div>
 
                                 @if(auth()->user()->isVendor())
@@ -611,58 +613,260 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Bottom Navigation Bar (Mobile) -->
-    <nav class="lg:hidden fixed bottom-6 left-4 right-4 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl flex justify-between items-center px-6 py-4">
-        <a href="/" class="flex flex-col items-center gap-1 {{ request()->is('/') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-            <span class="text-[9px] font-black uppercase tracking-wider">Accueil</span>
-        </a>
+    <!-- Bottom Navigation Bar (Mobile) - App-like Design -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50" x-data="{ activeTab: '{{ request()->is('/') ? 'home' : (request()->is('explore*') ? 'explore' : (request()->routeIs('orders.track') ? 'track' : (request()->is('orders*') || request()->routeIs('orders.*') ? 'orders' : 'account'))) }}' }">
+        <!-- Safe area spacer for iOS -->
+        <div class="h-safe-area-inset-bottom bg-white/95 dark:bg-gray-950/95"></div>
+        
+        <!-- Main Navigation Container -->
+        <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-100/50 dark:border-gray-800/50 shadow-2xl shadow-black/10">
+            <div class="relative flex justify-around items-end px-1 pt-2 pb-2">
+                
+                <!-- Home -->
+                <a href="/" class="relative flex flex-col items-center justify-center w-14 py-1.5 group transition-all duration-300">
+                    <div class="relative">
+                        <div class="{{ request()->is('/') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('/') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('/') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="{{ request()->is('/') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('/') ? '0' : '1.5' }}" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('/') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Accueil</span>
+                    @if(request()->is('/'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-red-600 rounded-full"></div>
+                    @endif
+                </a>
 
-        <a href="{{ route('explore') }}" class="flex flex-col items-center gap-1 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <span class="text-[9px] font-black uppercase tracking-wider">Explorer</span>
-        </a>
+                <!-- Explore/Search -->
+                <a href="{{ route('explore') }}" class="relative flex flex-col items-center justify-center w-14 py-1.5 group transition-all duration-300">
+                    <div class="relative">
+                        <div class="{{ request()->is('explore*') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('explore*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('explore*') ? '2.5' : '1.5' }}" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Explorer</span>
+                    @if(request()->is('explore*'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-red-600 rounded-full"></div>
+                    @endif
+                </a>
 
-        <div class="relative -top-8">
-            <a href="{{ route('cart.index') }}" class="flex flex-col items-center justify-center w-14 h-14 bg-red-600 text-white rounded-full shadow-lg shadow-red-200 transform active:scale-90 transition-transform">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                </svg>
-                <template x-if="cartCount > 0">
-                    <span class="absolute top-0 right-0 w-4 h-4 bg-white text-red-600 text-[10px] font-black flex items-center justify-center rounded-full border-2 border-red-600" x-text="cartCount"></span>
-                </template>
-            </a>
-        </div>
-
-        <a href="{{ route('orders.index') }}" class="flex flex-col items-center gap-1 {{ request()->is('orders*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <span class="text-[9px] font-black uppercase tracking-wider">Commandes</span>
-        </a>
-
-        @auth
-            <a href="{{ $dashboardRoute }}" class="flex flex-col items-center gap-1 {{ request()->url() === $dashboardRoute ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
-                <div class="relative">
-                    <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff' }}" 
-                         class="w-6 h-6 rounded-lg object-cover {{ request()->url() === $dashboardRoute ? 'ring-2 ring-red-600' : '' }}">
-                    <div class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 border border-white dark:border-gray-900 rounded-full"></div>
+                <!-- Cart Button (Central - Elevated) -->
+                <div class="relative -mt-6">
+                    <a href="{{ route('cart.index') }}" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl shadow-xl shadow-red-500/30 transform active:scale-90 transition-all duration-300 group">
+                        <!-- Animated ring on hover -->
+                        <div class="absolute inset-0 rounded-2xl border-2 border-white/20 group-active:border-white/40 transition-colors"></div>
+                        <!-- Cart Icon -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <!-- Cart Count Badge -->
+                        <template x-if="cartCount > 0">
+                            <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-white text-red-600 text-[10px] font-black flex items-center justify-center rounded-full shadow-lg border-2 border-red-500" x-text="cartCount"></span>
+                        </template>
+                        <!-- Pulse effect when cart has items -->
+                        <template x-if="cartCount > 0">
+                            <div class="absolute inset-0 rounded-2xl bg-red-400 animate-ping opacity-20"></div>
+                        </template>
+                    </a>
+                    <span class="block text-center mt-1 text-[8px] font-bold text-gray-400 dark:text-gray-500">Panier</span>
                 </div>
-                <span class="text-[9px] font-black uppercase tracking-wider">Compte</span>
-            </a>
-        @else
-            <a href="{{ route('login') }}" class="flex flex-col items-center gap-1 {{ request()->is('login') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-                <span class="text-[9px] font-black uppercase tracking-wider">Connexion</span>
-            </a>
-        @endauth
+
+                <!-- Track Order (Suivi) -->
+                <a href="{{ route('orders.track') }}" class="relative flex flex-col items-center justify-center w-14 py-1.5 group transition-all duration-300">
+                    <div class="relative">
+                        <div class="{{ request()->routeIs('orders.track') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->routeIs('orders.track') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->routeIs('orders.track') ? 'text-orange-600 dark:text-orange-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="{{ request()->routeIs('orders.track') ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->routeIs('orders.track') ? '0' : '1.5' }}" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->routeIs('orders.track') ? '0' : '1.5' }}" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->routeIs('orders.track') ? 'text-orange-600 dark:text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Suivi</span>
+                    @if(request()->routeIs('orders.track'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></div>
+                    @endif
+                </a>
+
+                <!-- Profile/Account with Dropdown -->
+                @auth
+                <div class="relative" x-data="{ accountMenu: false }">
+                    <!-- Account Button -->
+                    <button @click="accountMenu = !accountMenu" class="relative flex flex-col items-center justify-center w-14 py-1.5 group transition-all duration-300">
+                        <div class="relative">
+                            <div class="{{ request()->url() === $dashboardRoute ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->url() === $dashboardRoute ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
+                            <div class="relative">
+                                <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff&bold=true&size=64' }}" 
+                                     class="w-6 h-6 rounded-lg object-cover ring-2 transition-all duration-300 {{ request()->url() === $dashboardRoute ? 'ring-red-500 scale-110' : 'ring-transparent' }}"
+                                     alt="{{ auth()->user()->name }}">
+                                <!-- Online indicator -->
+                                <div class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 border-2 border-white dark:border-gray-950 rounded-full"></div>
+                            </div>
+                        </div>
+                        <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->url() === $dashboardRoute ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Compte</span>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div x-show="accountMenu" 
+                         @click.away="accountMenu = false"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                         class="absolute bottom-full right-0 mb-3 w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-[60]"
+                         x-cloak>
+                        
+                        <!-- User Info Header -->
+                        <div class="p-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                            <div class="flex items-center gap-3">
+                                <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff&bold=true&size=64' }}" 
+                                     class="w-10 h-10 rounded-xl object-cover"
+                                     alt="{{ auth()->user()->name }}">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-[10px] text-gray-400 truncate">{{ auth()->user()->email }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Menu Items -->
+                        <div class="p-2">
+                            <!-- Dashboard -->
+                            <a href="{{ $dashboardRoute }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Tableau de bord</span>
+                            </a>
+
+                            <!-- My Orders -->
+                            <a href="{{ route('orders.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Mes commandes</span>
+                            </a>
+
+                            <!-- Profile -->
+                            <a href="{{ route('profile.edit') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="w-8 h-8 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Mon profil</span>
+                            </a>
+
+                            <!-- Favorites -->
+                            <a href="{{ route('favoris.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                <div class="w-8 h-8 bg-pink-50 dark:bg-pink-900/20 rounded-lg flex items-center justify-center text-pink-600 dark:text-pink-400">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Mes favoris</span>
+                            </a>
+                        </div>
+
+                        <!-- Vendor Section -->
+                        @if(auth()->user()->isVendor())
+                        <div class="p-2 border-t border-gray-100 dark:border-gray-800">
+                            <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400">Espace Vendeur</div>
+                            <a href="{{ route('vendeur.dashboard') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
+                                <div class="w-8 h-8 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Ma boutique</span>
+                            </a>
+                            <a href="{{ vendor_route('vendeur.slug.orders.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
+                                <div class="w-8 h-8 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center text-green-600 dark:text-green-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Commandes reçues</span>
+                            </a>
+                        </div>
+                        @endif
+
+                        <!-- Admin Section -->
+                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
+                        <div class="p-2 border-t border-gray-100 dark:border-gray-800">
+                            <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400">Administration</div>
+                            <a href="{{ route('admin.dashboard') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                <div class="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Panel Admin</span>
+                            </a>
+                        </div>
+                        @endif
+
+                        <!-- Delivery Section -->
+                        @if(auth()->user()->isDriver())
+                        <div class="p-2 border-t border-gray-100 dark:border-gray-800">
+                            <a href="{{ route('delivery.my-deliveries') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors">
+                                <div class="w-8 h-8 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg flex items-center justify-center text-cyan-600 dark:text-cyan-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                                </div>
+                                <span class="text-sm font-semibold">Espace Livreur</span>
+                            </a>
+                        </div>
+                        @endif
+
+                        <!-- Logout -->
+                        <div class="p-2 border-t border-gray-100 dark:border-gray-800">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" @click="accountMenu = false" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                    <div class="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    </div>
+                                    <span class="text-sm font-bold">Déconnexion</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <a href="{{ route('login') }}" class="relative flex flex-col items-center justify-center w-14 py-1.5 group transition-all duration-300">
+                    <div class="relative">
+                        <div class="{{ request()->is('login') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('login') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('login') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('login') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Connexion</span>
+                    @if(request()->is('login'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-red-600 rounded-full"></div>
+                    @endif
+                </a>
+                @endauth
+            </div>
+        </div>
     </nav>
+
+    <!-- Mobile Bottom Safe Area Padding -->
+    <div class="lg:hidden h-24"></div>
+
+    <style>
+        /* iOS Safe Area Support */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .h-safe-area-inset-bottom {
+                height: env(safe-area-inset-bottom);
+            }
+        }
+        
+        /* Subtle bounce animation for cart badge */
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        .animate-bounce-subtle {
+            animation: bounce-subtle 2s infinite;
+        }
+        
+        /* Hide scrollbar when mobile nav is present */
+        @media (max-width: 1023px) {
+            body {
+                padding-bottom: env(safe-area-inset-bottom, 0);
+            }
+        }
+    </style>
 
     @yield('scripts')
     

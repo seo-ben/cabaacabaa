@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Auth;
 class FavoriteController extends Controller
 {
     /**
+     * Affiche la liste des vendeurs favoris de l'utilisateur.
+     */
+    public function index()
+    {
+        $user = Auth::user();
+        $favoris = $user->favoris()->with('vendeur')->get();
+        
+        return view('favoris.index', compact('favoris'));
+    }
+
+    /**
      * Ajoute ou supprime un vendeur des favoris.
      */
     public function toggle($vendorId)
