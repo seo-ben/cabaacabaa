@@ -39,21 +39,21 @@
                                 <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Choisissez comment vous souhaitez recevoir vos articles.</p>
                             </div>
                             
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div class="grid grid-cols-3 gap-2 sm:gap-6">
                                 <!-- À Emporter -->
                                 <label class="relative cursor-pointer group">
                                     <input type="radio" name="type_recuperation" value="emporter" class="peer sr-only" checked onchange="toggleDelivery(false)">
-                                    <div class="h-full p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-4">
-                                        <div class="w-16 h-16 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-6 transition-transform">
-                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
+                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-6 transition-transform">
+                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                                         </div>
                                         <div>
-                                            <span class="block text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-1">À emporter</span>
-                                            <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Je récupère moi-même à l'établissement</span>
+                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">À emporter</span>
+                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Je récupère moi-même à l'établissement</span>
                                         </div>
-                                        <div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -62,17 +62,17 @@
                                 <!-- Sur Place -->
                                 <label class="relative cursor-pointer group">
                                     <input type="radio" name="type_recuperation" value="sur_place" class="peer sr-only" onchange="toggleDelivery(false)">
-                                    <div class="h-full p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-4">
-                                        <div class="w-16 h-16 rounded-2xl bg-gray-900 dark:bg-white dark:text-gray-900 text-white flex items-center justify-center shadow-lg shadow-gray-900/20 group-hover:-rotate-6 transition-transform">
-                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 16v2m3-6v6m3-3v3M9 12h6M4 21h16a1 1 0 001-1V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1z"/></svg>
+                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
+                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gray-900 dark:bg-white dark:text-gray-900 text-white flex items-center justify-center shadow-lg shadow-gray-900/20 group-hover:-rotate-6 transition-transform">
+                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 16v2m3-6v6m3-3v3M9 12h6M4 21h16a1 1 0 001-1V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1z"/></svg>
                                         </div>
                                         <div>
-                                            <span class="block text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-1">Sur place</span>
-                                            <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Réservez une table et profitez ici</span>
+                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">Sur place</span>
+                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Réservez une table et profitez ici</span>
                                         </div>
-                                        <div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -81,17 +81,17 @@
                                 <!-- Livraison -->
                                 <label class="relative cursor-pointer group">
                                     <input type="radio" name="type_recuperation" value="livraison" class="peer sr-only" onchange="toggleDelivery(true)">
-                                    <div class="h-full p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-4">
-                                        <div class="w-16 h-16 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-12 transition-transform">
-                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
+                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-12 transition-transform">
+                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                                         </div>
                                         <div>
-                                            <span class="block text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-1">Livraison</span>
-                                            <span class="block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Frais calculés par distance GPS</span>
+                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">Livraison</span>
+                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Frais calculés par distance GPS</span>
                                         </div>
-                                        <div class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
+                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
+                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -132,8 +132,8 @@
                 <!-- Summary Side -->
                 <div class="lg:w-96">
                     <div class="sticky top-32 space-y-8">
-                        <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl p-10 text-white space-y-8 shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-700">
-                            <h3 class="text-xl font-black border-b border-white/10 pb-6 uppercase tracking-widest">Résumé</h3>
+                        <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl p-6 sm:p-10 text-white space-y-8 shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-700 w-full overflow-hidden">
+                            <h3 class="text-lg sm:text-xl font-black border-b border-white/10 pb-6 uppercase tracking-widest">Résumé</h3>
                             
                             <div class="space-y-4">
                                 <div class="flex justify-between text-white/60">
