@@ -1,15 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 pt-20 pb-32 transition-colors duration-300">
-    <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
+@section('content')
+<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 pt-20 pb-32 transition-colors duration-300 overflow-x-hidden">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-10 lg:px-14">
         
         <!-- Header avec actions -->
-        <div class="mb-12">
-            <div class="flex items-center justify-between mb-2">
-                <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">Votre Panier</h1>
+        <div class="mb-8 sm:mb-12">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <h1 class="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tighter">Votre Panier</h1>
                 @if(count($cart) > 0)
-                <form action="{{ route('cart.clear') }}" method="POST">
+                <form action="{{ route('cart.clear') }}" method="POST" class="self-start sm:self-auto">
                     @csrf
                     <button type="submit" onclick="return confirm('Vider tout le panier ?')" class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest hover:text-red-600 dark:hover:text-red-400 transition-colors">
                         Vider le panier
@@ -30,7 +31,7 @@
             <!-- Articles Section - 8 colonnes -->
             <div class="lg:col-span-8 space-y-4 lg:space-y-6">
                 @foreach($cart as $id => $item)
-                <div id="cart-item-{{ $id }}" class="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/20 transition-all overflow-hidden">
+                <div id="cart-item-{{ $id }}" class="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/20 transition-all overflow-hidden max-w-full">
                     
                     <!-- Bouton supprimer (Position absolue pour mobile) -->
                     <button class="cart-remove absolute top-2 right-2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all z-20" data-id="{{ $id }}">
@@ -46,21 +47,21 @@
                             </div>
 
                             <!-- Informations principales -->
-                            <div class="flex-1 flex flex-col">
+                            <div class="flex-1 flex flex-col justify-center min-w-0">
                                 <!-- Nom et vendeur -->
-                                <div class="mb-2 pr-8 sm:pr-0">
-                                    <h3 class="text-base sm:text-xl font-black text-gray-900 dark:text-white leading-snug mb-1">{{ $item['name'] }}</h3>
-                                    <p class="text-[10px] sm:text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ $item['vendor_name'] ?? 'Établissement' }}</p>
+                                <div class="mb-2 pr-7 sm:pr-0">
+                                    <h3 class="text-base sm:text-xl font-black text-gray-900 dark:text-white leading-snug mb-1 truncate sm:whitespace-normal">{{ $item['name'] }}</h3>
+                                    <p class="text-[10px] sm:text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest truncate sm:whitespace-normal">{{ $item['vendor_name'] ?? 'Établissement' }}</p>
                                 </div>
                                 
                                 <!-- Options -->
                                 @if(isset($item['options']) && !empty($item['options']))
                                 <div class="mb-3 flex flex-wrap items-center gap-x-2 gap-y-2">
                                     @foreach($item['options'] as $optionGroup)
-                                        <div class="flex flex-wrap items-center gap-1 text-[10px] sm:text-xs bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg">
+                                        <div class="flex flex-wrap items-center gap-1 text-[10px] sm:text-xs bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg max-w-full">
                                             <span class="font-bold text-gray-500 dark:text-gray-400">{{ $optionGroup['groupe'] }}:</span>
                                             @foreach($optionGroup['variantes'] as $variant)
-                                                <span class="text-gray-700 dark:text-gray-300 font-semibold">
+                                                <span class="text-gray-700 dark:text-gray-300 font-semibold truncate max-w-[100px]">
                                                     {{ $variant['nom'] }}
                                                     @if(isset($variant['quantite']) && $variant['quantite'] > 1)
                                                         <span class="text-gray-400">x{{ $variant['quantite'] }}</span>
@@ -117,7 +118,7 @@
                 <div class="sticky top-8 space-y-6">
                     
                     <!-- Récapitulatif principal -->
-                    <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl p-10 text-white space-y-8 shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-700">
+                    <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl p-6 sm:p-10 text-white space-y-8 shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-700 overflow-hidden">
                         <h3 class="text-xl font-black border-b border-white/10 pb-6 uppercase tracking-widest">Récapitulatif</h3>
                         
                         <div class="space-y-4">
