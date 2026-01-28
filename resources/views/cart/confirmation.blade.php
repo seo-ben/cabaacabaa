@@ -149,7 +149,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
 
                 <div class="pt-8 border-t border-gray-50 dark:border-gray-800">
                     <div class="flex justify-between items-center mb-2">
