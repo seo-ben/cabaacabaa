@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 py-24 transition-colors duration-300">
+<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 pt-20 pb-32 transition-colors duration-300">
     <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
         
         <!-- Header avec actions -->
@@ -25,98 +25,84 @@
         </div>
 
         @if(count($cart) > 0)
-        <div class="grid lg:grid-cols-12 gap-8">
+        <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 cursor-default">
             
             <!-- Articles Section - 8 colonnes -->
-            <div class="lg:col-span-8 space-y-6">
+            <div class="lg:col-span-8 space-y-4 lg:space-y-6">
                 @foreach($cart as $id => $item)
-                <div id="cart-item-{{ $id }}" class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/20 transition-all overflow-hidden">
-                    <div class="p-6">
-                        <div class="flex gap-6">
+                <div id="cart-item-{{ $id }}" class="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 dark:hover:shadow-black/20 transition-all overflow-hidden">
+                    
+                    <!-- Bouton supprimer (Position absolue pour mobile) -->
+                    <button class="cart-remove absolute top-2 right-2 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all z-20" data-id="{{ $id }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+
+                    <div class="p-4 sm:p-6">
+                        <div class="flex gap-4 sm:gap-6">
                             <!-- Image -->
-                            <div class="w-32 h-32 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 flex-shrink-0">
+                            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 flex-shrink-0">
                                 <img src="{{ isset($item['image']) && $item['image'] ? asset('storage/' . $item['image']) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200' }}" 
                                      class="w-full h-full object-cover">
                             </div>
 
                             <!-- Informations principales -->
                             <div class="flex-1 flex flex-col">
-                                <!-- Nom, vendeur et bouton modifier -->
-                                <div class="mb-3 flex items-start justify-between gap-4">
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-black text-gray-900 dark:text-white leading-tight mb-1">{{ $item['name'] }}</h3>
-                                        <p class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ $item['vendor_name'] ?? 'Établissement' }}</p>
-                                    </div>
-                                    @if(isset($item['options']) && !empty($item['options']))
-                                    <button class="edit-options-btn px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all flex items-center gap-1.5"
-                                            data-id="{{ $id }}"
-                                            data-plat-id="{{ $item['id'] }}"
-                                            title="Modifier les options">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                        </svg>
-                                        <span class="hidden sm:inline">Modifier</span>
-                                    </button>
-                                    @endif
+                                <!-- Nom et vendeur -->
+                                <div class="mb-2 pr-8 sm:pr-0">
+                                    <h3 class="text-base sm:text-xl font-black text-gray-900 dark:text-white leading-snug mb-1">{{ $item['name'] }}</h3>
+                                    <p class="text-[10px] sm:text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ $item['vendor_name'] ?? 'Établissement' }}</p>
                                 </div>
                                 
-                                <!-- Options (horizontales sur une ligne) -->
+                                <!-- Options -->
                                 @if(isset($item['options']) && !empty($item['options']))
-                                <div class="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                                <div class="mb-3 flex flex-wrap items-center gap-x-2 gap-y-2">
                                     @foreach($item['options'] as $optionGroup)
-                                        <div class="flex items-center gap-1.5">
+                                        <div class="flex flex-wrap items-center gap-1 text-[10px] sm:text-xs bg-gray-50 dark:bg-gray-800/50 px-2 py-1 rounded-lg">
                                             <span class="font-bold text-gray-500 dark:text-gray-400">{{ $optionGroup['groupe'] }}:</span>
                                             @foreach($optionGroup['variantes'] as $variant)
-                                                <span class="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded text-[10px] font-semibold whitespace-nowrap">
+                                                <span class="text-gray-700 dark:text-gray-300 font-semibold">
                                                     {{ $variant['nom'] }}
                                                     @if(isset($variant['quantite']) && $variant['quantite'] > 1)
                                                         <span class="text-gray-400">x{{ $variant['quantite'] }}</span>
                                                     @endif
-                                                    @if($variant['prix'] > 0)
-                                                        <span class="text-orange-600 dark:text-orange-400">+{{ number_format($variant['prix'] * ($variant['quantite'] ?? 1), 0) }}</span>
-                                                    @endif
                                                 </span>
-                                                @if(!$loop->last)<span class="text-gray-300 dark:text-gray-700">,</span>@endif
+                                                @if(!$loop->last)<span class="text-gray-300">,</span>@endif
                                             @endforeach
                                         </div>
-                                        @if(!$loop->last)<span class="text-gray-300 dark:text-gray-700">•</span>@endif
                                     @endforeach
+                                    
+                                    <button class="edit-options-btn ml-auto text-[9px] font-bold text-indigo-500 hover:text-indigo-600 uppercase tracking-wider bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded"
+                                            data-id="{{ $id }}"
+                                            data-plat-id="{{ $item['id'] }}">
+                                        Modifier
+                                    </button>
                                 </div>
                                 @endif
 
-                                <!-- Contrôles en bas -->
-                                <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
-                                    <div class="flex items-center justify-between">
-                                        <!-- Prix unitaire -->
-                                        <div>
-                                            <p class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase mb-1">Prix unitaire</p>
-                                            <p class="text-lg font-black text-gray-900 dark:text-white">{{ number_format($item['price'], 0) }} FCFA</p>
+                                <!-- Contrôles Mobile / Desktop -->
+                                <div class="mt-auto pt-3 border-t border-gray-50 dark:border-gray-800">
+                                    <div class="flex flex-wrap items-end justify-between gap-y-3">
+                                        
+                                        <!-- Prix Unitaire & Total Mobile -->
+                                        <div class="flex flex-col">
+                                            <div class="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-0.5 sm:hidden">Total</div>
+                                            <p class="text-lg sm:text-xl font-black text-orange-600 dark:text-orange-400 leading-none">
+                                                <span id="item-total-{{ $id }}">{{ number_format($item['price'] * $item['quantity'], 0, ',', ' ') }}</span> <small class="text-[10px] font-bold">FCFA</small>
+                                            </p>
+                                            <p class="hidden sm:block text-[10px] text-gray-400 mt-1">{{ number_format($item['price'], 0) }} FCFA / unité</p>
                                         </div>
 
                                         <!-- Quantité -->
-                                        <div class="flex items-center gap-3">
-                                            <p class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase">Quantité</p>
-                                            <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-2xl">
-                                                <button class="qty-decrease text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors" data-id="{{ $id }}">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                                                </button>
-                                                <span class="cart-quantity w-8 text-center font-black text-gray-900 dark:text-white" data-id="{{ $id }}">{{ $item['quantity'] }}</span>
-                                                <button class="qty-increase text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors" data-id="{{ $id }}">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                                </button>
-                                            </div>
+                                        <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-xl ml-auto sm:ml-0">
+                                            <button class="qty-decrease w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors hover:bg-white dark:hover:bg-gray-700 rounded-lg" data-id="{{ $id }}">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"/></svg>
+                                            </button>
+                                            <span class="cart-quantity w-6 text-center text-sm font-black text-gray-900 dark:text-white" data-id="{{ $id }}">{{ $item['quantity'] }}</span>
+                                            <button class="qty-increase w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors hover:bg-white dark:hover:bg-gray-700 rounded-lg" data-id="{{ $id }}">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                                            </button>
                                         </div>
 
-                                        <!-- Total -->
-                                        <div class="text-right">
-                                            <p class="text-[9px] font-black text-gray-400 dark:text-gray-500 uppercase mb-1">Total</p>
-                                            <p class="text-xl font-black text-orange-600 dark:text-orange-400"><span id="item-total-{{ $id }}">{{ number_format($item['price'] * $item['quantity'], 0, ',', ' ') }}</span> <small class="text-[10px]">FCFA</small></p>
-                                        </div>
-
-                                        <!-- Supprimer -->
-                                        <button class="cart-remove w-12 h-12 flex items-center justify-center text-gray-300 dark:text-gray-600 hover:text-red-600 dark:hover:text-red-400 bg-gray-50 dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all" data-id="{{ $id }}">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
