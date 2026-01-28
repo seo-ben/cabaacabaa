@@ -26,7 +26,7 @@
         </div>
 
         @if(count($cart) > 0)
-        <div class="grid lg:grid-cols-12 gap-6 lg:gap-8 cursor-default w-full">
+        <div class="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 cursor-default w-full">
             
             <!-- Articles Section - 8 colonnes -->
             <div class="lg:col-span-8 space-y-4 lg:space-y-6 w-full">
