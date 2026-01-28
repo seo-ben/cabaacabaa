@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 py-24 transition-colors duration-300">
+<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 py-12 md:py-24 transition-colors duration-300">
     <div class="max-w-3xl mx-auto px-6 space-y-12">
         
         <div class="text-center space-y-4">
@@ -30,12 +30,28 @@
 
         <!-- Tracking Timeline -->
         @if($commande->statut != 'annule')
-        <div class="bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none overflow-x-auto">
-            <div class="flex items-center justify-between min-w-[500px] relative">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-10 border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none">
+            @php
+                $steps = [
+                    ['id' => 'en_attente', 'label' => 'Reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+                    ['id' => 'en_preparation', 'label' => 'Préparation', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
+                    ['id' => 'pret', 'label' => 'Prête', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+                    ['id' => 'termine', 'label' => 'Livrée', 'icon' => 'M5 13l4 4L19 7']
+                ];
+                $currentStatusRank = [
+                    'en_attente' => 0,
+                    'en_preparation' => 1,
+                    'pret' => 2,
+                    'termine' => 3
+                ][$commande->statut] ?? 0;
+            @endphp
+
+            <!-- Desktop Layout (Horizontal) -->
+            <div class="hidden md:flex items-center justify-between relative">
                 <!-- Line background -->
                 <div class="absolute top-1/2 left-10 right-10 h-1 bg-gray-100 dark:bg-gray-800 -translate-y-1/2 z-0"></div>
                 <!-- Active Line -->
-                <div class="absolute top-1/2 left-10 -translate-y-1/2 h-1 bg-orange-500 transition-all duration-1000 z-0"
+                <div id="tracking-progress-bar" class="absolute top-1/2 left-10 -translate-y-1/2 h-1 bg-orange-500 transition-all duration-1000 z-0"
                     style="width: 
                     @if($commande->statut == 'en_attente') 0% 
                     @elseif($commande->statut == 'en_preparation') 33% 
@@ -43,21 +59,6 @@
                     @elseif($commande->statut == 'termine') 100% 
                     @endif">
                 </div>
-
-                @php
-                    $steps = [
-                        ['id' => 'en_attente', 'label' => 'Reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                        ['id' => 'en_preparation', 'label' => 'Préparation', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
-                        ['id' => 'pret', 'label' => 'Prête', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
-                        ['id' => 'termine', 'label' => 'Livre', 'icon' => 'M5 13l4 4L19 7']
-                    ];
-                    $currentStatusRank = [
-                        'en_attente' => 0,
-                        'en_preparation' => 1,
-                        'pret' => 2,
-                        'termine' => 3
-                    ][$commande->statut] ?? 0;
-                @endphp
 
                 @foreach($steps as $index => $step)
                     <div class="relative z-10 flex flex-col items-center step-item" data-rank="{{ $index }}">
@@ -68,12 +69,44 @@
                     </div>
                 @endforeach
             </div>
+
+            <!-- Mobile Layout (Vertical) -->
+            <div class="flex md:hidden flex-col relative pl-2">
+                <!-- Line background -->
+                <div class="absolute top-6 left-[23px] bottom-6 w-1 bg-gray-100 dark:bg-gray-800 z-0"></div>
+                <!-- Active Line -->
+                <div id="tracking-progress-bar-mobile" class="absolute top-6 left-[23px] w-1 bg-orange-500 transition-all duration-1000 z-0 origin-top"
+                    style="height: 
+                    @if($commande->statut == 'en_attente') 0% 
+                    @elseif($commande->statut == 'en_preparation') 33% 
+                    @elseif($commande->statut == 'pret') 66% 
+                    @elseif($commande->statut == 'termine') 100% 
+                    @endif">
+                </div>
+
+                <div class="space-y-8">
+                    @foreach($steps as $index => $step)
+                        <div class="relative z-10 flex items-center gap-6 step-item" data-rank="{{ $index }}">
+                            <div class="step-icon w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shrink-0 {{ $index <= $currentStatusRank ? 'bg-orange-500 text-white shadow-lg shadow-orange-200 scale-110' : 'bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 text-gray-300 dark:text-gray-600' }}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $step['icon'] }}"/></svg>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="step-label text-xs font-black uppercase tracking-widest {{ $index <= $currentStatusRank ? 'text-orange-600 dark:text-orange-400' : 'text-gray-400 dark:text-gray-600' }}">{{ $step['label'] }}</span>
+                                @if($index == $currentStatusRank)
+                                    <span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 animate-pulse">En cours...</span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
         </div>
         @endif
 
         <!-- Order Summary Card -->
         <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden">
-            <div class="p-10 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+            <div class="p-6 md:p-10 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white dark:bg-gray-700 rounded-2xl flex items-center justify-center text-orange-600 dark:text-orange-400 shadow-sm font-black italic border border-gray-100 dark:border-gray-600">
                         {{ substr($commande->vendeur->nom_commercial, 0, 1) }}
@@ -96,7 +129,7 @@
                 </div>
             </div>
 
-            <div class="p-10 space-y-8">
+            <div class="p-6 md:p-10 space-y-8">
                 <div class="space-y-6">
                     @foreach($commande->lignes as $ligne)
                         <div class="flex justify-between items-center group">
@@ -164,7 +197,7 @@
             </div>
 
             <!-- Rating Section -->
-            <div id="rating-section" class="{{ ($commande->statut == 'termine' && !$commande->avis) ? '' : 'hidden' }} bg-white dark:bg-gray-900 rounded-2xl p-10 border border-orange-100 dark:border-orange-900/30 shadow-xl dark:shadow-none space-y-8 animate-in zoom-in duration-500">
+            <div id="rating-section" class="{{ ($commande->statut == 'termine' && !$commande->avis) ? '' : 'hidden' }} bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-10 border border-orange-100 dark:border-orange-900/30 shadow-xl dark:shadow-none space-y-8 animate-in zoom-in duration-500">
                 <div class="text-center space-y-2">
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Alors, c'était comment ?</h3>
                     <p class="text-gray-500 dark:text-gray-400 font-medium whitespace-pre-wrap">Laissez une note pour aider <span class="text-gray-900 dark:text-white font-black">{{ $commande->vendeur->nom_commercial }}</span> à s'améliorer.</p>
@@ -226,30 +259,30 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <a href="{{ route('home') }}" class="px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all active:scale-95">Explorer d'autres articles</a>
+        <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 pt-4">
+            <a href="{{ route('home') }}" class="w-full md:w-auto text-center px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all active:scale-95">Explorer d'autres articles</a>
             
             @if($commande->statut == 'en_attente')
                 <a href="{{ route('orders.cancel', $commande->id_commande) }}" 
                    onclick="return confirm('Voulez-vous vraiment annuler cette commande ?')"
-                   class="px-8 py-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-600 hover:text-white transition-all active:scale-95">
+                   class="w-full md:w-auto text-center px-8 py-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-600 hover:text-white transition-all active:scale-95">
                    Annuler la commande
                 </a>
             @endif
 
-            <a href="{{ route('orders.reorder', $commande->id_commande) }}" class="px-8 py-4 bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-orange-700 transition-all shadow-xl shadow-orange-100 dark:shadow-none active:scale-95">
+            <a href="{{ route('orders.reorder', $commande->id_commande) }}" class="w-full md:w-auto text-center px-8 py-4 bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-orange-700 transition-all shadow-xl shadow-orange-100 dark:shadow-none active:scale-95">
                Commander à nouveau
             </a>
 
             @if($commande->statut == 'termine')
                 <a href="{{ route('order.receipt', ['code' => $commande->numero_commande]) }}" target="_blank"
-                   class="px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black dark:hover:bg-gray-200 transition-all active:scale-95 flex items-center gap-2">
+                   class="w-full md:w-auto text-center px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-black dark:hover:bg-gray-200 transition-all active:scale-95 flex items-center justify-center gap-2">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Télécharger le reçu
                 </a>
             @endif
             
-            <a href="{{ route('orders.index') }}" class="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
+            <a href="{{ route('orders.index') }}" class="w-full md:w-auto text-center px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
                 Toutes mes commandes
             </a>
         </div>
@@ -274,8 +307,11 @@
         const progress = (rank / 3) * 100;
         
         // Update line
-        const activeLine = document.querySelector('.absolute.top-1\\/2.left-10.-translate-y-1\\/2.h-1.bg-orange-500');
+        const activeLine = document.getElementById('tracking-progress-bar');
         if(activeLine) activeLine.style.width = progress + '%';
+        
+        const activeLineMobile = document.getElementById('tracking-progress-bar-mobile');
+        if(activeLineMobile) activeLineMobile.style.height = progress + '%';
         
         // Update steps
         document.querySelectorAll('.step-item').forEach(item => {
