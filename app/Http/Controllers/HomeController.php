@@ -286,7 +286,7 @@ class HomeController extends Controller
     {
         $vendeur = Vendeur::with([
             'plats' => function ($query) {
-                $query->where('disponible', 1)->orderBy('nom_plat');
+                $query->where('disponible', 1)->with(['categorie', 'groupesVariantes.variantes'])->orderBy('nom_plat');
             },
             'contacts',
             'horaires' => function ($query) {

@@ -41,7 +41,7 @@
         <!-- Alibaba-style Header -->
         <div class="mb-10">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-gray-100 dark:border-gray-800">
-                <div class="flex-1">
+                {{-- <div class="flex-1">
                     <nav class="flex mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-400">
                         <a href="/" class="hover:text-red-600 transition-colors">Accueil</a>
                         <span class="mx-1 md:mx-2">/</span>
@@ -49,7 +49,7 @@
                     </nav>
                     <h1 class="hidden md:block text-3xl lg:text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Marché Global des Produits</h1>
                     <p class="hidden md:block text-sm font-bold text-gray-400 dark:text-gray-500 mt-2">Découvrez plus de {{ $plats->total() }} articles sélectionnés par nos experts.</p>
-                </div>
+                </div> --}}
 
                 <!-- Functional Sort Actions -->
                 <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar -mx-2 px-2 md:mx-0 md:px-0">
