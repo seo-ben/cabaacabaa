@@ -192,61 +192,63 @@
                                 </div>
 
                                 <!-- Product Info Area -->
-                                <div class="p-4 flex-1 flex flex-col space-y-3">
-                                    <h3 class="text-sm font-bold text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-red-600 transition-colors h-10">
+                                <div class="p-3 sm:p-4 flex-1 flex flex-col space-y-3">
+                                    <h3 class="text-xs sm:text-sm font-bold text-gray-900 dark:text-white line-clamp-2 leading-snug group-hover:text-red-600 transition-colors h-8 sm:h-10">
                                         {{ $plat->nom_plat }}
                                     </h3>
 
                                     <!-- Pricing Block -->
                                     <div class="flex flex-col">
-                                        <div class="flex items-baseline gap-2">
+                                        <div class="flex items-baseline gap-1.5 sm:gap-2">
                                             @if($plat->en_promotion)
-                                                <span class="text-lg font-black text-red-600">{{ number_format($plat->prix_promotion, 0) }} FCFA</span>
-                                                <span class="text-[10px] font-bold text-gray-300 line-through">{{ number_format($plat->prix, 0) }}</span>
+                                                <span class="text-base sm:text-lg font-black text-red-600">{{ number_format($plat->prix_promotion, 0) }} FCFA</span>
+                                                <span class="text-[9px] sm:text-[10px] font-bold text-gray-300 line-through">{{ number_format($plat->prix, 0) }}</span>
                                             @else
-                                                <span class="text-lg font-black text-gray-900 dark:text-white">{{ number_format($plat->prix, 0) }} FCFA</span>
+                                                <span class="text-base sm:text-lg font-black text-gray-900 dark:text-white">{{ number_format($plat->prix, 0) }} FCFA</span>
                                             @endif
                                         </div>
-                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Par Unité</span>
+                                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Par Unité</span>
                                     </div>
 
                                     <!-- Status / Social Proof -->
                                     <div class="flex items-center gap-2 pt-1 border-t border-gray-50 dark:border-gray-700/50">
                                         <div class="flex items-center gap-1 text-orange-400">
-                                            <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                            <span class="text-[11px] font-black text-gray-900 dark:text-white">{{ number_format($plat->vendeur->note_moyenne, 1) }}</span>
+                                            <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                            <span class="text-[10px] sm:text-[11px] font-black text-gray-900 dark:text-white">{{ number_format($plat->vendeur->note_moyenne, 1) }}</span>
                                         </div>
-                                        <span class="text-[10px] font-bold text-gray-400 flex-1">{{ $plat->nombre_commandes ?? rand(10, 100) }} vendus</span>
+                                        <span class="text-[9px] sm:text-[10px] font-bold text-gray-400 flex-1 truncate">{{ $plat->nombre_commandes ?? rand(10, 100) }} vendus</span>
                                     </div>
 
                                     <!-- Vendor Footer -->
-                                    <div class="mt-auto pt-3 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between gap-3">
+                                    <div class="mt-auto pt-3 border-t border-gray-50 dark:border-gray-700/50 flex items-center justify-between gap-2">
                                         <a href="{{ route('vendor.show', ['id' => $plat->vendeur->id_vendeur, 'slug' => \Str::slug($plat->vendeur->nom_commercial)]) }}" 
-                                           class="flex items-center gap-2 group/v overflow-hidden flex-1">
-                                           <div class="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-center border border-gray-100 dark:border-gray-600 shrink-0">
+                                           class="flex items-center gap-1.5 sm:gap-2 group/v overflow-hidden flex-1 min-w-0">
+                                           <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-center border border-gray-100 dark:border-gray-600 shrink-0">
                                                @if($plat->vendeur->logo)
                                                    <img src="{{ asset('storage/' . $plat->vendeur->logo) }}" class="w-full h-full object-cover">
                                                @else
-                                                   <span class="text-[10px] font-black text-gray-400">{{ substr($plat->vendeur->nom_commercial, 0, 1) }}</span>
+                                                   <span class="text-[9px] sm:text-[10px] font-black text-gray-400">{{ substr($plat->vendeur->nom_commercial, 0, 1) }}</span>
                                                @endif
                                            </div>
                                            <div class="flex flex-col min-w-0">
-                                               <span class="text-[10px] font-black text-gray-900 dark:text-white uppercase truncate group-hover/v:text-red-600 transition-colors">{{ $plat->vendeur->nom_commercial }}</span>
+                                               <span class="text-[9px] sm:text-[10px] font-black text-gray-900 dark:text-white uppercase truncate group-hover/v:text-red-600 transition-colors">{{ $plat->vendeur->nom_commercial }}</span>
                                                <div class="flex items-center gap-1">
-                                                   <svg class="w-2.5 h-2.5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-                                                   <span class="text-[8px] font-black text-gray-400 uppercase tracking-tighter">Vérifié</span>
+                                                   <svg class="w-2 h-2 sm:w-2.5 sm:h-2.5 text-blue-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                                                   <span class="text-[7px] sm:text-[8px] font-black text-gray-400 uppercase tracking-tighter truncate">Vérifié</span>
                                                </div>
                                            </div>
                                         </a>
 
-                                        @if($plat->is_available)
-                                            <button @click="@if($plat->groupesVariantes->isNotEmpty()) openModal({{ Js::from($plat) }}) @else addCart({{ $plat->id_plat }}) @endif"
-                                                    class="w-10 h-10 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl flex items-center justify-center hover:bg-black dark:hover:bg-gray-100 transition-all shadow-lg active:scale-90">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                            </button>
-                                        @else
-                                            <span class="text-[8px] font-black text-red-600 border border-red-600 px-2 py-1 rounded-lg uppercase">Épuisé</span>
-                                        @endif
+                                        <div class="shrink-0">
+                                            @if($plat->is_available)
+                                                <button @click="@if($plat->groupesVariantes->isNotEmpty()) openModal({{ Js::from($plat) }}) @else addCart({{ $plat->id_plat }}) @endif"
+                                                        class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl flex items-center justify-center hover:bg-black dark:hover:bg-gray-100 transition-all shadow-lg active:scale-90">
+                                                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                                                </button>
+                                            @else
+                                                <span class="text-[7px] sm:text-[8px] font-black text-red-600 border border-red-600 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg uppercase">Épuisé</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -292,42 +294,51 @@
                 <template x-if="selectedPlat">
                     <div class="flex flex-col max-h-[85vh]">
                         <!-- Modal Header -->
-                        <div class="px-8 py-6 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 z-10 flex justify-between items-center sticky top-0">
-                            <div>
-                                <h3 class="text-xl font-black text-gray-900 dark:text-white" x-text="selectedPlat.nom_plat"></h3>
-                                <p class="text-sm font-bold text-red-600 dark:text-red-400 mt-1">
-                                    <span x-text="formatPrice(calculateTotal())"></span> FCFA
-                                </p>
+                        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 z-10 sticky top-0">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <template x-if="selectedPlat.vendeur">
+                                            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest truncate" x-text="selectedPlat.vendeur.nom_commercial"></span>
+                                        </template>
+                                        <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest" x-text="selectedPlat.categorie ? selectedPlat.categorie.nom_categorie : 'Produit'"></span>
+                                    </div>
+                                    <h3 class="text-base sm:text-lg font-black text-gray-900 dark:text-white leading-tight truncate" x-text="selectedPlat.nom_plat" :title="selectedPlat.nom_plat"></h3>
+                                    <p class="text-sm font-black text-red-600 dark:text-red-400 mt-0.5">
+                                        <span x-text="formatPrice(calculateTotal())"></span> FCFA
+                                    </p>
+                                </div>
+                                <button @click="closeModal()" class="p-2 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shrink-0">
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
                             </div>
-                            <button @click="closeModal()" class="p-2 bg-gray-50 dark:bg-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
                         </div>
 
                         <!-- Scrollable Content -->
-                        <div class="flex-1 overflow-y-auto p-8 space-y-8">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-medium" x-text="selectedPlat.description"></p>
+                        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-medium" x-text="selectedPlat.description"></p>
 
                             <!-- Variant Groups -->
                             <template x-for="group in selectedPlat.groupes_variantes" :key="group.id_groupe">
                                 <div class="space-y-4">
                                     <div class="flex items-center justify-between">
-                                        <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest" x-text="group.nom"></h4>
+                                        <h4 class="text-[11px] font-black text-gray-900 dark:text-white uppercase tracking-widest" x-text="group.nom"></h4>
                                         <div class="flex gap-2">
-                                            <span x-show="group.obligatoire" class="px-2 py-0.5 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[9px] font-black uppercase rounded">Obligatoire</span>
-                                            <span x-show="group.choix_multiple" class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-[9px] font-black uppercase rounded">
+                                            <span x-show="group.obligatoire" class="px-2 py-0.5 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-[8px] font-black uppercase rounded">Obligatoire</span>
+                                            <span x-show="group.choix_multiple" class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-[8px] font-black uppercase rounded">
                                                 Max <span x-text="group.max_choix"></span>
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div class="space-y-3">
+                                    <div class="space-y-2">
                                         <template x-for="option in group.variantes" :key="option.id_variante">
-                                            <div class="flex flex-col gap-2 p-4 rounded-xl border-2 transition-all"
+                                            <div class="flex flex-col gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all"
                                                  :class="isSelected(group, option) ? 'border-red-600 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800'">
                                                  
                                                  <div class="flex items-center justify-between">
-                                                     <label class="flex items-center gap-3 cursor-pointer flex-1">
+                                                     <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
                                                          <!-- Checkbox for multiple -->
                                                          <input x-show="group.choix_multiple" 
                                                                 type="checkbox" 
@@ -335,7 +346,7 @@
                                                                 :value="option.id_variante"
                                                                 @change="toggleOption(group, option)"
                                                                 :checked="isSelected(group, option)"
-                                                                class="w-5 h-5 text-red-600 rounded focus:ring-red-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                                                                class="w-4 h-4 text-red-600 rounded focus:ring-red-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
                                                          
                                                          <!-- Radio for single -->
                                                          <input x-show="!group.choix_multiple" 
@@ -344,12 +355,12 @@
                                                                 :value="option.id_variante"
                                                                 @change="selectSingleOption(group, option)"
                                                                 :checked="isSelected(group, option)"
-                                                                class="w-5 h-5 text-red-600 focus:ring-red-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                                                                class="w-4 h-4 text-red-600 focus:ring-red-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
                                                          
-                                                         <span class="text-sm font-bold text-gray-900 dark:text-white" x-text="option.nom"></span>
+                                                         <span class="text-xs font-bold text-gray-900 dark:text-white truncate" x-text="option.nom"></span>
                                                      </label>
                                                      
-                                                     <span x-show="option.prix_supplement > 0" class="text-xs font-black text-gray-500 dark:text-gray-400">
+                                                     <span x-show="option.prix_supplement > 0" class="text-[10px] font-black text-gray-400 dark:text-gray-500 shrink-0">
                                                          +<span x-text="formatPrice(option.prix_supplement)"></span>
                                                      </span>
                                                  </div>
@@ -357,14 +368,14 @@
                                                  <!-- Quantity Controls for this option -->
                                                  <template x-if="isSelected(group, option)">
                                                      <div class="flex items-center justify-between mt-2 pt-2 border-t border-red-100 dark:border-red-900/30">
-                                                         <p class="text-[9px] font-black text-red-600 dark:text-red-400 uppercase tracking-widest">Quantité pour cette option</p>
-                                                         <div class="flex items-center gap-3 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-900/30">
+                                                         <p class="text-[8px] font-black text-red-600 dark:text-red-400 uppercase tracking-[0.1em]">Quantité</p>
+                                                         <div class="flex items-center gap-3 bg-white dark:bg-gray-800 px-2 py-1 rounded-lg border border-red-100 dark:border-red-900/30">
                                                              <button @click="decrementOption(group, option)" class="text-gray-400 hover:text-red-600 transition-colors">
-                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"/></svg>
                                                              </button>
-                                                             <span class="text-xs font-black text-gray-900 dark:text-white w-4 text-center" x-text="getOptionQuantity(group, option)"></span>
+                                                             <span class="text-[11px] font-black text-gray-900 dark:text-white w-4 text-center" x-text="getOptionQuantity(group, option)"></span>
                                                              <button @click="incrementOption(group, option)" class="text-gray-400 hover:text-red-600 transition-colors">
-                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                                                              </button>
                                                          </div>
                                                      </div>
@@ -377,10 +388,10 @@
                         </div>
 
                         <!-- Sticky Footer -->
-                        <div class="p-6 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700 sticky bottom-0 z-10 w-full">
+                        <div class="p-5 bg-white dark:bg-gray-800 border-t border-gray-50 dark:border-gray-700 sticky bottom-0 z-10 w-full">
                             <button @click="confirmAddToCart()" 
                                     :disabled="!isValidSelection()"
-                                    class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-gray-200 shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                    class="w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-200 shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                                 Ajouter à la commande
                             </button>
                         </div>
