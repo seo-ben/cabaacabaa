@@ -651,7 +651,7 @@
                 </a>
 
                 <!-- Cart Button (Central - Elevated) -->
-                <div class="relative -mt-6 flex-1 flex justify-center">
+                <div class="relative -mt-6 -translate-y-4 z-10 flex-1 flex justify-center">
                     <a href="{{ route('cart.index') }}" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl shadow-xl shadow-red-500/30 transform active:scale-90 transition-all duration-300 group">
                         <!-- Animated ring on hover -->
                         <div class="absolute inset-0 rounded-2xl border-2 border-white/20 group-active:border-white/40 transition-colors"></div>

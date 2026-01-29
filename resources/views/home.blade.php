@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Accueil - ' . config('app.name'))
+@section('title', '' . config('app.name'))
 
 @section('content')
 
 <main class="bg-white dark:bg-slate-950 font-sans selection:bg-red-500 selection:text-white">
 
     <!-- 1. Refined Hero Section -->
-    <section class="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+    <section class="relative  pb-10 lg:pt-24 lg:pb-2 overflow-hidden">
         <!-- Subtle Ambient Background -->
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/5 rounded-full blur-[120px]"></div>
+        {{-- <div class="absolute top-0 right-0 w-[500px] h-[200px] bg-red-500/5 rounded-full blur-[120px]"></div> --}}
         
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
@@ -303,7 +303,7 @@
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1526367790999-0150786486a9?w=800&fit=crop" class="rounded-[2.5rem] shadow-2xl relative z-10" alt="Delivery Guy">
+                    <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="rounded-[2.5rem] shadow-2xl relative z-10" alt="Delivery Guy">
                     <div class="absolute -top-6 -left-6 w-32 h-32 bg-red-600 rounded-full mix-blend-multiply filter blur-2xl opacity-20"></div>
                 </div>
                 
