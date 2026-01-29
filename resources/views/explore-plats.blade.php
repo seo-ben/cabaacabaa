@@ -41,22 +41,35 @@
         <!-- Alibaba-style Header -->
         <div class="mb-10">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-gray-100 dark:border-gray-800">
-                <div>
-                    <nav class="flex mb-4 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                <div class="flex-1">
+                    <nav class="flex mb-3 md:mb-4 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-400">
                         <a href="/" class="hover:text-red-600 transition-colors">Accueil</a>
-                        <span class="mx-2">/</span>
+                        <span class="mx-1 md:mx-2">/</span>
                         <span class="text-gray-900 dark:text-gray-200">Produits</span>
                     </nav>
-                    <h1 class="text-3xl lg:text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Marché Global des Produits</h1>
-                    <p class="text-sm font-bold text-gray-400 dark:text-gray-500 mt-2">Découvrez plus de {{ $plats->total() }} articles sélectionnés par nos experts.</p>
+                    <h1 class="hidden md:block text-3xl lg:text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Marché Global des Produits</h1>
+                    <p class="hidden md:block text-sm font-bold text-gray-400 dark:text-gray-500 mt-2">Découvrez plus de {{ $plats->total() }} articles sélectionnés par nos experts.</p>
                 </div>
 
-                <!-- Quick Actions / Sort -->
-                <div class="flex items-center gap-3">
-                    <div class="hidden lg:flex items-center bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-1 shadow-sm">
-                        <button class="px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">Recommandés</button>
-                        <button class="px-5 py-2.5 text-gray-400 hover:text-gray-900 dark:hover:text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">Nouveautés</button>
-                        <button class="px-5 py-2.5 text-gray-400 hover:text-gray-900 dark:hover:text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">Top Ventes</button>
+                <!-- Functional Sort Actions -->
+                <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar -mx-2 px-2 md:mx-0 md:px-0">
+                    <div class="flex items-center bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-100 dark:border-gray-700 rounded-[1.2rem] p-1 shadow-sm shrink-0">
+                        @php $currentSort = request('sort', 'recommended'); @endphp
+                        
+                        <a href="{{ route('explore.plats', array_merge(request()->query(), ['sort' => 'recommended'])) }}" 
+                           class="px-5 py-2.5 rounded-[0.9rem] text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 {{ $currentSort === 'recommended' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg shadow-gray-200 dark:shadow-none' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
+                            Recommandés
+                        </a>
+                        
+                        <a href="{{ route('explore.plats', array_merge(request()->query(), ['sort' => 'newest'])) }}" 
+                           class="px-5 py-2.5 rounded-[0.9rem] text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 {{ $currentSort === 'newest' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg shadow-gray-200 dark:shadow-none' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
+                            Nouveautés
+                        </a>
+                        
+                        <a href="{{ route('explore.plats', array_merge(request()->query(), ['sort' => 'top_sales'])) }}" 
+                           class="px-5 py-2.5 rounded-[0.9rem] text-[9px] font-black uppercase tracking-[0.15em] transition-all duration-300 {{ $currentSort === 'top_sales' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg shadow-gray-200 dark:shadow-none' : 'text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
+                            Top Ventes
+                        </a>
                     </div>
                 </div>
             </div>
@@ -246,13 +259,17 @@
                     </div>
                 @else
                     <!-- Professional Empty State -->
-                    <div class="bg-white dark:bg-gray-800 rounded-3xl p-20 text-center border border-gray-100 dark:border-gray-700 shadow-xl shadow-black/5">
-                        <div class="w-24 h-24 bg-red-50 dark:bg-red-900/30 rounded-[2rem] flex items-center justify-center mx-auto mb-8">
-                            <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <div class="bg-white dark:bg-gray-800 rounded-3xl py-12 px-6 sm:p-20 text-center border border-gray-100 dark:border-gray-700 shadow-xl shadow-black/5 transition-all duration-300">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 bg-red-50 dark:bg-red-900/30 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8">
+                            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         </div>
-                        <h2 class="text-3xl font-display font-black mb-4">Aucune correspondance exacte</h2>
-                        <p class="text-gray-500 max-w-sm mx-auto mb-10 text-sm font-bold uppercase tracking-widest leading-loose">Nous n'avons trouvé aucun article pour votre recherche actuelle. Essayez d'ajuster les filtres ou les mots-clés.</p>
-                        <a href="{{ route('explore.plats') }}" class="px-10 py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-black transition-all">Consulter Tout le Marché</a>
+                        <h2 class="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white mb-4 tracking-tight">Aucune correspondance directe</h2>
+                        <p class="text-gray-400 dark:text-gray-500 max-w-sm mx-auto mb-10 text-[11px] sm:text-sm font-bold uppercase tracking-widest leading-loose">
+                            Nous n'avons trouvé aucun article pour votre recherche actuelle. Essayez d'ajuster les filtres ou d'utiliser d'autres mots-clés.
+                        </p>
+                        <a href="{{ route('explore.plats') }}" class="inline-flex px-8 sm:px-12 py-4 sm:py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-black transition-all shadow-xl shadow-gray-200 dark:shadow-none">
+                            Voir tout le catalogue
+                        </a>
                     </div>
                 @endif
             </main>
@@ -375,6 +392,9 @@
 </div>
 
 <style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
     .custom-filter-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-filter-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-filter-scrollbar::-webkit-scrollbar-thumb { background: #f1f5f9; border-radius: 10px; }

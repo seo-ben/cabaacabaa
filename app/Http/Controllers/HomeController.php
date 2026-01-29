@@ -235,11 +235,19 @@ class HomeController extends Controller
             $query->orderBy('distance', 'asc');
         }
 
-        // Algorithme de mise en avant (Merit-based)
-        $query->orderBy('plats.en_promotion', 'desc')
-            ->orderBy('plats.nombre_commandes', 'desc')
-            ->orderBy('vendeurs.note_moyenne', 'desc')
-            ->orderBy('plats.date_creation', 'desc');
+        // Algorithme de mise en avant (Tri)
+        $sort = $request->get('sort', 'recommended');
+        
+        if ($sort === 'newest') {
+            $query->orderBy('plats.date_creation', 'desc');
+        } elseif ($sort === 'top_sales') {
+            $query->orderBy('plats.nombre_commandes', 'desc');
+        } else {
+            $query->orderBy('plats.en_promotion', 'desc')
+                ->orderBy('plats.nombre_commandes', 'desc')
+                ->orderBy('vendeurs.note_moyenne', 'desc')
+                ->orderBy('plats.date_creation', 'desc');
+        }
 
         // Filtre par catégorie
         if ($request->filled('category')) {
