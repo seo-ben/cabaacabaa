@@ -530,80 +530,140 @@
     </main>
 
     <!-- Footer Premium -->
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-32 relative overflow-hidden transition-colors duration-300">
-        <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-24">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16">
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 mt-20 lg:mt-32 relative overflow-hidden transition-colors duration-300">
+        <!-- Subtle Glow Background -->
+        <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-orange-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 pt-24 pb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16">
                 
                 <!-- Brand Columns -->
-                <div class="lg:col-span-2">
-                    <a href="/" class="flex items-center gap-3 mb-8">
+                <div class="sm:col-span-2 lg:col-span-2 space-y-8">
+                    <a href="/" class="flex items-center gap-3 group">
                         @if($finalLogo)
-                            <img src="{{ $finalLogo }}" alt="{{ $siteName }}" class="h-10 object-contain">
+                            <img src="{{ $finalLogo }}" alt="{{ $siteName }}" class="h-12 object-contain transform group-hover:scale-105 transition-transform duration-500">
                         @else
-                            <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-200">
-                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-200 transform group-hover:rotate-6 transition-transform duration-500">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                             </div>
                         @endif
-                        <span class="text-2xl font-display font-black tracking-tighter bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">{{ $siteName }}</span>
+                        <span class="text-3xl font-display font-black tracking-tighter bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent transform group-hover:scale-105 transition-transform duration-500 leading-none">
+                            {{ $siteName }}
+                        </span>
                     </a>
-                    <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed mb-10 max-w-sm italic">
-                        La destination privilégiée pour découvrir les trésors culinaires de votre région. Savourez l'authenticité à chaque bouchée.
+                    
+                    <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed max-w-sm text-sm lg:text-base">
+                        La destination privilégiée pour découvrir les trésors culinaires de votre région. Savourez l'authenticité et la qualité à chaque bouchée, livrés directement chez vous.
                     </p>
+
                     <div class="flex gap-4">
-                        <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-                        <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-pink-50 dark:hover:bg-pink-900/20 hover:text-pink-600 dark:hover:text-pink-400 transition-all"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072z"/></svg></a>
+                        @php
+                            $socials = [
+                                ['icon' => 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', 'color' => 'blue'],
+                                ['icon' => 'M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072z', 'color' => 'pink']
+                            ];
+                        @endphp
+                        @foreach($socials as $social)
+                            <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-{{ $social['color'] }}-50 dark:hover:bg-{{ $social['color'] }}-900/20 hover:text-{{ $social['color'] }}-600 dark:hover:text-{{ $social['color'] }}-400 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="{{ $social['icon'] }}"/></svg>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
 
-                <!-- Fast Links -->
+                <!-- Footer Nav Sections -->
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Plateforme</h4>
+                    <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+                        Plateforme
+                    </h4>
                     <ul class="space-y-4">
-                        <li><a href="/" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Accueil</a></li>
-                        <li><a href="{{ route('explore') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Explorer</a></li>
-                        <li><a href="{{ route('vendors.map') }}" class="text-[13px] font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-colors flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                            Vendeurs les plus proches
-                        </a></li>
-                        <li><a href="{{ route('delivery.index') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            Opportunités Livreur
-                        </a></li>
-                        @auth
-                            @if(auth()->user()->canApplyAsVendor())
-                                <li><a href="{{ route('vendor.apply') }}" class="text-[13px] font-bold text-red-500 hover:text-red-600 transition-colors">Devenir Vendeur</a></li>
-                            @endif
-                        @endauth
+                        <li>
+                            <a href="/" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Accueil
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('explore.plats') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Produits
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('vendors.map') }}" class="group flex items-center gap-2 text-sm font-bold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-orange-600 transition-all duration-300"></span>
+                                Autour de moi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('delivery.index') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Devenir Livreur
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Aide & Plus</h4>
+                    <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                        Aide & Plus
+                    </h4>
                     <ul class="space-y-4">
-                        <li><a href="#" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Notre FAQ</a></li>
-                        <li><a href="{{ route('terms') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Conditions d'Utilisation</a></li>
-                        <li><a href="{{ route('privacy') }}" class="text-[13px] font-bold text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors">Politique de Confidentialité</a></li>
+                        <li>
+                            <a href="#" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Nos FAQ
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('terms') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Conditions d'Utilisation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('privacy') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Confidentialité
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
                 <!-- Newsletter Column -->
-                <div class="md:col-span-2 lg:col-span-1">
-                    <h4 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-8">Newsletter</h4>
-                    <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">Savourez les offres exclusives</p>
-                    <form action="{{ route('newsletter.subscribe') }}" method="POST" class="relative group">
-                        @csrf
-                        <input type="email" name="email" placeholder="Votre email" required
-                               class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700/50 rounded-[1.5rem] text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:bg-white dark:focus:bg-gray-800 focus:ring-2 focus:ring-red-500 transition-all outline-none">
-                        <button type="submit" class="absolute right-2 top-2 bottom-2 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-100 transition-colors font-black text-xs">OK</button>
-                    </form>
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <div class="p-8 bg-gray-50 dark:bg-gray-800/50 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 transition-all duration-300">
+                        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4">Newsletter</h4>
+                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 leading-relaxed">
+                            Savourez nos offres exclusives chaque semaine.
+                        </p>
+                        <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-3">
+                            @csrf
+                            <div class="relative group">
+                                <input type="email" name="email" placeholder="Votre email" required
+                                       class="w-full px-5 py-4 bg-white dark:bg-gray-900 border border-transparent dark:border-gray-700/50 rounded-2xl text-[13px] font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500 transition-all outline-none shadow-sm">
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-100 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-gray-200 dark:shadow-none">
+                                Souscrire
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
             </div>
             
-            <div class="mt-24 pt-10 border-t border-gray-50 dark:border-gray-800">
-                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center">
-                    &copy; {{ date('Y') }} {{ $siteName }}. Made with passion for food.
+            <div class="mt-20 pt-10 border-t border-gray-50 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center md:text-left order-2 md:order-1">
+                    &copy; {{ date('Y') }} {{ $siteName }}. Tous droits réservés.
                 </p>
+                <div class="flex gap-8 order-1 md:order-2">
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Cotonou</span>
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Abidjan</span>
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Lomel</span>
+                </div>
             </div>
         </div>
     </footer>
@@ -614,7 +674,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bottom Navigation Bar (Mobile) - App-like Design -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50" x-data="{ activeTab: '{{ request()->is('/') ? 'home' : (request()->is('explore*') ? 'explore' : (request()->routeIs('orders.track') ? 'track' : (request()->is('orders*') || request()->routeIs('orders.*') ? 'orders' : 'account'))) }}' }">
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50" x-data="{ activeTab: '{{ request()->is('/') ? 'home' : (request()->is('produits*') ? 'produits' : (request()->is('explore*') ? 'explore' : (request()->routeIs('orders.track') ? 'track' : (request()->is('orders*') || request()->routeIs('orders.*') ? 'orders' : 'account')))) }}' }">
         <!-- Safe area spacer for iOS -->
         <div class="h-safe-area-inset-bottom bg-white/95 dark:bg-gray-950/95"></div>
         
@@ -636,16 +696,16 @@
                     @endif
                 </a>
 
-                <!-- Explore/Search -->
-                <a href="{{ route('explore') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
+                <!-- Produit/Search -->
+                <a href="{{ route('explore.plats') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
-                        <div class="{{ request()->is('explore*') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('explore*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
-                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('explore*') ? '2.5' : '1.5' }}" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <div class="{{ request()->is('produits*') ? 'bg-red-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('produits*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-red-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('produits*') ? 'text-red-600 dark:text-red-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('produits*') ? '2.5' : '1.5' }}" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </div>
-                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('explore*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Explorer</span>
-                    @if(request()->is('explore*'))
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('produits*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Produits</span>
+                    @if(request()->is('produits*'))
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-red-600 rounded-full"></div>
                     @endif
                 </a>
