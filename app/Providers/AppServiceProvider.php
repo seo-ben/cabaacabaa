@@ -102,5 +102,10 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
         });
+
+        // Pulse Authorization
+        \Illuminate\Support\Facades\Gate::define('viewPulse', function ($user) {
+            return method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
+        });
     }
 }

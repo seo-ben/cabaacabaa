@@ -443,6 +443,23 @@
                 </div>
                 @endcan
 
+                @can('viewPulse')
+                <!-- Monitoring -->
+                <div class="px-1.5">
+                    <a href="{{ url(config('pulse.path')) }}"
+                       target="_blank"
+                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95 text-gray-500 hover:bg-gray-50 hover:text-purple-600 border border-transparent">
+                        
+                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300 bg-gray-50 text-gray-400 group-hover:bg-purple-100 group-hover:text-purple-600">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Monitoring</span>
+                    </a>
+                </div>
+                @endcan
+
                 <div class="my-4 border-t border-gray-200"></div>
 
                 @can('view_security')
