@@ -603,6 +603,12 @@
                                 Devenir Livreur
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('vendor.apply') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
+                                <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
+                                Devenir Partenaire / Boutique
+                            </a>
+                        </li>
                     </ul>
                 </div>
 

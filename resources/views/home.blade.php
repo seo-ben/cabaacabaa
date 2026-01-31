@@ -376,11 +376,13 @@
                 <h2 class="text-3xl font-bold text-white dark:text-slate-900 mb-6">Vous êtes un professionnel ?</h2>
                 <p class="text-slate-400 dark:text-slate-500 mb-10 text-sm font-medium">Rejoignez la plateforme et boostez votre visibilité auprès des clients de votre région.</p>
                 <div class="flex flex-wrap justify-center gap-4">
-                    @auth
+                    @guest
+                        <a href="{{ route('vendor.apply') }}" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all shadow-lg">Devenir Partenaire / Boutique</a>
+                    @else
                         @if(auth()->user()->canApplyAsVendor())
-                            <a href="{{ route('vendor.apply') }}" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all shadow-lg">Devenir Partenaire</a>
+                            <a href="{{ route('vendor.apply') }}" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all shadow-lg">Devenir Partenaire / Boutique</a>
                         @endif
-                    @endauth
+                    @endguest
                     <a href="{{ route('explore') }}" class="bg-transparent text-white dark:text-slate-500 border border-white/20 dark:border-slate-800 px-8 py-3.5 rounded-xl font-bold text-sm hover:bg-white/5 transition-all">Découvrir les articles</a>
                 </div>
             </div>
