@@ -583,7 +583,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <style>
     .scrollbar-hide::-webkit-scrollbar {
@@ -726,6 +725,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script>
