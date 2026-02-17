@@ -14,14 +14,31 @@ class DeliveryController extends Controller
     /**
      * Show list of delivery requests for potential drivers
      */
-    public function index()
+    public function index(Request $request)
     {
-        $requests = DeliveryRequest::where('status', 'open')
-            ->with(['vendeur'])
-            ->latest()
+        $query = DeliveryRequest::where('status', 'open')
+            ->with(['vendeur.zone']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('vendeur', function($q) use ($search) {
+                $q->where('nom_commercial', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('zone')) {
+            $zoneId = $request->zone;
+            $query->whereHas('vendeur', function($q) use ($zoneId) {
+                $q->where('id_zone', $zoneId);
+            });
+        }
+
+        $requests = $query->latest()
             ->paginate(12);
 
-        return view('delivery.index', compact('requests'));
+        $zones = \App\Models\ZoneGeographique::all();
+
+        return view('delivery.index', compact('requests', 'zones'));
     }
 
     /**

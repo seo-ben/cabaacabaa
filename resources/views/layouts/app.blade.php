@@ -535,7 +535,7 @@
         <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-orange-500/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-        <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 pt-24 pb-12">
+        <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 pt-12 pb-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16">
                 
                 <!-- Brand Columns -->
@@ -560,12 +560,42 @@
                     <div class="flex gap-4">
                         @php
                             $socials = [
-                                ['icon' => 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', 'color' => 'blue'],
-                                ['icon' => 'M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072z', 'color' => 'pink']
+                                [
+                                    'name' => 'Facebook',
+                                    'icon' => 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', 
+                                    'color' => 'blue',
+                                    'url' => '#'
+                                ],
+                                [
+                                    'name' => 'X',
+                                    'icon' => 'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z', 
+                                    'color' => 'slate',
+                                    'url' => '#'
+                                ],
+                                [
+                                    'name' => 'Instagram',
+                                    'icon' => 'M12 2.163c3.204 0 3.584.012 4.85.07 1.166.054 1.791.248 2.214.414.56.216.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.804-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0-2.163c-3.259 0-3.667.014-4.947.072-1.28.06-2.148.261-2.913.558-.789.306-1.459.717-2.126 1.384s-1.078 1.335-1.384 2.126c-.297.765-.499 1.636-.558 2.913-.06 1.28-.072 1.687-.072 4.947s.015 3.667.072 4.947c.06 1.278.262 2.148.558 2.913.306.789.717 1.459 1.384 2.126s1.335 1.078 2.126 1.384c.765.297 1.636.499 2.913.558 1.28.06 1.687.072 4.947.072s3.667-.015 4.947-.072c1.278-.06 2.148-.262 2.913-.558.789-.306 1.459-.717 2.126-1.384s1.078-1.335 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.278-.262-2.148-.558-2.913-.306-.789-.717-1.459-1.384-2.126s-1.335-1.078-2.126-1.384c-.765-.297-1.636-.499-2.913-.558-1.28-.06-1.687-.072-4.947-.072zM12 7c2.761 0 5 2.239 5 5s-2.239 5-5 5-5-2.239-5-5 2.239-5 5-5zm0 2a3 3 0 100 6 3 3 0 000-6zm6.25-4.75a1 1 0 110 2 1 1 0 010-2z', 
+                                    'color' => 'pink',
+                                    'url' => '#'
+                                ],
+                                [
+                                    'name' => 'TikTok',
+                                    'icon' => 'M12 2a1 1 0 0 0-1 1v12.5a1.5 1.5 0 1 1-3-1.5c.01 0 .02 0 .03 0V11a4.5 4.5 0 1 0 5.47 5.47V7a7.5 7.5 0 0 0 5.5 2.5v-3a4.5 4.5 0 0 1-4-2V2h-2z', 
+                                    'color' => 'gray',
+                                    'url' => '#'
+                                ],
+                                [
+                                    'name' => 'WhatsApp',
+                                    'icon' => 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z', 
+                                    'color' => 'green',
+                                    'url' => '#'
+                                ],
                             ];
                         @endphp
                         @foreach($socials as $social)
-                            <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-{{ $social['color'] }}-50 dark:hover:bg-{{ $social['color'] }}-900/20 hover:text-{{ $social['color'] }}-600 dark:hover:text-{{ $social['color'] }}-400 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
+                            <a href="{{ $social['url'] }}" 
+                               title="{{ $social['name'] }}"
+                               class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-{{ $social['color'] }}-50 dark:hover:bg-{{ $social['color'] }}-900/20 hover:text-{{ $social['color'] }}-600 dark:hover:text-{{ $social['color'] }}-400 transition-all duration-300 transform hover:-translate-y-1 shadow-sm">
                                 <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="{{ $social['icon'] }}"/></svg>
                             </a>
                         @endforeach
@@ -606,7 +636,7 @@
                         <li>
                             <a href="{{ route('vendor.apply') }}" class="group flex items-center gap-2 text-sm font-bold text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all">
                                 <span class="w-0 group-hover:w-2 h-0.5 bg-red-600 transition-all duration-300"></span>
-                                Devenir Partenaire / Boutique
+                                Devenir Partenaire 
                             </a>
                         </li>
                     </ul>
@@ -639,23 +669,28 @@
                     </ul>
                 </div>
 
-                <!-- Newsletter Column -->
+                <!-- Newsletter Column (Normal styling) -->
                 <div class="sm:col-span-2 lg:col-span-1">
-                    <div class="p-8 bg-gray-50 dark:bg-gray-800/50 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 transition-all duration-300">
-                        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4">Newsletter</h4>
-                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6 leading-relaxed">
-                            Savourez nos offres exclusives chaque semaine.
-                        </p>
-                        <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-3">
-                            @csrf
-                            <div class="relative group">
-                                <input type="email" name="email" placeholder="Votre email" required
-                                       class="w-full px-5 py-4 bg-white dark:bg-gray-900 border border-transparent dark:border-gray-700/50 rounded-2xl text-[13px] font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500 transition-all outline-none shadow-sm">
-                            </div>
-                            <button type="submit" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-100 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-gray-200 dark:shadow-none">
-                                Souscrire
-                            </button>
-                        </form>
+                    <div class="space-y-6">
+                        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Newsletter
+                        </h4>
+                        <div class="space-y-4">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 leading-relaxed">
+                                Savourez nos offres exclusives chaque semaine directement dans votre boîte mail.
+                            </p>
+                            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-3">
+                                @csrf
+                                <div class="relative group">
+                                    <input type="email" name="email" placeholder="Votre email" required
+                                           class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500 transition-all outline-none">
+                                </div>
+                                <button type="submit" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-200 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-lg active:scale-[0.98]">
+                                    Souscrire
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -902,8 +937,6 @@
                     @endif
                 </a>
                 @endauth
-            </div>
-        </div>
             </div>
         </div>
     </nav>

@@ -7,7 +7,7 @@
 <main class="bg-white dark:bg-slate-950 font-sans selection:bg-red-500 selection:text-white">
 
     <!-- 1. Refined Hero Section -->
-    <section class="relative  pb-10 lg:pt-24 lg:pb-2 overflow-hidden">
+    <section class="relative  pb-10 lg:pb-2 overflow-hidden">
         <!-- Subtle Ambient Background -->
         {{-- <div class="absolute top-0 right-0 w-[500px] h-[200px] bg-red-500/5 rounded-full blur-[120px]"></div> --}}
         
@@ -73,10 +73,10 @@
                 <div class="relative hidden lg:block" data-aos="fade-left">
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12">
-                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop" class="rounded-3xl shadow-xl w-full object-cover h-[400px]" alt="Hero Food">
+                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop" class="rounded-2xl shadow-xl w-full object-cover h-[400px]" alt="Hero Food">
                         </div>
                         <div class="col-span-6">
-                            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-slate-800 flex items-center gap-4 -mt-12 relative z-20">
+                            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 flex items-center gap-4 -mt-12 relative z-20">
                                 <div class="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center text-green-600">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </div>
@@ -96,14 +96,14 @@
     <section class="py-16 bg-gray-50 dark:bg-slate-900/50">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="text-center mb-10">
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">Explorez par catégorie</h2>
+                <h2 class="text-2xl md:text-2xl font-bold text-slate-900 dark:text-white mb-3">Explorez par catégorie</h2>
                 <p class="text-sm text-gray-500">Trouvez rapidement ce que vous cherchez</p>
             </div>
             
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
                 @foreach($categories as $category)
                 <a href="{{ route('explore', ['category' => $category->id_categorie]) }}" 
-                   class="group relative bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                   class="group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                     <!-- Category Image -->
                     <div class="aspect-square relative overflow-hidden">
                         @if($category->image)
@@ -159,7 +159,7 @@
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="flex items-end justify-between mb-12">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Les meilleurs établissements</h2>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Les meilleurs établissements</h2>
                     <p class="text-sm text-gray-500">Sélectionnés pour leur qualité et leur fiabilité.</p>
                 </div>
                 <a href="{{ route('explore') }}" class="text-red-600 text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all">
@@ -262,17 +262,17 @@
     </section>
 
     <!-- NEW: 4.5. How It Works -->
-    <section class="py-24 px-4 bg-white dark:bg-slate-950">
+    <section class="py-10 px-4 bg-white dark:bg-slate-950">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Comment ça marche ?</h2>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Comment ça marche ?</h2>
                 <p class="text-sm text-gray-500 max-w-lg mx-auto">Commandez vos articles préférés en quelques clics seulement.</p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-12">
                 <!-- Step 1 -->
                 <div class="text-center group">
-                    <div class="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-3xl flex items-center justify-center text-red-600 mx-auto mb-6 transition-transform group-hover:rotate-6">
+                    <div class="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center text-red-600 mx-auto mb-6 transition-transform group-hover:rotate-6">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Recherche Facile</h3>
@@ -280,7 +280,7 @@
                 </div>
                 <!-- Step 2 -->
                 <div class="text-center group">
-                    <div class="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 rounded-3xl flex items-center justify-center text-orange-600 mx-auto mb-6 transition-transform group-hover:-rotate-6">
+                    <div class="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center text-orange-600 mx-auto mb-6 transition-transform group-hover:-rotate-6">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Commande Rapide</h3>
@@ -288,7 +288,7 @@
                 </div>
                 <!-- Step 3 -->
                 <div class="text-center group">
-                    <div class="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-3xl flex items-center justify-center text-green-600 mx-auto mb-6 transition-transform group-hover:scale-110">
+                    <div class="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-2xl flex items-center justify-center text-green-600 mx-auto mb-6 transition-transform group-hover:scale-110">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Livraison Express</h3>
@@ -299,7 +299,7 @@
     </section>
 
     <!-- NEW: 4.7. Features / Why Us -->
-    <section class="py-24 px-4 bg-gray-50 dark:bg-slate-900/50">
+    <section class="py-10 px-4 bg-gray-50 dark:bg-slate-900/50">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
@@ -308,7 +308,7 @@
                 </div>
                 
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 leading-tight">Pourquoi choisir <span class="text-red-600">{{ config('app.name') }}</span> ?</h2>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-8 leading-tight">Pourquoi choisir <span class="text-red-600">{{ config('app.name') }}</span> ?</h2>
                     <div class="space-y-8">
                         <div class="flex gap-5">
                             <div class="shrink-0 w-12 h-12 bg-white dark:bg-slate-800 rounded-xl shadow-sm flex items-center justify-center text-red-600 border border-gray-100 dark:border-slate-700">
@@ -344,12 +344,12 @@
     </section>
 
     <!-- NEW: 4.9. Simple Testimonials -->
-    <section class="py-24 px-4 bg-white dark:bg-slate-950">
+    <section class="py-10 px-4 bg-white dark:bg-slate-950">
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-12 text-center">Ce que disent nos clients</h2>
             <div class="grid md:grid-cols-3 gap-8">
                 @for($i=1; $i<=3; $i++)
-                <div class="p-8 bg-gray-50 dark:bg-slate-900/50 rounded-3xl border border-gray-100 dark:border-slate-800">
+                <div class="p-8 bg-gray-50 dark:bg-slate-900/50 rounded-2xl border border-gray-100 dark:border-slate-800">
                     <div class="flex items-center gap-1 text-yellow-500 mb-4">
                         @for($j=0; $j<5; $j++) <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M10 1L13 7L19 8L15 12L16 18L10 15L4 18L5 12L1 8L7 7L10 1Z"/></svg> @endfor
                     </div>
@@ -370,10 +370,10 @@
     </section>
 
     <!-- 5. Minimalist CTA -->
-    <section class="py-24 px-4 bg-white dark:bg-slate-950">
-        <div class="max-w-4xl mx-auto text-center px-8 py-16 bg-slate-900 dark:bg-white rounded-[2.5rem] relative overflow-hidden">
+    <section class="py-10 px-4 bg-white dark:bg-slate-950">
+        <div class="max-w-4xl mx-auto text-center px-8 py-16 bg-slate-900 dark:bg-white rounded-[1.5rem] relative overflow-hidden">
             <div class="relative z-10">
-                <h2 class="text-3xl font-bold text-white dark:text-slate-900 mb-6">Vous êtes un professionnel ?</h2>
+                <h2 class="text-2xl font-bold text-white dark:text-slate-900 mb-6">Vous êtes un professionnel ?</h2>
                 <p class="text-slate-400 dark:text-slate-500 mb-10 text-sm font-medium">Rejoignez la plateforme et boostez votre visibilité auprès des clients de votre région.</p>
                 <div class="flex flex-wrap justify-center gap-4">
                     @guest
