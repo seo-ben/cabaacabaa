@@ -48,6 +48,7 @@ Route::get('/vendor/{id}-{slug?}', [HomeController::class, 'vendor'])->name('ven
 // Static pages
 Route::get('/conditions-utilisation', [HomeController::class, 'terms'])->name('terms');
 Route::get('/politique-confidentialite', [HomeController::class, 'privacy'])->name('privacy');
+Route::get('/a-propos', [HomeController::class, 'about'])->name('about');
 
 // Vendor Map - Géolocalisation
 Route::get('/vendeurs-proches', [\App\Http\Controllers\VendorMapController::class, 'index'])->name('vendors.map');

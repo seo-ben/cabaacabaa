@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Plat;
 use App\Models\CategoryPlat;
 use App\Models\ZoneGeographique;
+use App\Models\MiseEnAvant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -109,7 +110,6 @@ class HomeController extends Controller
         try {
             $data['categories'] = CategoryPlat::where('actif', true)
                 ->orderBy('ordre_affichage')
-                ->limit(6)
                 ->get();
         } catch (\Throwable $e) {
             $data['categories'] = collect([]);
@@ -133,6 +133,19 @@ class HomeController extends Controller
             ];
         } catch (\Throwable $e) {
             $data['stats'] = ['total_vendeurs' => 0, 'total_plats' => 0, 'total_commandes' => 0];
+        }
+
+        // Pubs / Mise en avant (Caroussel)
+        try {
+            $data['pubs'] = MiseEnAvant::where('actif', 1)
+                ->where(function($q) {
+                    $q->whereNull('date_fin')->orWhere('date_fin', '>', now());
+                })
+                ->orderBy('priorite', 'desc')
+                ->limit(5)
+                ->get();
+        } catch (\Throwable $e) {
+            $data['pubs'] = collect([]);
         }
 
         return view('home', $data);
@@ -359,5 +372,13 @@ class HomeController extends Controller
     public function privacy()
     {
         return view('pages.privacy');
+    }
+
+    /**
+     * Page A propos.
+     */
+    public function about()
+    {
+        return view('pages.about');
     }
 }

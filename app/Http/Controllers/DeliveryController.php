@@ -17,6 +17,10 @@ class DeliveryController extends Controller
     public function index(Request $request)
     {
         $query = DeliveryRequest::where('status', 'open')
+<<<<<<< Updated upstream
+=======
+            ->has('vendeur')
+>>>>>>> Stashed changes
             ->with(['vendeur.zone']);
 
         if ($request->filled('search')) {

@@ -4,13 +4,222 @@
 
 @section('content')
 
-<main class="bg-white dark:bg-slate-950 font-sans selection:bg-red-500 selection:text-white">
+<!-- ================= MOBILE VIEW (< lg) ================= -->
+<main class="block lg:hidden bg-gray-50 dark:bg-slate-950 min-h-screen font-sans">
+    
+    <!-- 1. Ads Slider / Pubs (MiseEnAvant) -->
+    <section class="pt-4 px-4 mb-6">
+        <div id="mobile-ads-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 no-scrollbar scroll-smooth">
+            @forelse($pubs as $pub)
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg">
+                    @if($pub->vendeur && $pub->vendeur->image_principale)
+                        <img src="{{ asset('storage/' . $pub->vendeur->image_principale) }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full bg-gradient-to-r from-red-600 to-red-800 flex items-center justify-center text-white p-6 text-center">
+                            <h3 class="font-bold text-xl">{{ $pub->description ?: 'Promotion Spéciale' }}</h3>
+                        </div>
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                        <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded w-fit mb-1">PROMO</span>
+                        <h3 class="text-white font-bold truncate">{{ $pub->description ?: ($pub->vendeur ? $pub->vendeur->nom_commercial : 'Offre Spéciale') }}</h3>
+                    </div>
+                </div>
+            @empty
+                <!-- Default Ads (5 Items) -->
+                <!-- 1. Welcome -->
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center">
+                    <div class="text-center text-white px-6">
+                        <h3 class="font-black text-2xl mb-2">Bienvenue sur {{ config('app.name') }}</h3>
+                        <p class="text-sm font-medium opacity-90">Commandez vos plats préférés en quelques clics.</p>
+                    </div>
+                </div>
+                
+                <!-- 2. Fast Delivery -->
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+                    <div class="text-center text-white px-6">
+                        <h3 class="font-black text-2xl mb-2">Livraison Rapide</h3>
+                        <p class="text-sm font-medium opacity-90">Recevez vos commandes en un temps record.</p>
+                    </div>
+                </div>
+
+                <!-- 3. Quality/Freshness -->
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg bg-gradient-to-br from-green-600 to-teal-700 flex items-center justify-center">
+                    <div class="text-center text-white px-6">
+                        <h3 class="font-black text-2xl mb-2">Produits Frais</h3>
+                        <p class="text-sm font-medium opacity-90">Sélectionnés avec soin auprès de nos partenaires.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Support/Community -->
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
+                    <div class="text-center text-white px-6">
+                        <h3 class="font-black text-2xl mb-2">Support 7j/7</h3>
+                        <p class="text-sm font-medium opacity-90">Une équipe dédiée à votre écoute.</p>
+                    </div>
+                </div>
+
+                <!-- 5. Partner -->
+                <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                    <div class="text-center text-white px-6">
+                        <h3 class="font-black text-2xl mb-2">Devenez Partenaire</h3>
+                        <p class="text-sm font-medium opacity-90">Boostez votre activité en rejoignant notre communauté.</p>
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+    <!-- 2. Bar (Stats & Opportunités - Style Wallet) -->
+    <section class="px-4 mb-6">
+        <div class="bg-red-700 dark:bg-red-800 rounded-3xl p-4 flex items-center justify-between shadow-lg text-white relative overflow-hidden">
+            <!-- Deco overlay -->
+            <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-xl -mr-6 -mt-6"></div>
+            
+            <!-- Left: Stats (Like Balance) -->
+            <div class="relative z-10">
+                <div class="flex items-center gap-1.5 mb-0.5 opacity-90">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Activités</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-2xl font-black leading-none">{{ number_format($stats['total_commandes'] ?? 150) }}</span>
+                        <span class="text-[10px] font-medium opacity-80">Cmdes</span>
+                    </div>
+                    <div class="w-px h-5 bg-white/30 rounded-full"></div>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-2xl font-black leading-none">4.9</span>
+                        <svg class="w-3.5 h-3.5 text-yellow-300 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Actions (Like Wallet Actions) -->
+            <div class="relative z-10 flex gap-3">
+                <!-- Vendeur Button -->
+                <a href="{{ route('vendor.apply') }}" class="group relative" title="Devenir Vendeur">
+                    <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-red-600 shadow-md group-active:scale-95 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <!-- Small indicator icon -->
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white border-2 border-red-700">
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    </div>
+                </a>
+
+                <!-- Livreur Button -->
+                <a href="{{ route('delivery.index') }}" class="group relative" title="Devenir Livreur">
+                    <div class="w-11 h-11 bg-white rounded-full flex items-center justify-center text-red-600 shadow-md group-active:scale-95 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center text-white border-2 border-red-700">
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Categories Grid (Circular) -->
+    <section class="px-4">
+        <div class="grid grid-cols-4 gap-y-8 gap-x-2">
+
+            <!-- Product Categories (Specific) -->
+            @foreach($categories as $cat)
+            <a href="{{ route('explore', ['category' => $cat->id_categorie]) }}" class="flex flex-col items-center gap-2 group">
+                <div class="w-14 h-14 rounded-full bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center justify-center group-hover:shadow-md group-hover:scale-105 transition-all duration-300 relative overflow-hidden">
+                    @if($cat->image)
+                        <img src="{{ asset('storage/'.$cat->image) }}" class="w-full h-full object-cover">
+                    @else
+                        <span class="text-xl text-red-500">{{ $cat->icone ?: '🍽️' }}</span>
+                    @endif
+                </div>
+                <!-- Truncated name to avoid layout shift -->
+                <span class="text-[11px] font-medium text-slate-700 dark:text-slate-300 text-center leading-tight truncate w-full px-1">{{ Str::limit($cat->nom_categorie, 10) }}</span>
+            </a>
+            @endforeach
+            
+            <!-- More Button -->
+            {{-- <a href="{{ route('explore') }}" class="flex flex-col items-center gap-2 group">
+                <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+                </div>
+                <span class="text-[11px] font-medium text-slate-700 dark:text-slate-300 text-center">Plus</span>
+            </a> --}}
+        </div>
+    </section>
+
+    <!-- 4. Quick Promotions / Feeds (Optional, below grid) -->
+    <section class="mt-8 px-4">
+        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4">Populaire près de chez vous</h3>
+        <div class="grid grid-cols-2 gap-4">
+            @foreach($vendeurs->take(4) as $vendor)
+            <a href="{{ route('vendor.show', ['id' => $vendor->id_vendeur, 'slug' => Str::slug($vendor->nom_commercial)]) }}" class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 block">
+                <div class="h-28 relative">
+                    <img src="{{ $vendor->image_principale ? asset('storage/' . $vendor->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" class="w-full h-full object-cover">
+                    @if($vendor->is_boosted)
+                        <span class="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">PROMO</span>
+                    @endif
+                </div>
+                <div class="p-3">
+                    <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate">{{ $vendor->nom_commercial }}</h4>
+                    <p class="text-[10px] text-gray-500 truncate">{{ $vendor->description }}</p>
+                    <div class="flex items-center gap-1 mt-2">
+                        <svg class="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <span class="text-xs font-bold text-slate-800 dark:text-white">{{ number_format($vendor->note_moyenne, 1) }}</span>
+                    </div>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </section>
+
+    <!-- 5. About CabaaCabaa (Mobile) -->
+    <section class="px-4 py-8 bg-white dark:bg-slate-900 rounded-3xl mx-2 my-8 shadow-sm">
+        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4 text-center">À propos de {{ config('app.name') }}</h3>
+        
+        <div class="relative rounded-2xl overflow-hidden h-40 mb-6">
+             <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="w-full h-full object-cover" alt="À propos">
+             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                 <p class="text-white text-xs font-medium leading-relaxed drop-shadow-md">
+                     La première plateforme locale qui connecte vos envies aux meilleurs commerçants de la ville.
+                 </p>
+             </div>
+        </div>
+
+        <div class="space-y-4 px-2">
+            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
+                {{ config('app.name') }} est bien plus qu'une simple application de livraison. Nous sommes votre partenaire quotidien pour découvrir, commander et recevoir tout ce dont vous avez besoin, rapidement et simplement.
+            </p>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="bg-red-50 dark:bg-red-900/10 p-3 rounded-xl text-center">
+                    <span class="block text-2xl font-black text-red-600 mb-1">10k+</span>
+                    <span class="text-[10px] text-gray-500 uppercase font-bold">Utilisateurs</span>
+                </div>
+                <div class="bg-orange-50 dark:bg-orange-900/10 p-3 rounded-xl text-center">
+                    <span class="block text-2xl font-black text-orange-600 mb-1">500+</span>
+                    <span class="text-[10px] text-gray-500 uppercase font-bold">Partenaires</span>
+                </div>
+            </div>
+            <div class="text-center mt-6">
+                <a href="{{ route('about') }}" class="text-red-600 font-bold text-sm hover:underline">En savoir plus sur notre mission →</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ================= DESKTOP VIEW (>= lg) ================= -->
+<main class="hidden lg:block bg-white dark:bg-slate-950 font-sans selection:bg-red-500 selection:text-white pb-20">
 
     <!-- 1. Refined Hero Section -->
     <section class="relative  pb-10 lg:pb-2 overflow-hidden">
+<<<<<<< Updated upstream
         <!-- Subtle Ambient Background -->
         {{-- <div class="absolute top-0 right-0 w-[500px] h-[200px] bg-red-500/5 rounded-full blur-[120px]"></div> --}}
         
+=======
+>>>>>>> Stashed changes
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 
@@ -392,6 +601,23 @@
 </main>
 
 <script>
+    function toggleBalance() {
+        const balanceEl = document.getElementById('wallet-balance');
+        const eyeIcon = document.getElementById('eye-icon');
+        
+        if (balanceEl.textContent === '••••') {
+            balanceEl.textContent = '0'; // Replace with real balance variable if available
+            // Open Eye
+            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+        } else {
+            balanceEl.textContent = '••••';
+            // Closed Eye
+            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+        }
+    }
+</script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         // Vérifier si on a déjà une localisation dans l'URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -456,4 +682,46 @@
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-scroll pour le carrousel mobile
+        const carousel = document.getElementById('mobile-ads-carousel');
+        if(carousel) {
+            let scrollInterval;
+            const delay = 3500; // 3.5 secondes
+
+            const startAutoScroll = () => {
+                clearInterval(scrollInterval);
+                scrollInterval = setInterval(() => {
+                    // Calculer la largeur de la carte + le gap (16px pour gap-4)
+                    const firstCard = carousel.firstElementChild;
+                    if (!firstCard) return;
+                    
+                    const itemWidth = firstCard.offsetWidth + 16;
+                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+                    // Si on est à la fin (ou presque), on retourne au début
+                    if (carousel.scrollLeft >= maxScroll - 10) {
+                        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        carousel.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    }
+                }, delay);
+            };
+
+            const stopAutoScroll = () => {
+                clearInterval(scrollInterval);
+            };
+
+            // Démarrer le défilement
+            startAutoScroll();
+
+            // Mettre en pause lors de l'interaction utilisateur
+            carousel.addEventListener('touchstart', stopAutoScroll, { passive: true });
+            carousel.addEventListener('touchend', startAutoScroll);
+            carousel.addEventListener('mouseenter', stopAutoScroll);
+            carousel.addEventListener('mouseleave', startAutoScroll);
+        }
+    });
+</script>
 @endsection

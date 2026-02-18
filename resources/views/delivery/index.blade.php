@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="bg-gray-50 dark:bg-gray-950 min-h-screen">
+<<<<<<< Updated upstream
     <!-- Hero Section -->
     <div class="relative bg-gray-900 overflow-hidden pt-32 pb-48">
         <div class="absolute inset-0">
@@ -76,21 +77,63 @@
                     <div class="space-y-6">
                         @foreach($requests as $request)
                             <div class="group bg-white dark:bg-gray-900 p-6 md:p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center gap-8 hover:shadow-2xl hover:border-red-100 dark:hover:border-red-900/30 transition-all duration-300">
+=======
+
+
+    <!-- Main Content Grid -->
+    <div id="open-positions" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Job List Container -->
+            <div class="flex-1">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-xl font-black text-gray-900 dark:text-white">Opportunités Ouvertes</h2>
+                        <p class="text-xs text-gray-500 font-medium">{{ $requests->total() }} postes disponibles actuellement</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gray-400">Live Update</span>
+                    </div>
+                </div>
+
+                @if($requests->isEmpty())
+                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-10 text-center border-2 border-dashed border-gray-100 dark:border-gray-800">
+                        <div class="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-black text-gray-900 dark:text-white mb-1">Aucun poste pour le moment</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs italic">Essayez de modifier vos filtres de recherche.</p>
+                    </div>
+                @else
+                    <div class="space-y-4">
+                        @foreach($requests as $request)
+                            <div class="group bg-white dark:bg-gray-900 p-5 rounded-[2rem] border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center gap-6 hover:shadow-xl hover:border-red-100 dark:hover:border-red-900/30 transition-all duration-300">
+>>>>>>> Stashed changes
                                 <!-- Company Logo/Avatar -->
                                 <div class="shrink-0">
                                     @if($request->vendeur->image_principale)
                                         <img src="{{ asset('storage/'.$request->vendeur->image_principale) }}" 
+<<<<<<< Updated upstream
                                              class="w-20 h-20 rounded-2xl object-cover shadow-lg" 
                                              alt="{{ $request->vendeur->nom_commercial }}">
                                     @else
                                         <div class="w-20 h-20 bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl flex items-center justify-center shadow-inner">
                                             <span class="text-3xl font-black text-red-600/30">{{ mb_substr($request->vendeur->nom_commercial, 0, 1) }}</span>
+=======
+                                             class="w-16 h-16 rounded-xl object-cover shadow-md" 
+                                             alt="{{ $request->vendeur->nom_commercial }}">
+                                    @else
+                                        <div class="w-16 h-16 bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-800 dark:to-gray-700 rounded-xl flex items-center justify-center shadow-inner">
+                                            <span class="text-xl font-black text-red-600/30">{{ mb_substr($request->vendeur->nom_commercial, 0, 1) }}</span>
+>>>>>>> Stashed changes
                                         </div>
                                     @endif
                                 </div>
 
                                 <!-- Job Body -->
                                 <div class="flex-1 text-center md:text-left">
+<<<<<<< Updated upstream
                                     <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-3">
                                         <span class="px-2.5 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[10px] font-black uppercase tracking-widest rounded-lg">FREELANCE</span>
                                         <span class="px-2.5 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-[10px] font-black uppercase tracking-widest rounded-lg">ACTIF</span>
@@ -103,6 +146,20 @@
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+=======
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-2">
+                                        <span class="px-2 py-0.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-[9px] font-black uppercase tracking-widest rounded-md">FREELANCE</span>
+                                        <span class="px-2 py-0.5 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-[9px] font-black uppercase tracking-widest rounded-md">ACTIF</span>
+                                    </div>
+                                    <h3 class="text-lg font-black text-gray-900 dark:text-white mb-1 group-hover:text-red-600 transition-colors">Livreur Partenaire - {{ $request->vendeur->nom_commercial }}</h3>
+                                    <div class="flex flex-wrap justify-center md:justify-start items-center gap-3 text-gray-500 dark:text-gray-400 text-xs font-medium">
+                                        <div class="flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                            {{ $request->vendeur->zone->nom_zone ?? 'Toute la ville' }}
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+>>>>>>> Stashed changes
                                             Publié {{ $request->created_at->diffForHumans() }}
                                         </div>
                                     </div>
@@ -113,19 +170,31 @@
                                     @auth
                                         @php $hasApplied = $request->applications()->where('id_user', auth()->id())->exists(); @endphp
                                         @if($hasApplied)
+<<<<<<< Updated upstream
                                             <button disabled class="w-full px-8 py-4 bg-gray-50 dark:bg-gray-800 text-gray-400 rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed border border-gray-100">
+=======
+                                            <button disabled class="w-full px-6 py-3 bg-gray-50 dark:bg-gray-800 text-gray-400 rounded-xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed border border-gray-100">
+>>>>>>> Stashed changes
                                                 Candidature déposée
                                             </button>
                                         @else
                                             <form action="{{ route('delivery.apply', $request->id) }}" method="POST">
                                                 @csrf
+<<<<<<< Updated upstream
                                                 <button type="submit" class="w-full px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95">
+=======
+                                                <button type="submit" class="w-full px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 hover:text-white transition-all shadow-lg active:scale-95">
+>>>>>>> Stashed changes
                                                     Postuler
                                                 </button>
                                             </form>
                                         @endif
                                     @else
+<<<<<<< Updated upstream
                                         <a href="{{ route('login') }}" class="block px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-red-600 dark:hover:bg-red-600 hover:text-white transition-all shadow-xl">
+=======
+                                        <a href="{{ route('login') }}" class="block px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-widest text-center hover:bg-red-600 dark:hover:bg-red-600 hover:text-white transition-all shadow-lg">
+>>>>>>> Stashed changes
                                             Se connecter
                                         </a>
                                     @endauth
@@ -134,13 +203,18 @@
                         @endforeach
                     </div>
 
+<<<<<<< Updated upstream
                     <div class="mt-12">
+=======
+                    <div class="mt-10">
+>>>>>>> Stashed changes
                         {{ $requests->appends(request()->query())->links() }}
                     </div>
                 @endif
             </div>
 
             <!-- Sidebar -->
+<<<<<<< Updated upstream
             <div class="lg:w-96 space-y-8">
                 <!-- Why Join Us Card -->
                 <div class="bg-gradient-to-br from-red-600 to-orange-600 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden group">
@@ -169,12 +243,43 @@
                             <div>
                                 <p class="font-black text-sm uppercase tracking-wider mb-1">Assurance incluse</p>
                                 <p class="text-xs text-white/80 leading-relaxed font-medium">Nous protégeons nos partenaires pendant chaque course effectuée.</p>
+=======
+            <div class="lg:w-80 space-y-6">
+                <!-- Why Join Us Card -->
+                <div class="bg-gradient-to-br from-red-600 to-orange-600 rounded-[2rem] p-6 text-white shadow-xl relative overflow-hidden group">
+                    <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
+                    <h3 class="text-lg font-black mb-4 flex items-center gap-2 italic">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Pourquoi nous ?
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center shrink-0 text-xs font-black">01</span>
+                            <div>
+                                <p class="font-black text-xs uppercase tracking-wider mb-0.5">Flexibilité totale</p>
+                                <p class="text-[10px] text-white/80 leading-relaxed font-medium">Démarrez et arrêtez quand vous voulez. Vous décidez de votre emploi du temps.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center shrink-0 text-xs font-black">02</span>
+                            <div>
+                                <p class="font-black text-xs uppercase tracking-wider mb-0.5">Revenus Instantanés</p>
+                                <p class="text-[10px] text-white/80 leading-relaxed font-medium">Suivez vos gains en temps réel et recevez vos paiements chaque semaine.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center shrink-0 text-xs font-black">03</span>
+                            <div>
+                                <p class="font-black text-xs uppercase tracking-wider mb-0.5">Assurance incluse</p>
+                                <p class="text-[10px] text-white/80 leading-relaxed font-medium">Nous protégeons nos partenaires pendant chaque course effectuée.</p>
+>>>>>>> Stashed changes
                             </div>
                         </li>
                     </ul>
                 </div>
 
                 <!-- How it works -->
+<<<<<<< Updated upstream
                 <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-xl">
                     <h3 class="text-xl font-black text-gray-900 dark:text-white mb-6">Comment postuler ?</h3>
                     <div class="space-y-8">
@@ -189,6 +294,22 @@
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center text-red-600 font-bold">3</div>
                             <p class="text-sm font-bold text-gray-600 dark:text-gray-400 italic">Attendez la validation du vendeur et commencez.</p>
+=======
+                <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-800 shadow-lg">
+                    <h3 class="text-lg font-black text-gray-900 dark:text-white mb-4">Comment postuler ?</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-red-600 font-bold text-sm">1</div>
+                            <p class="text-xs font-bold text-gray-600 dark:text-gray-400 italic">Créez votre compte profil livreur.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-red-600 font-bold text-sm">2</div>
+                            <p class="text-xs font-bold text-gray-600 dark:text-gray-400 italic">Choisissez une offre et postulez en un clic.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center text-red-600 font-bold text-sm">3</div>
+                            <p class="text-xs font-bold text-gray-600 dark:text-gray-400 italic">Attendez la validation du vendeur et commencez.</p>
+>>>>>>> Stashed changes
                         </div>
                     </div>
                 </div>
@@ -197,6 +318,7 @@
         </div>
     </div>
 
+<<<<<<< Updated upstream
     <!-- Earnings Section -->
     <div class="bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800 py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -283,6 +405,30 @@
                 @endauth
             </div>
         </div>
+=======
+  
+
+    <!-- CTA Section -->
+    <div class="bg-gray-50 dark:bg-gray-950 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-6 tracking-tight italic">Prêt à prendre la route ?</h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 mb-8 font-medium">Rejoignez-nous aujourd'hui et commencez à gagner demain. Pas de CV requis, juste votre motivation !</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                @auth
+                    <a href="#open-positions" class="px-10 py-4 bg-red-600 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-red-700 transition-all shadow-xl shadow-red-500/25">
+                        Voir les offres
+                    </a>
+                @else
+                    <a href="{{ route('register') }}" class="px-10 py-4 bg-red-600 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-red-700 transition-all shadow-xl shadow-red-500/25">
+                        Créer mon compte
+                    </a>
+                    <a href="{{ route('login') }}" class="px-10 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-[2rem] font-black text-[10px] uppercase tracking-widest hover:bg-black dark:hover:bg-gray-100 transition-all border border-gray-800 dark:border-white shadow-lg">
+                        Me connecter
+                    </a>
+                @endauth
+            </div>
+        </div>
+>>>>>>> Stashed changes
     </div>
 </div>
 @endsection
