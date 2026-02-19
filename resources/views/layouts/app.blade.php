@@ -514,7 +514,6 @@
                             <a href="{{ route('register') }}" class="px-6 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-black dark:hover:bg-gray-100 transition shadow-lg">S'inscrire</a>
                         </div>
                     @endauth
-
                 </div>
             </div>
         </div>
@@ -674,7 +673,8 @@
             <div class="mt-20 pt-10 border-t border-gray-50 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
                 <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center md:text-left order-2 md:order-1">
                     &copy; {{ date('Y') }} {{ $siteName }}. Tous droits réservés.
-                </p>
+                </p> 
+                
                 <div class="flex gap-8 order-1 md:order-2">
                     <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Cotonou</span>
                     <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Abidjan</span>

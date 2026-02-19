@@ -68,7 +68,7 @@
             @endforelse
         </div>
     </section>
-
+    
     <!-- 2. Bar (Stats & Opportunités - Style Wallet) -->
     <section class="px-4 mb-6">
         <div class="bg-red-700 dark:bg-red-800 rounded-3xl p-4 flex items-center justify-between shadow-lg text-white relative overflow-hidden">
