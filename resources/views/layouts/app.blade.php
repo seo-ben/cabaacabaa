@@ -685,7 +685,7 @@
     </footer>
 
     <!-- Footer Mobile -->
-    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 overflow-hidden relative">
+    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-8 pb-32 overflow-hidden relative">
         <div class="px-6 space-y-6">
             <!-- Brand & Tagline -->
             <div class="flex flex-col items-center text-center space-y-3">
@@ -706,10 +706,10 @@
                 </p>
             </div>
 
-            <!-- Social Links Grid -->
-            <div class="grid grid-cols-5 gap-3">
+            <!-- Social Links - Centered & Compact -->
+            <div class="flex justify-center gap-3">
                 @foreach($socialLinks as $social)
-                    <a href="#" class="aspect-square bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 active:scale-95 transition-transform border border-gray-100 dark:border-gray-800">
+                    <a href="#" class="w-12 h-12 bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center text-gray-400 dark:text-gray-500 active:scale-95 transition-transform border border-gray-100 dark:border-gray-800 shrink-0">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="{{ $social['icon'] }}"/></svg>
                     </a>
                 @endforeach
