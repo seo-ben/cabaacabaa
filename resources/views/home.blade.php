@@ -214,12 +214,8 @@
 
     <!-- 1. Refined Hero Section -->
     <section class="relative  pb-10 lg:pb-2 overflow-hidden">
-<<<<<<< Updated upstream
         <!-- Subtle Ambient Background -->
         {{-- <div class="absolute top-0 right-0 w-[500px] h-[200px] bg-red-500/5 rounded-full blur-[120px]"></div> --}}
-        
-=======
->>>>>>> Stashed changes
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 
