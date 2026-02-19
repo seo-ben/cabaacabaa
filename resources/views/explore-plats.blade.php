@@ -39,11 +39,95 @@
      ">
     
 
-    <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-12">
+    <!-- ================= MOBILE VIEW (< lg) ================= -->
+    <main class="block lg:hidden bg-gray-50 dark:bg-slate-950 min-h-screen font-sans">
+        <!-- 1. Sticky Search & Categories Bar -->
+        <div class="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800/50 pb-2">
+            <!-- Search & Location Bar -->
+            <section class="pt-6 px-4 mb-4">
+                <div class="flex flex-col gap-4">
+                    <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tight">Nos Produits</h1>
+                    
+                    <form action="{{ route('explore.plats') }}" method="GET" class="relative flex items-center bg-white dark:bg-slate-900/50 rounded-2xl p-1.5 border border-gray-100 dark:border-slate-800 shadow-sm focus-within:ring-2 focus-within:ring-red-500/20 transition-all">
+                        <div class="flex-1 flex items-center px-3 gap-2">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Pizza, Burger..." 
+                                   class="w-full py-2 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 2. Horizontal Categories -->
+            <section>
+                <div class="flex overflow-x-auto snap-x snap-mandatory gap-3 px-4 pb-2 no-scrollbar">
+                    <a href="{{ route('explore.plats', request()->except('category')) }}" 
+                       class="snap-start shrink-0 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ !request('category') ? 'bg-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/50 dark:bg-slate-900/50 text-gray-400 border border-gray-100 dark:border-slate-800' }}">
+                        Tout
+                    </a>
+                    @foreach($categories as $cat)
+                    <a href="{{ route('explore.plats', array_merge(request()->query(), ['category' => $cat->id_categorie])) }}" 
+                       class="snap-start shrink-0 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ request('category') == $cat->id_categorie ? 'bg-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/50 dark:bg-slate-900/50 text-gray-400 border border-gray-100 dark:border-slate-800' }}">
+                        {{ $cat->nom_categorie }}
+                    </a>
+                    @endforeach
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. Stats Bar -->
+        <section class="px-4 mb-8">
+            <div class="flex items-center justify-between text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <span>{{ $plats->total() }} Articles trouvés</span>
+                <button @click="mobileFiltersOpen = true" class="flex items-center gap-1.5 text-red-600">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Filtres
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. Grid -->
+        <section class="px-4 pb-12">
+            <div class="grid grid-cols-2 gap-4">
+                @foreach($plats as $plat)
+                <div class="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-sm border border-gray-50 dark:border-slate-800 flex flex-col">
+                    <div class="relative aspect-square">
+                        <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" class="w-full h-full object-cover">
+                        @if($plat->en_promotion)
+                            <span class="absolute top-2 left-2 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-lg shadow-lg">PROMO</span>
+                        @endif
+                        <button @click="@if($plat->groupesVariantes->isNotEmpty()) openModal({{ Js::from($plat) }}) @else addCart({{ $plat->id_plat }}) @endif" 
+                                class="absolute bottom-2 right-2 w-10 h-10 bg-white dark:bg-slate-800 text-red-600 rounded-xl shadow-lg flex items-center justify-center active:scale-90 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col">
+                        <span class="text-[8px] font-black text-red-600 uppercase tracking-tighter mb-1">{{ $plat->categorie->nom_categorie ?? 'Article' }}</span>
+                        <h4 class="font-bold text-xs text-slate-900 dark:text-white line-clamp-1 mb-1">{{ $plat->nom_plat }}</h4>
+                        <p class="text-[9px] text-gray-400 line-clamp-1 mb-2">Par {{ $plat->vendeur->nom_commercial }}</p>
+                        <div class="mt-auto flex items-center justify-between">
+                            <span class="text-xs font-black text-slate-900 dark:text-white">{{ number_format($plat->en_promotion ? $plat->prix_promotion : $plat->prix, 0, ',', ' ') }} F</span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination Mobile -->
+            @if($plats->hasPages())
+                <div class="mt-8 flex justify-center scale-90">
+                    {{ $plats->appends(request()->query())->links('vendor.pagination.premium') }}
+                </div>
+            @endif
+        </section>
+    </main>
+
+    <!-- ================= DESKTOP VIEW (>= lg) ================= -->
+    <div class="hidden lg:block max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-12">
         <div class="flex flex-col lg:flex-row gap-12">
             
             <!-- Elegant Sticky Sidebar (Desktop) -->
-            <aside class="hidden lg:block w-72 shrink-0">
+            <aside class="w-72 shrink-0">
                 <div class="sticky top-28 space-y-10">
                     
                     <!-- Search Form -->
@@ -104,7 +188,7 @@
                 </div>
             </aside>
 
-            <!-- Main Product Grid -->
+            <!-- Main Product Grid (Desktop) -->
             <main class="flex-1">
                 @if($plats->count())
                     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">

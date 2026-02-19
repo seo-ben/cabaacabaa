@@ -4,8 +4,150 @@
 <div class="bg-gray-50 dark:bg-gray-950 min-h-screen py-8 transition-colors duration-300" x-data="{ mobileFiltersOpen: false, loading: true }" x-init="setTimeout(() => loading = false, 800)">
     <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
         
-        <!-- Page Header (Mobile) -->
-        <div class="lg:hidden mb-8">
+    <!-- ================= MOBILE VIEW (< lg) ================= -->
+    <main class="block lg:hidden bg-gray-50 dark:bg-slate-950 min-h-screen font-sans">
+        <!-- 1. Sticky Header Section -->
+        <div class="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800/50 pb-2">
+            <!-- Search & Title Section -->
+            <section class="pt-6 px-4 mb-4">
+                <div class="flex flex-col gap-4">
+                    <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tight">Nos Partenaires</h1>
+                    
+                    <form action="{{ route('explore') }}" method="GET" class="relative flex items-center bg-white dark:bg-slate-900/50 rounded-2xl p-1.5 border border-gray-100 dark:border-slate-800 shadow-sm focus-within:ring-2 focus-within:ring-orange-500/20 transition-all">
+                        <div class="flex-1 flex items-center px-3 gap-2">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Trouver un établissement..." 
+                                   class="w-full py-2 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 2. Horizontal Type Filters -->
+            <section class="mb-2">
+                <div class="flex overflow-x-auto gap-3 px-4 pb-2 no-scrollbar snap-x">
+                    <a href="{{ route('explore', request()->except('type')) }}" 
+                       class="snap-start shrink-0 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ !request('type') ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' : 'bg-white/50 dark:bg-slate-900/50 text-gray-400 border border-gray-100 dark:border-slate-800' }}">
+                        Tous
+                    </a>
+                    @foreach($types as $type)
+                    <a href="{{ route('explore', array_merge(request()->query(), ['type' => $type->id_category_vendeur])) }}" 
+                       class="snap-start shrink-0 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ request('type') == $type->id_category_vendeur ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' : 'bg-white/50 dark:bg-slate-900/50 text-gray-400 border border-gray-100 dark:border-slate-800' }}">
+                        {{ $type->name }}
+                    </a>
+                    @endforeach
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. Categories Horizontal (Non-sticky but better spacing) -->
+        <section class="mt-6 mb-8">
+            <div class="px-4 mb-3 flex items-center justify-between">
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400">Par spécialités</h3>
+            </div>
+            <div class="flex overflow-x-auto gap-4 px-4 pb-4 no-scrollbar snap-x">
+                <a href="{{ route('explore', request()->except('category')) }}" 
+                   class="snap-start shrink-0 flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center transition-all {{ !request('category') ? 'bg-orange-600 text-white shadow-lg' : 'bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 text-gray-400' }}">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </div>
+                    <span class="text-[9px] font-black uppercase tracking-tighter {{ !request('category') ? 'text-orange-600' : 'text-gray-400' }}">Tout</span>
+                </a>
+                @foreach($categories as $cat)
+                <a href="{{ route('explore', array_merge(request()->query(), ['category' => $cat->id_categorie])) }}" 
+                   class="snap-start shrink-0 flex flex-col items-center gap-2 group">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center transition-all {{ request('category') == $cat->id_categorie ? 'bg-orange-600 text-white shadow-lg' : 'bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 text-gray-400 text-orange-600' }}">
+                        <span class="text-xl font-bold">{{ substr($cat->nom_categorie, 0, 1) }}</span>
+                    </div>
+                    <span class="text-[9px] font-black uppercase tracking-tighter truncate w-14 text-center {{ request('category') == $cat->id_categorie ? 'text-orange-600' : 'text-gray-400' }}">{{ $cat->nom_categorie }}</span>
+                </a>
+                @endforeach
+            </div>
+        </section>
+
+        <!-- 4. Stats & Filters Button -->
+        <section class="px-4 mb-6">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ $vendeurs->total() }} Boutiques</span>
+                <button @click="mobileFiltersOpen = true" class="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase text-orange-600 flex items-center gap-2 shadow-sm">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Zones
+                </button>
+            </div>
+        </section>
+
+        <!-- 5. Vendors List -->
+        <section class="px-4 pb-20 space-y-6">
+            @foreach($vendeurs as $v)
+            <article class="bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-50 dark:border-slate-800 relative group">
+                <a href="{{ route('vendor.show', ['id' => $v->id_vendeur, 'slug' => \Str::slug($v->nom_commercial)]) }}">
+                    <div class="relative aspect-[16/9]">
+                        <img src="{{ $v->image_principale ? asset('storage/' . $v->image_principale) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800' }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        
+                        <!-- Badges Overlay -->
+                        <div class="absolute top-4 left-4 flex flex-col gap-2">
+                            @if($v->is_boosted)
+                                <span class="bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">Sponsorisé</span>
+                            @endif
+                            @if($v->statut_verification === 'verifie')
+                                <span class="bg-orange-600 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg flex items-center gap-1">
+                                    <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                                    Certifié
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Rating & Action -->
+                        <div class="absolute bottom-4 right-4 flex items-center gap-3">
+                            <div class="bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl shadow-lg flex items-center gap-1.5">
+                                <svg class="w-3 h-3 text-orange-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                <span class="text-xs font-black text-slate-900">{{ number_format($v->note_moyenne, 1) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-1">{{ $v->nom_commercial }}</h2>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $v->zone ? ($v->zone->nom_zone ?: $v->zone->nom) : 'Lomé' }}</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            @if(isset($v->distance))
+                                <span class="text-[10px] font-black text-orange-600 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded-lg">À {{ number_format($v->distance, 1) }} km</span>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    @if($v->description)
+                        <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">{{ $v->description }}</p>
+                    @endif
+
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($v->categories->take(2) as $cat)
+                            <span class="text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 bg-gray-50 dark:bg-slate-800 text-gray-400 rounded-lg border border-gray-100 dark:border-slate-700">{{ $cat->nom_categorie }}</span>
+                        @endforeach
+                    </div>
+                </div>
+            </article>
+            @endforeach
+        </section>
+
+        <!-- Pagination Mobile -->
+        @if($vendeurs->hasPages())
+            <div class="px-4 pb-20 flex justify-center scale-90">
+                {{ $vendeurs->appends(request()->query())->links('vendor.pagination.premium') }}
+            </div>
+        @endif
+    </main>
+
+    <!-- ================= DESKTOP VIEW (>= lg) ================= -->
+    <div class="hidden lg:block max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-8transition-colors duration-300">
+        
+        <!-- Page Header (Desktop) -->
+        <div class="mb-8">
             <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tight">Nos Partenaires</h1>
             <p class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">{{ $vendeurs->total() }} boutiques disponibles</p>
         </div>
@@ -13,36 +155,9 @@
         <div class="flex flex-col lg:flex-row gap-8">
             
             <!-- Sidebar (Filters) -->
-            <aside class="w-full lg:w-72 shrink-0">
-                <!-- Mobile Filter Toggle -->
-                <div class="lg:hidden mb-4">
-                    <button @click="mobileFiltersOpen = !mobileFiltersOpen" 
-                            class="w-full flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 hover:border-orange-500 transition-all group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                            </div>
-                            <span class="text-[11px] font-black text-gray-900 text-center dark:text-white uppercase tracking-[0.2em]">Filtres & Zones</span>
-                        </div>
-                        <svg class="w-5 h-5 text-gray-400 transform transition-transform" :class="mobileFiltersOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                </div>
-
-                <div x-show="mobileFiltersOpen" x-transition.opacity 
-                     class="fixed inset-0 bg-black/50 z-[60] lg:hidden" 
-                     @click="mobileFiltersOpen = false" x-cloak></div>
-
-                <div :class="mobileFiltersOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" 
-                     class="fixed lg:sticky top-0 lg:top-28 left-0 bottom-0 w-80 lg:w-full bg-white dark:bg-gray-900 lg:bg-transparent z-[70] lg:z-auto lg:p-0 transition-transform duration-300 h-full lg:h-auto overflow-y-auto lg:overflow-visible shadow-2xl lg:shadow-none">
-                    
-                    <div class="lg:hidden mb-8 flex justify-between items-center">
-                        <span class="text-xl font-display font-black dark:text-white">Filtrer les boutiques</span>
-                        <button @click="mobileFiltersOpen = false" class="p-2 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-900 rounded-2xl lg:shadow-sm lg:border lg:border-gray-100 dark:lg:border-gray-800 p-8 lg:p-7 space-y-10">
+            <aside class="w-full lg:w-72 shrink-0 space-y-8">
+                <div class="sticky top-28">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 lg:p-7 space-y-10">
                         <form action="{{ route('explore') }}" method="GET" class="space-y-10">
                             
                             <!-- Search -->
@@ -63,6 +178,73 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                     </button>
                                 </div>
+                            </div>
+                            <!-- Categories -->
+                            <div>
+                                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6 flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    Catégories
+                                </h3>
+                                <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-filter-scrollbar text-left">
+                                    <a href="{{ route('explore', request()->except('category')) }}" 
+                                       class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ !request('category') ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                        <span>Toutes les catégories</span>
+                                        @if(!request('category'))
+                                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                        @endif
+                                    </a>
+                                    @foreach($categories as $cat)
+                                        <a href="{{ route('explore', array_merge(request()->query(), ['category' => $cat->id_categorie])) }}" 
+                                           class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ request('category') == $cat->id_categorie ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                            <span>{{ $cat->nom_categorie }}</span>
+                                            @if(request('category') == $cat->id_categorie)
+                                                <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Vendor Types (Genres de Boutique) -->
+                            <div>
+                                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6 flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    Types de Boutique
+                                </h3>
+                                <div class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-filter-scrollbar text-left">
+                                    <a href="{{ route('explore', request()->except('type')) }}" 
+                                       class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ !request('type') ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                        <span>Tous les genres</span>
+                                        @if(!request('type'))
+                                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                        @endif
+                                    </a>
+                                    @foreach($types as $type)
+                                        <a href="{{ route('explore', array_merge(request()->query(), ['type' => $type->id_category_vendeur])) }}" 
+                                           class="flex items-center justify-between px-5 py-3.5 rounded-xl text-[13px] font-black transition-all {{ request('type') == $type->id_category_vendeur ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl shadow-gray-200 dark:shadow-none' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                                            <span>{{ $type->name }}</span>
+                                            @if(request('type') == $type->id_category_vendeur)
+                                                <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Zones -->
+                            <div>
+                                <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 mb-6 flex items-center gap-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                    Zones
+                                </h3>
+                                <select name="zone" class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-800 border border-transparent rounded-xl text-[13px] font-bold text-gray-900 dark:text-white focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-orange-500 transition-all outline-none appearance-none">
+                                    <option value="">Toutes les zones</option>
+                                    @foreach($zones as $z)
+                                        <option value="{{ $z->id_zone }}" {{ request('zone') == $z->id_zone ? 'selected' : '' }}>
+                                            {{ $z->nom_zone ?: $z->nom }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Categories -->

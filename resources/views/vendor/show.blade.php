@@ -4,6 +4,248 @@
 <script src="{{ asset('js/product-options.js') }}"></script>
 <div class="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300" 
      x-data="productOptionsManager()">
+
+{{-- ===== MOBILE VIEW (< lg) ===== --}}
+<div class="block lg:hidden bg-gray-50 dark:bg-slate-950 min-h-screen pb-24">
+    {{-- Closed Modal --}}
+    @if(!$vendeur->actif || $vendeur->is_busy)
+    <div class="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-end justify-center p-4">
+        <div class="w-full bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl text-center space-y-5">
+            <div class="w-14 h-14 {{ $vendeur->is_busy ? 'bg-orange-50' : 'bg-red-50' }} rounded-2xl flex items-center justify-center mx-auto">
+                <svg class="w-7 h-7 {{ $vendeur->is_busy ? 'text-orange-500 animate-pulse' : 'text-red-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 class="text-xl font-black text-gray-900 dark:text-white">{{ $vendeur->is_busy ? 'Chef occupé !' : 'Actuellement Fermé' }}</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ $vendeur->is_busy ? 'Nouvelles commandes suspendues temporairement.' : "Ce vendeur est fermé pour le moment." }}</p>
+            <a href="{{ route('explore') }}" class="block w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black uppercase tracking-widest text-[11px]">Voir d'autres vendeurs</a>
+        </div>
+    </div>
+    @endif
+
+    {{-- Mobile Hero --}}
+    <div class="relative bg-slate-900 overflow-hidden h-52">
+        @if($vendeur->image_principale)
+            <img src="{{ asset('storage/' . $vendeur->image_principale) }}" class="w-full h-full object-cover opacity-50">
+        @endif
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+        {{-- Info overlay --}}
+        <div class="absolute bottom-0 left-0 right-0 p-4 flex items-end gap-3">
+            <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white shadow-xl border-2 border-white/20 shrink-0">
+                @if($vendeur->image_principale)
+                    <img src="{{ asset('storage/' . $vendeur->image_principale) }}" class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-2xl font-black text-white">{{ substr($vendeur->nom_commercial, 0, 1) }}</div>
+                @endif
+            </div>
+            <div class="text-white min-w-0">
+                <div class="flex flex-wrap gap-1 mb-1">
+                    <span class="text-[8px] font-black px-2 py-0.5 {{ $isOpen ? 'bg-green-500' : 'bg-red-500' }} rounded-full flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full {{ $isOpen ? 'animate-pulse' : '' }}"></span>
+                        {{ $isOpen ? 'Ouvert' : 'Fermé' }}
+                    </span>
+                    @if($vendeur->statut_verification === 'verifie')
+                    <span class="text-[8px] font-black px-2 py-0.5 bg-blue-500 rounded-full">✓ Vérifié</span>
+                    @endif
+                </div>
+                <h1 class="text-xl font-black leading-tight truncate">{{ $vendeur->nom_commercial }}</h1>
+                <div class="flex items-center gap-2 mt-0.5">
+                    <div class="flex gap-0.5">
+                        @for($i=1;$i<=5;$i++)
+                            <svg class="w-3 h-3 {{ $i <= floor($ratingMoyen) ? 'text-yellow-400 fill-current' : 'text-slate-600' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        @endfor
+                    </div>
+                    <span class="text-[10px] font-bold text-white/80">{{ number_format($ratingMoyen, 1) }} ({{ $avisCount }})</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Mobile Nav Tabs (Sticky) --}}
+    <div class="sticky top-0 z-30 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800/50">
+        <nav class="flex gap-6 px-4 overflow-x-auto no-scrollbar py-3">
+            <a href="#m-menu" class="text-[11px] font-black text-orange-600 border-b-2 border-orange-600 pb-1 whitespace-nowrap shrink-0">Catalogue</a>
+            <a href="#m-about" class="text-[11px] font-black text-gray-400 pb-1 whitespace-nowrap shrink-0">À propos</a>
+            @if(!empty($vendeur->images_galerie))
+            <a href="#m-gallery" class="text-[11px] font-black text-gray-400 pb-1 whitespace-nowrap shrink-0">Galerie</a>
+            @endif
+            <a href="#m-reviews" class="text-[11px] font-black text-gray-400 pb-1 whitespace-nowrap shrink-0">Avis ({{ $avisCount }})</a>
+        </nav>
+    </div>
+
+    {{-- Promotions Mobile --}}
+    @if($vendeur->coupons->count() > 0)
+    <section class="px-4 pt-4">
+        <div class="flex overflow-x-auto gap-3 pb-1 no-scrollbar">
+            @foreach($vendeur->coupons as $coupon)
+            <div class="shrink-0 bg-white dark:bg-slate-900 border-2 border-dashed border-red-200 dark:border-red-900/50 rounded-2xl p-4 min-w-[200px]">
+                <p class="text-2xl font-black text-red-600">{{ $coupon->type === 'pourcentage' ? $coupon->valeur . '%' : number_format($coupon->valeur, 0) . ' F' }} <small class="text-[9px] font-black text-gray-400">OFFERT</small></p>
+                <p class="text-[9px] text-gray-400 font-bold mb-2">Dès {{ number_format($coupon->montant_minimal, 0) }} F</p>
+                <button onclick="copyToClipboard('{{ $coupon->code }}')" class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 rounded-lg">
+                    <code class="text-[11px] font-black tracking-widest">{{ $coupon->code }}</code>
+                    <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </button>
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- Products / Catalogue --}}
+    <section id="m-menu" class="px-4 pt-5">
+        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-4">Nos Articles <span class="text-[11px] font-black text-gray-400">({{ $vendeur->plats->count() }})</span></h2>
+        @if($vendeur->plats->count() > 0)
+            @foreach($vendeur->plats->groupBy('id_categorie') as $catId => $plats)
+                @php $category = $vendeur->categories->firstWhere('id_categorie', $catId); @endphp
+                <div class="mb-6">
+                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{{ $category->nom_categorie ?? 'Autres' }}</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        @foreach($plats as $plat)
+                        @php
+                            $hasOptions = $plat->groupesVariantes->isNotEmpty();
+                            $platForModal = clone $plat;
+                            $platForModal->setRelation('vendeur', $vendeur);
+                        @endphp
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 shadow-sm group">
+                            <div class="relative h-32 bg-gray-100 dark:bg-slate-800">
+                                @if($plat->image_principale)
+                                    <img src="{{ asset('storage/' . $plat->image_principale) }}" class="w-full h-full object-cover group-active:scale-105 transition-transform duration-300">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center"><svg class="w-10 h-10 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>
+                                @endif
+                                @if($plat->en_promotion)
+                                    <div class="absolute top-2 left-2 px-2 py-0.5 bg-red-600 text-white text-[8px] font-black uppercase rounded-lg">-{{ round((($plat->prix - $plat->prix_promotion)/$plat->prix)*100) }}%</div>
+                                @endif
+                                @if(!$plat->is_available)
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center"><span class="px-2 py-1 bg-slate-900/90 text-white text-[8px] font-black uppercase tracking-widest rounded-lg">ÉPUISÉ</span></div>
+                                @endif
+                            </div>
+                            <div class="p-3">
+                                <h4 class="text-xs font-black text-gray-900 dark:text-white line-clamp-2 mb-1 leading-snug">{{ $plat->nom_plat }}</h4>
+                                <div class="flex items-center justify-between gap-1">
+                                    <div>
+                                        @if($plat->en_promotion)
+                                            <p class="text-sm font-black text-orange-600 dark:text-orange-400 leading-none">{{ number_format($plat->prix_promotion, 0) }}<small class="text-[8px]"> F</small></p>
+                                            <p class="text-[9px] text-gray-400 line-through">{{ number_format($plat->prix, 0) }} F</p>
+                                        @else
+                                            <p class="text-sm font-black text-gray-900 dark:text-white leading-none">{{ number_format($plat->prix, 0) }}<small class="text-[8px] text-gray-500"> F</small></p>
+                                        @endif
+                                    </div>
+                                    <button type="button"
+                                        @if($hasOptions) @click="openModal({{ Js::from($platForModal) }})" @else @click="addCart({{ $plat->id_plat }})" @endif
+                                        :disabled="{{ !$plat->is_available ? 'true' : 'false' }}"
+                                        class="w-8 h-8 shrink-0 {{ $plat->is_available ? 'bg-orange-600 active:bg-orange-700' : 'bg-gray-200 cursor-not-allowed' }} text-white rounded-xl flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                                        @if($plat->is_available)
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
+                                        @else
+                                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636"/></svg>
+                                        @endif
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="py-16 text-center">
+                <div class="w-16 h-16 bg-gray-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+                <h3 class="text-base font-black text-gray-900 dark:text-white mb-1">Catalogue en préparation</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Revenez bientôt !</p>
+            </div>
+        @endif
+    </section>
+
+    {{-- About Mobile --}}
+    <section id="m-about" class="px-4 mt-8">
+        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-4">À Propos</h2>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-gray-100 dark:border-slate-800 shadow-sm space-y-4">
+            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                {{ $vendeur->description ?: "Bienvenue chez {$vendeur->nom_commercial}. Nous nous engageons à vous offrir le meilleur service." }}
+            </p>
+            {{-- Contact info --}}
+            <div class="space-y-3 pt-3 border-t border-gray-50 dark:border-slate-800">
+                @php $vTel = $vendeur->contacts->where('telephone_principal', '!=', null)->first()?->telephone_principal ?? $vendeur->telephone_commercial; @endphp
+                @if($vTel)
+                <a href="tel:{{ $vTel }}" class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-orange-50 dark:bg-orange-900/20 rounded-xl flex items-center justify-center shrink-0"><svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+                    <span class="text-sm font-black text-gray-900 dark:text-white">{{ $vTel }}</span>
+                </a>
+                @endif
+                @if($vendeur->adresse_complete)
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-gray-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg></div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $vendeur->adresse_complete }}</span>
+                </div>
+                @endif
+            </div>
+            {{-- Social --}}
+            @if($vendeur->whatsapp_number || $vendeur->facebook_url || $vendeur->instagram_url)
+            <div class="flex gap-2 pt-2">
+                @if($vendeur->whatsapp_number)
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $vendeur->whatsapp_number) }}" target="_blank" class="w-10 h-10 bg-green-50 dark:bg-green-900/20 hover:bg-green-500 text-green-600 hover:text-white rounded-xl flex items-center justify-center transition-all">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </a>
+                @endif
+                @if($vendeur->instagram_url)
+                <a href="{{ $vendeur->instagram_url }}" target="_blank" class="w-10 h-10 bg-pink-50 dark:bg-pink-900/20 hover:bg-pink-600 text-pink-600 hover:text-white rounded-xl flex items-center justify-center transition-all">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                @endif
+            </div>
+            @endif
+        </div>
+    </section>
+
+    {{-- Gallery Mobile --}}
+    @if(!empty($vendeur->images_galerie) && count($vendeur->images_galerie) > 0)
+    <section id="m-gallery" class="px-4 mt-8">
+        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-4">Galerie</h2>
+        <div class="grid grid-cols-3 gap-2">
+            @foreach($vendeur->images_galerie as $img)
+            <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-slate-800">
+                <img src="{{ asset('storage/' . $img) }}" class="w-full h-full object-cover active:scale-95 transition-transform">
+            </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
+    {{-- Reviews Mobile --}}
+    <section id="m-reviews" class="px-4 mt-8 mb-4">
+        <h2 class="text-xl font-black text-gray-900 dark:text-white mb-4">Avis clients</h2>
+        @if($avis->isEmpty())
+            <div class="py-10 text-center bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800">
+                <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Aucun avis pour le moment.</p>
+            </div>
+        @else
+            <div class="space-y-3">
+                @foreach($avis as $a)
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 bg-gray-100 dark:bg-slate-800 rounded-xl flex items-center justify-center font-black text-sm text-gray-600 dark:text-gray-300">{{ substr($a->client->name ?? 'A', 0, 1) }}</div>
+                            <div>
+                                <h4 class="text-xs font-black text-gray-900 dark:text-white">{{ $a->client->name ?? 'Client' }}</h4>
+                                <p class="text-[9px] text-gray-400">{{ $a->date_publication->diffForHumans() }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 px-2 py-1 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                            <svg class="w-3 h-3 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <span class="text-xs font-black text-yellow-700 dark:text-yellow-500">{{ $a->note }}</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{{ $a->commentaire }}</p>
+                </div>
+                @endforeach
+            </div>
+        @endif
+    </section>
+
+</div>
+{{-- ===== END MOBILE VIEW ===== --}}
+
+{{-- ===== DESKTOP VIEW (>= lg) ===== --}}
+<div class="hidden lg:block">
     
     <!-- Closed State Modal -->
     @if(!$vendeur->actif || $vendeur->is_busy)
@@ -727,6 +969,8 @@
     </div>
 </div>
 </div>
+</div>
+{{-- END DESKTOP VIEW --}}
 
 <script>
     function copyToClipboard(text) {
