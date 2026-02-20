@@ -88,6 +88,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Password Reset routes
+Route::get('/mot-de-passe-oublie', [\App\Http\Controllers\PasswordResetController::class, 'showForgotForm'])->name('password.forgot');
+Route::post('/mot-de-passe-oublie', [\App\Http\Controllers\PasswordResetController::class, 'sendResetLink'])->name('password.forgot.post');
+Route::get('/reset-password', [\App\Http\Controllers\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [\App\Http\Controllers\PasswordResetController::class, 'resetPassword'])->name('password.reset.post');
+
 // Auth-dependent routes
 Route::middleware('auth')->group(function () {
     // Favorites
@@ -181,6 +187,12 @@ Route::get('/devenir-livreur', [\App\Http\Controllers\DeliveryController::class,
     Route::get('/mes-livraisons', [\App\Http\Controllers\DeliveryController::class, 'myDeliveries'])->name('delivery.my-deliveries');
     Route::post('/mes-livraisons/{id}/complete', [\App\Http\Controllers\DeliveryController::class, 'completeDelivery'])->name('delivery.complete');
 });
+
+// Real-Time Driver Map
+Route::get('/carte-livreurs', [\App\Http\Controllers\DriverController::class, 'index'])->name('drivers.map');
+Route::get('/api/drivers/online', [\App\Http\Controllers\DriverController::class, 'getOnlineDrivers'])->name('api.drivers.online');
+Route::post('/api/driver/location', [\App\Http\Controllers\DriverController::class, 'updateLocation'])->middleware('auth')->name('api.driver.location');
+
 
 // Legacy Vendeur routes (backward compatibility - redirects to slug-based URLs)
 Route::prefix('vendeur')->middleware(['auth', \App\Http\Middleware\EnsureUserIsVendeur::class])->group(function () {
@@ -370,4 +382,3 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
         'names' => 'admin.admins'
     ]);
 });
-

@@ -59,8 +59,8 @@
             </section>
 
             <!-- 2. Horizontal Categories -->
-            <section>
-                <div class="flex overflow-x-auto snap-x snap-mandatory gap-3 px-4 pb-2 no-scrollbar">
+            <section class="px-3">
+                <div class="flex overflow-x-auto snap-x snap-mandatory px-4 pb-2 no-scrollbar">
                     <a href="{{ route('explore.plats', request()->except('category')) }}" 
                        class="snap-start shrink-0 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ !request('category') ? 'bg-red-600 text-white shadow-lg shadow-red-500/20' : 'bg-white/50 dark:bg-slate-900/50 text-gray-400 border border-gray-100 dark:border-slate-800' }}">
                         Tout

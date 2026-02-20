@@ -684,7 +684,8 @@
         </div>
     </footer>
 
-    <!-- Footer Mobile -->
+    <!-- Footer Mobile (page d'accueil uniquement) -->
+    @if(request()->is('/'))
     <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-8 overflow-hidden relative">
         <div class="px-6 space-y-6">
             <!-- Brand & Tagline -->
@@ -732,6 +733,7 @@
             </div>
         </div>
     </footer>
+    @endif
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -970,11 +972,13 @@
 
     <style>
         /* iOS Safe Area Support */
+        @verbatim
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
             .h-safe-area-inset-bottom {
                 height: env(safe-area-inset-bottom);
             }
         }
+        @endverbatim
         
         /* Subtle bounce animation for cart badge */
         @keyframes bounce-subtle {

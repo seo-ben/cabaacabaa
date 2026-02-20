@@ -113,7 +113,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $login = $request->input('login');
+        $login = trim($request->input('login'));
         $password = $request->input('password');
 
         // SECURITY FIX: Rate Limiting to prevent brute force
@@ -125,63 +125,87 @@ class AuthController extends Controller
         }
 
         // Determine if login is email or phone
-        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
+        $isEmail = filter_var($login, FILTER_VALIDATE_EMAIL);
+        $field = $isEmail ? 'email' : 'telephone';
 
-        $credentials = [
-            $field => $login,
-            'password' => $password
-        ];
+        // --- Attempt 1: direct match (email or exact phone) ---
+        $credentials = [$field => $login, 'password' => $password];
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-            RateLimiter::clear($throttleKey);
-            $request->session()->regenerate();
-            $user = Auth::user();
-
-            // Update safety metadata
-            $user->update([
-                'date_derniere_connexion' => now(),
-                'derniere_ip' => $request->ip(),
-                'login_attempts' => 0, // Reset counter
-            ]);
-
-            // Log successful attempt
-            LoginAttempt::create([
-                'id_user' => $user->id_user,
-                'email' => $user->email,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'status' => 'success',
-            ]);
-
-            // Role-based redirection
-            if (($user->role ?? null) === 'admin' || ($user->role ?? null) === 'super_admin') {
-                return redirect()->route('admin.dashboard');
-            }
-
-            // Prevent redirecting to API routes (like background notification polling)
-            $intendedUrl = session('url.intended');
-            if ($intendedUrl && (str_contains($intendedUrl, '/api/') || str_contains($intendedUrl, '/notifications/'))) {
-                session()->forget('url.intended');
-                return redirect('/');
-            }
-
-            return redirect()->intended('/');
+            return $this->loginSuccess($request, Auth::user());
         }
 
-        // Log failed attempt
+        // --- Attempt 2 (phone only): flexible matching ---
+        // The phone is stored as "+228 90123456" but users may type various formats.
+        // We search for users whose stored telephone ends with the digits provided.
+        if (!$isEmail) {
+            // Strip all non-digit chars from the input to get raw digits
+            $digitsOnly = preg_replace('/[^0-9]/', '', $login);
+
+            if ($digitsOnly) {
+                // Find user whose telephone column ends with those digits
+                $user = User::where('telephone', 'LIKE', '%' . $digitsOnly)
+                            ->orWhere('telephone', 'LIKE', '%' . $digitsOnly . '%')
+                            ->first();
+
+                if ($user && Hash::check($password, $user->password)) {
+                    RateLimiter::clear($throttleKey);
+                    $request->session()->regenerate();
+                    Auth::login($user, $request->filled('remember'));
+                    return $this->loginSuccess($request, $user);
+                }
+            }
+        }
+
+        // All attempts failed — log and return error
         RateLimiter::hit($throttleKey);
-        $user = User::where($field, '=', $login, 'and')->first();
+        $failedUser = User::where($field, '=', $login)->first();
 
         LoginAttempt::create([
-            'id_user' => $user ? $user->id_user : null,
-            'email' => $field === 'email' ? $login : ($user->email ?? $login),
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'status' => 'failed',
+            'id_user'        => $failedUser ? $failedUser->id_user : null,
+            'email'          => $field === 'email' ? $login : ($failedUser->email ?? $login),
+            'ip_address'     => $request->ip(),
+            'user_agent'     => $request->userAgent(),
+            'status'         => 'failed',
             'failure_reason' => 'Identifiants invalides',
         ]);
 
         return back()->withErrors(['login' => 'Identifiants invalides'])->withInput();
+    }
+
+    /**
+     * Handle post-login actions and redirection.
+     */
+    private function loginSuccess(Request $request, $user)
+    {
+        RateLimiter::clear(Str::lower($request->input('login')) . '|' . $request->ip());
+        $request->session()->regenerate();
+
+        $user->update([
+            'date_derniere_connexion' => now(),
+            'derniere_ip'             => $request->ip(),
+            'login_attempts'          => 0,
+        ]);
+
+        LoginAttempt::create([
+            'id_user'    => $user->id_user,
+            'email'      => $user->email,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'status'     => 'success',
+        ]);
+
+        if (in_array($user->role ?? null, ['admin', 'super_admin'])) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $intendedUrl = session('url.intended');
+        if ($intendedUrl && (str_contains($intendedUrl, '/api/') || str_contains($intendedUrl, '/notifications/'))) {
+            session()->forget('url.intended');
+            return redirect('/');
+        }
+
+        return redirect()->intended('/');
     }
 
     public function logout(Request $request)

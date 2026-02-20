@@ -122,7 +122,7 @@
                             <input type="checkbox" name="remember" class="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
                             <span class="text-xs font-bold text-gray-600">Se souvenir</span>
                         </label>
-                        <a href="#" class="text-xs font-black text-orange-500 active:text-orange-700 transition-colors">Mot de passe oublié ?</a>
+                        <a href="{{ route('password.forgot') }}" class="text-xs font-black text-orange-500 active:text-orange-700 transition-colors">Mot de passe oublié ?</a>
                     </div>
 
                     {{-- Submit --}}
@@ -183,7 +183,7 @@
                             <input type="checkbox" name="remember" class="w-4 h-4 text-[#ff4d00] border-gray-300 rounded focus:ring-[#ff4d00]">
                             <span class="text-sm text-gray-600">Se souvenir de moi</span>
                         </label>
-                        <a href="#" class="text-sm font-bold text-[#ff4d00] hover:text-orange-600 transition">Mot de passe oublié ?</a>
+                        <a href="{{ route('password.forgot') }}" class="text-sm font-bold text-[#ff4d00] hover:text-orange-600 transition">Mot de passe oublié ?</a>
                     </div>
                     <button type="submit" class="w-full bg-gradient-to-r from-[#ff4d00] to-orange-600 text-white font-black py-4 rounded-xl hover:shadow-2xl hover:shadow-orange-200 transition-all transform hover:scale-[1.02] active:scale-[0.98]">Se connecter</button>
                 </form>

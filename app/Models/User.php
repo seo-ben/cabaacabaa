@@ -182,6 +182,11 @@ class User extends Authenticatable
         return $hasAcceptedApplication || $hasAssignedDeliveries;
     }
 
+    public function driver()
+    {
+        return $this->hasOne(Driver::class, 'user_id', 'id_user');
+    }
+
     // ===== PERMISSIONS =====
 
     public function permissions()
