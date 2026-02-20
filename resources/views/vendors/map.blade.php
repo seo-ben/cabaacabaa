@@ -9,151 +9,104 @@
     /* Reset and base map styles */
     #map-container {
         position: relative;
-        height: calc(100vh - 80px); /* Ajusté pour le header standard */
+        height: calc(100vh - 80px);
         width: 100%;
         overflow: hidden;
         background: #f3f4f6;
-        display: block; /* S'assurer qu'il est visible */
     }
 
     #map {
         height: 100%;
         width: 100%;
-        z-index: 1;
+        z-index: 0;
     }
 
-    /* Floating controls - Premium Look */
-    .floating-ui {
-        position: absolute;
+    /* Floating UI - Matching Driver Map Style */
+    .status-overlay {
+        position: absolute; 
+        top: 20px; 
+        right: 20px; 
+        left: 20px;
         z-index: 1000;
         pointer-events: none;
-        width: 100%;
-        padding: 16px;
     }
 
-    .top-ui {
-        top: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center; 
-        gap: 12px;
+    @media (min-width: 640px) {
+        .status-overlay { left: auto; width: 320px; }
     }
 
-    .bottom-ui {
-        bottom: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 12px;
-    }
-
-    /* Glassmorphism Cards */
-    .glass-card {
+    .glass-panel {
         background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        border-radius: 24px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
         pointer-events: auto;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px;
     }
 
     /* Radius Selection */
     .radius-selector {
         display: flex;
-        padding: 4px;
-        border-radius: 12px;
+        gap: 8px;
+        margin-top: 12px;
         overflow-x: auto;
-        max-width: calc(100vw - 32px);
+        padding-bottom: 4px;
         scrollbar-width: none;
     }
-    
     .radius-selector::-webkit-scrollbar { display: none; }
 
     .radius-item {
-        padding: 10px 18px;
-        border-radius: 10px;
-        font-weight: 800;
-        font-size: 11px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        font-weight: 900;
+        font-size: 10px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         white-space: nowrap;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.3s;
+        background: #f3f4f6;
         color: #6b7280;
-        font-family: 'Inter', sans-serif;
     }
-
-    .radius-item:hover { color: #111827; background: rgba(0,0,0,0.03); }
 
     .radius-item.active {
         background: #f97316;
         color: white;
-        box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-    }
-
-    /* Stats Pill */
-    #stats-pill {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border-radius: 40px;
-    }
-
-    .pill-label {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 900;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: #6b7280;
-    }
-
-    .pill-value {
-        font-weight: 800;
-        color: #f97316;
-        font-size: 14px;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
     }
 
     /* Action Buttons */
-    .map-action-btn {
-        width: 54px;
-        height: 54px;
+    .action-group {
+        position: absolute;
+        bottom: 30px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .map-btn {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         cursor: pointer;
-        color: #1f2937;
-        border-radius: 18px;
+        transition: all 0.3s;
+        pointer-events: auto;
     }
 
-    .map-action-btn:hover {
-        background: #fff;
-        transform: scale(1.06);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    
-    .map-action-btn svg {
-        width: 24px;
-        height: 24px;
-        stroke-width: 2.5;
-    }
-
-    /* Popup Style */
-    .leaflet-popup-content-wrapper { border-radius: 24px; padding: 0; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-    .leaflet-popup-content { margin: 0 !important; width: 280px !important; }
-    .popup-card { padding: 0; }
-    .popup-img { width: 100%; height: 150px; object-fit: cover; }
-    .popup-body { padding: 18px; }
-    .popup-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 17px; margin-bottom: 4px; color: #111827; }
-    .popup-meta { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 4px; margin-bottom: 14px; }
-    .popup-btn { display: block; width: 100%; padding: 12px; background: #f97316; color: white; text-align: center; border-radius: 12px; font-weight: 800; text-decoration: none; font-size: 13px; transition: all 0.3s; }
-    .popup-btn:hover { background: #ea580c; transform: translateY(-1px); }
+    .map-btn:hover { transform: scale(1.05); }
+    .map-btn svg { width: 22px; height: 22px; color: #1f2937; }
 
     /* Custom Markers */
-    .custom-marker { 
+    .vendor-marker { 
         background: #f97316; 
         border: 3px solid white; 
         border-radius: 50%; 
@@ -167,71 +120,71 @@
     }
     
     .user-marker { 
-        width: 24px; 
-        height: 24px; 
-        background: #3b82f6; 
-        border: 4px solid white; 
-        border-radius: 50%; 
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); 
-        position: relative; 
+        width: 20px; height: 20px; background: #3b82f6; border: 3px solid white; border-radius: 50%; shadow: 0 0 15px rgba(59,130,246,0.5); position: relative;
     }
-    
-    .user-marker::after {
-        content: ''; position: absolute; inset: -8px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); animation: pulse-ring 2s infinite;
-    }
-    @keyframes pulse-ring { 0% { transform: scale(0.7); opacity: 0.8; } 100% { transform: scale(1.6); opacity: 0; } }
+    .user-marker::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; background: rgba(59, 130, 246, 0.2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
 
-    /* Loader Overlay */
-    .loader-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .spinner { width: 50px; height: 50px; border: 5px solid #f3f4f6; border-top: 5px solid #f97316; border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Popup Style */
+    .leaflet-popup-content-wrapper { border-radius: 24px; padding: 0; overflow: hidden; }
+    .leaflet-popup-content { margin: 0 !important; width: 260px !important; }
+    .popup-img { width: 100%; height: 140px; object-fit: cover; }
+    .popup-info { padding: 16px; }
+    .popup-btn { display: block; width: 100%; padding: 10px; background: #f97316; color: white; text-align: center; border-radius: 12px; font-weight: 800; font-size: 12px; margin-top: 12px; }
 
-    @media (max-width: 640px) {
-        #map-container { height: calc(100vh - 65px); }
-        .top-ui { padding: 8px; }
-        .radius-selector { border-radius: 12px; }
-        .bottom-ui { bottom: 85px; } /* Evite la navigation mobile */
+    /* Desktop Adjustments for Bottom Nav */
+    @media (max-width: 1023px) {
+        #map-container { height: calc(100vh - 145px); margin-bottom: 65px; }
+        .action-group { bottom: 85px; }
     }
 </style>
 @endsection
 
 @section('content')
 <div id="map-container">
-    <!-- UI Layer -->
-    <div class="floating-ui top-ui">
-        <div class="radius-selector glass-card">
-            <div class="radius-item active" data-radius="0.5">500m</div>
-            <div class="radius-item" data-radius="1">1km</div>
-            <div class="radius-item" data-radius="2">2km</div>
-            <div class="radius-item" data-radius="5">5km</div>
-            <div class="radius-item" data-radius="10">10km</div>
-        </div>
-        
-        <div id="stats-pill" class="glass-card hidden">
-            <span class="pill-label">Vendeurs à proximité</span>
-            <span id="vendor-count" class="pill-value">0</span>
-        </div>
-    </div>
+    <!-- UI Layer: Status Overlay -->
+    <div class="status-overlay">
+        <div class="glass-panel">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex flex-col">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.15em] text-gray-500">Rayon de recherche</h3>
+                    <div id="stats-display" class="text-xs font-black text-gray-900 mt-0.5">
+                        <span id="vendor-count">0</span> boutiques trouvées
+                    </div>
+                </div>
+                <div class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shadow-sm shadow-orange-200"></div>
+            </div>
 
-    <div class="floating-ui bottom-ui">
-        <div class="glass-card map-action-btn" onclick="recenterMap()" title="Ma position">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <div class="glass-card map-action-btn" onclick="requestLocation()" title="Rafraîchir">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <div class="radius-selector">
+                <div class="radius-item active" data-radius="0.5">500m</div>
+                <div class="radius-item" data-radius="1">1km</div>
+                <div class="radius-item" data-radius="2">2km</div>
+                <div class="radius-item" data-radius="5">5km</div>
+                <div class="radius-item" data-radius="10">10km</div>
+            </div>
         </div>
     </div>
 
     <!-- Map div -->
     <div id="map"></div>
 
+    <!-- Action Group -->
+    <div class="action-group">
+        <div class="map-btn" onclick="recenterMap()" title="Ma position">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <div class="map-btn" onclick="requestLocation()" title="Rafraîchir">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </div>
+    </div>
+
     <!-- Permissions Overlay -->
     <div id="permission-card" class="loader-overlay hidden">
-        <div class="glass-card p-8 text-center max-w-sm mx-4">
+        <div class="glass-panel p-8 text-center max-w-sm mx-4 pointer-events-auto">
             <div class="text-5xl mb-4">📍</div>
-            <h2 class="text-XL font-black mb-2">Localisation requise</h2>
-            <p class="text-gray-600 text-sm mb-6">Pour voir les vendeurs autour de vous, nous avons besoin de votre position GPS.</p>
-            <button onclick="requestLocation()" class="w-full py-3 bg-orange-600 text-white rounded-xl font-bold shadow-lg shadow-orange-200">
+            <h2 class="text-xl font-black mb-2">Localisation requise</h2>
+            <p class="text-gray-600 text-sm mb-6 font-medium leading-relaxed">Pour voir les boutiques autour de vous, nous avons besoin de votre position GPS.</p>
+            <button onclick="requestLocation()" class="w-full py-4 bg-orange-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-orange-200 active:scale-95 transition-all">
                 Autoriser l'accès
             </button>
         </div>
@@ -240,7 +193,7 @@
     <!-- Loading Overlay -->
     <div id="loader" class="loader-overlay hidden">
         <div class="spinner mb-4"></div>
-        <p class="text-xs font-black uppercase tracking-widest text-gray-500">Recherche de vendeurs...</p>
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Recherche...</p>
     </div>
 </div>
 @endsection
@@ -377,23 +330,23 @@
 
                 data.vendors.forEach(v => {
                     const icon = L.divIcon({
-                        className: 'custom-marker-wrapper',
-                        html: `<div class="custom-marker">🍽️</div>`,
+                        className: 'vendor-marker-wrapper',
+                        html: `<div class="vendor-marker">🍽️</div>`,
                         iconSize: [44, 44],
                         iconAnchor: [22, 22]
                     });
 
                     const popupHtml = `
-                        <div class="popup-card">
+                        <div class="leaflet-popup-card">
                             <img src="${v.image}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">
-                            <div class="popup-body">
-                                <div class="popup-title">${v.nom}</div>
-                                <div class="popup-meta">
-                                    <span>📍 ${v.distance_text}</span>
+                            <div class="popup-info">
+                                <div class="text-sm font-black text-gray-900 mb-1">${v.nom}</div>
+                                <div class="flex items-center gap-2 text-[10px] font-bold text-gray-500 mb-3">
+                                    <span class="flex items-center gap-1">📍 ${v.distance_text}</span>
                                     <span>•</span>
-                                    <span class="text-orange-600 font-bold">${v.category}</span>
+                                    <span class="text-orange-600 uppercase tracking-widest">${v.category}</span>
                                 </div>
-                                <a href="${v.url}" class="popup-btn">Commander</a>
+                                <a href="${v.url}" class="popup-btn">VOIR LA CARTE</a>
                             </div>
                         </div>
                     `;
