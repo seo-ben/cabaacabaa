@@ -137,29 +137,38 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-xs font-bold text-gray-700 dark:text-gray-300">Localisation GPS (Carte)</h4>
-                            <button type="button" onclick="detectMyPosition()" class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest flex items-center gap-1 hover:underline">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                Détecter ma position
+                    <div class="border-t border-gray-100 dark:border-gray-700 pt-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                            <div>
+                                <h4 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Localisation de la Boutique</h4>
+                                <p class="text-[10px] text-gray-400 font-medium">Déplacez le marqueur pour définir l'emplacement exact.</p>
+                            </div>
+                            <button type="button" onclick="detectMyPosition()" class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-100 transition-all active:scale-95">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                Trouver ma position
                             </button>
                         </div>
                         
-                        <p class="text-[9px] text-gray-400 mb-3 italic">Déplacez le marqueur sur la carte pour définir votre position exacte. Les coordonnées seront mises à jour automatiquement.</p>
-                        
-                        <div id="vendor-map-settings" class="w-full h-48 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 z-0"></div>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Latitude</label>
-                                <input type="text" name="latitude" id="lat-input" value="{{ $vendeur->latitude }}" readonly
-                                       class="w-full px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-mono text-gray-500 outline-none">
+                        <div class="relative group">
+                            <div id="vendor-map-settings" class="w-full h-72 sm:h-96 rounded-2xl border-2 border-gray-100 dark:border-gray-700 overflow-hidden z-0 shadow-inner"></div>
+                            <div class="absolute bottom-4 left-4 z-[1000] pointer-events-none">
+                                <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-700 shadow-sm">
+                                    <p class="text-[9px] font-black uppercase text-gray-400 tracking-tighter">Note</p>
+                                    <p class="text-[10px] font-bold text-gray-900 dark:text-white">Glissez le marqueur 🏢</p>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Longitude</label>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-100 dark:border-gray-800">
+                                <label class="block text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Latitude</label>
+                                <input type="text" name="latitude" id="lat-input" value="{{ $vendeur->latitude }}" readonly
+                                       class="w-full bg-transparent text-xs font-mono font-bold text-gray-600 dark:text-gray-400 outline-none">
+                            </div>
+                            <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-100 dark:border-gray-800">
+                                <label class="block text-[9px] font-black text-gray-400 uppercase mb-1 tracking-widest">Longitude</label>
                                 <input type="text" name="longitude" id="lng-input" value="{{ $vendeur->longitude }}" readonly
-                                       class="w-full px-3 py-1.5 text-xs bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-mono text-gray-500 outline-none">
+                                       class="w-full bg-transparent text-xs font-mono font-bold text-gray-600 dark:text-gray-400 outline-none">
                             </div>
                         </div>
                     </div>
@@ -390,6 +399,20 @@
             document.getElementById('lng-input').value = e.latlng.lng.toFixed(6);
         });
 
+        // Helper to show toast (safe fallback)
+        const showToast = (message, type = 'info') => {
+            if (window.showToast) {
+                window.showToast(message, type);
+            } else {
+                // simple fallback if not defined in layout
+                const toast = document.createElement('div');
+                toast.className = `fixed bottom-4 right-4 z-[9999] px-6 py-3 rounded-2xl text-white text-xs font-black uppercase tracking-widest shadow-2xl animate-in slide-in-from-right-10 ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+                toast.innerText = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            }
+        };
+
         // Function to detect position
         window.detectMyPosition = function() {
             if ("geolocation" in navigator) {
@@ -403,14 +426,14 @@
                     document.getElementById('lat-input').value = newLat.toFixed(6);
                     document.getElementById('lng-input').value = newLng.toFixed(6);
                     
-                    window.showToast('Position détectée avec succès !', 'success');
+                    showToast('Position détectée avec succès !', 'success');
                 }, function(error) {
-                    window.showToast('Impossible de détecter votre position : ' + error.message, 'error');
+                    showToast('Impossible de détecter votre position : ' + error.message, 'error');
                 }, {
                     enableHighAccuracy: true
                 });
             } else {
-                window.showToast('La géolocalisation n\'est pas supportée par votre navigateur.', 'error');
+                showToast('La géolocalisation n\'est pas supportée par votre navigateur.', 'error');
             }
         }
         

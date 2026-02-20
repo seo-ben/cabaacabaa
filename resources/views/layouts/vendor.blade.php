@@ -72,6 +72,7 @@
             animation: alert-pulse 2s infinite;
         }
     </style>
+    @yield('extra_head')
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300" 
     x-data="{ 
@@ -434,6 +435,7 @@
         </main>
     </div>
 
+    @yield('scripts')
 </body>
 </html>
 
