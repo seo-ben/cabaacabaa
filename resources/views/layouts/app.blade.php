@@ -326,26 +326,62 @@
 
                     <!-- Navigation Desktop -->
                     <nav class="hidden lg:flex items-center gap-8">
-                        <a href="/" class="relative text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-red-600 transition-colors group">
+                        <a href="/" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('/') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Accueil
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('/') ? 'w-full' : '' }}"></span>
                         </a>
-                        <a href="{{ route('explore') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-red-600 transition-colors group">
+                        <a href="{{ route('explore') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('explore') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Vendeurs
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('explore') ? 'w-full' : '' }}"></span>
                         </a>
-                        <a href="{{ route('explore.plats') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-red-600 transition-colors group">
+                        <a href="{{ route('explore.plats') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('produits*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Produits
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('produits*') ? 'w-full' : '' }}"></span>
                         </a>
-                        <a href="{{ route('vendors.map') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('vendeurs-proches*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
-                            Autour de moi
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('vendeurs-proches*') ? 'w-full' : '' }}"></span>
-                        </a>
-                        <a href="{{ route('drivers.map') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('carte-livreurs*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
-                            Livreurs Live
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('carte-livreurs*') ? 'w-full' : '' }}"></span>
-                        </a>
+
+                        <!-- Discovery Dropdown -->
+                        <div class="relative" x-data="{ open: false }">
+                            <button @mouseenter="open = true" @click="open = !open" class="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('vendeurs-proches*') || request()->is('carte-livreurs*') || request()->is('commande/suivi*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
+                                Découvrir
+                                <svg class="w-3 h-3 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            
+                            <div x-show="open" 
+                                 @mouseleave="open = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                 class="absolute left-0 mt-4 w-64 bg-white dark:bg-gray-900 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-gray-800 p-2 z-50"
+                                 x-cloak>
+                                <a href="{{ route('vendors.map') }}" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-all group/item">
+                                    <div class="p-2 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-lg group-hover/item:scale-110 transition-transform">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Autour de moi</p>
+                                        <p class="text-[9px] text-gray-400 font-bold">Boutiques à proximité</p>
+                                    </div>
+                                </a>
+                                <a href="{{ route('drivers.map') }}" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-green-50 dark:hover:bg-green-900/20 transition-all group/item">
+                                    <div class="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg group-hover/item:scale-110 transition-transform">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Livreurs Live</p>
+                                        <p class="text-[9px] text-gray-400 font-bold">Suivi en temps réel</p>
+                                    </div>
+                                </a>
+                                <a href="{{ route('orders.track') }}" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all group/item">
+                                    <div class="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg group-hover/item:scale-110 transition-transform">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Suivi Commande</p>
+                                        <p class="text-[9px] text-gray-400 font-bold">Où est mon colis ?</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </nav>
                 </div>
 
@@ -516,9 +552,6 @@
                         </div>
                     @else
                         <div class="hidden lg:flex items-center gap-3">
-                            <a href="{{ route('vendors.map') }}" class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Autour de moi</a>
-                            <a href="{{ route('drivers.map') }}" class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Livreurs en direct</a>
-                            <a href="{{ route('orders.track') }}" class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Suivi de commande</a>
                             <a href="{{ route('login') }}" class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Connexion</a>
                             <a href="{{ route('register') }}" class="px-6 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-black dark:hover:bg-gray-100 transition shadow-lg">S'inscrire</a>
                         </div>
