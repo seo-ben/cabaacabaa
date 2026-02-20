@@ -331,14 +331,17 @@
                 data.vendors.forEach(v => {
                     const icon = L.divIcon({
                         className: 'vendor-marker-wrapper',
-                        html: `<div class="vendor-marker">🍽️</div>`,
+                        html: `<div class="vendor-marker">🛍️</div>`,
                         iconSize: [44, 44],
                         iconAnchor: [22, 22]
                     });
 
                     const popupHtml = `
                         <div class="leaflet-popup-card">
-                            <img src="${v.image}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">
+                            ${v.image 
+                                ? `<img src="${v.image}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">`
+                                : `<div class="w-full h-[140px] bg-orange-50 flex items-center justify-center text-4xl">🛍️</div>`
+                            }
                             <div class="popup-info">
                                 <div class="text-sm font-black text-gray-900 mb-1">${v.nom}</div>
                                 <div class="flex items-center gap-2 text-[10px] font-bold text-gray-500 mb-3">
@@ -346,7 +349,7 @@
                                     <span>•</span>
                                     <span class="text-orange-600 uppercase tracking-widest">${v.category}</span>
                                 </div>
-                                <a href="${v.url}" class="popup-btn">VOIR LA CARTE</a>
+                                <a href="${v.url}" class="popup-btn no-underline">DÉCOUVRIR LA BOUTIQUE</a>
                             </div>
                         </div>
                     `;

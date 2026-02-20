@@ -78,8 +78,8 @@
             className: 'custom-vendor-marker',
             html: `
                 <div class="relative group">
-                    <div class="w-10 h-10 bg-red-600 border-2 border-white rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all">
-                        <span class="text-xl">🏢</span>
+                    <div class="w-10 h-10 bg-orange-600 border-2 border-white rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all">
+                        <span class="text-xl">🛍️</span>
                     </div>
                 </div>
             `,
@@ -143,11 +143,12 @@
                 .addTo(map)
                 .bindPopup(`
                     <div class="text-center p-2">
-                        @{{#if vendor.image}}
-                            <img src="${vendor.image}" class="w-16 h-16 rounded-lg object-cover mx-auto mb-2 border border-gray-100 shadow-sm">
-                        @{{/if}}
+                        ${vendor.image 
+                            ? `<img src="${vendor.image}" class="w-16 h-16 rounded-lg object-cover mx-auto mb-2 border-2 border-orange-100 shadow-sm" onerror="this.onerror=null; this.src='/images/default-vendor.jpg';">` 
+                            : `<div class="w-16 h-16 bg-orange-50 rounded-lg flex items-center justify-center mx-auto mb-2 text-orange-200">🛍️</div>`
+                        }
                         <h4 class="font-black text-sm text-gray-900 mb-1">${vendor.name}</h4>
-                        <a href="${vendor.url}" class="text-[10px] font-black text-red-600 hover:text-red-700 uppercase tracking-widest">Voir la boutique</a>
+                        <a href="${vendor.url}" class="text-[10px] font-black text-red-600 hover:text-red-700 uppercase tracking-widest no-underline">Voir la boutique</a>
                     </div>
                 `);
         }

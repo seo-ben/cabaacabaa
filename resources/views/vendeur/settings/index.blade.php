@@ -375,7 +375,7 @@
         // Custom icon
         const vendorIcon = L.divIcon({
             className: 'custom-vendor-marker',
-            html: '<div style="background:#f97316; width:30px; height:30px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2); display:flex; items-center; justify-content:center; color:white; font-size:16px;">🏢</div>',
+            html: '<div style="background:#f97316; width:30px; height:30px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">🛍️</div>',
             iconSize: [30, 30],
             iconAnchor: [15, 15]
         });
