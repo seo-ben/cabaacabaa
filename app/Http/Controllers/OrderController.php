@@ -415,7 +415,7 @@ class OrderController extends Controller
         $commande = null;
 
         if ($code) {
-            $commande = Commande::with(['vendeur', 'lignes', 'avis'])
+            $commande = Commande::with(['vendeur', 'lignes', 'avis', 'livreur'])
                 ->where('numero_commande', 'LIKE', '%' . $code)
                 ->first();
 

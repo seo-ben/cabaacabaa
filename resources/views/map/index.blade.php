@@ -3,28 +3,42 @@
 @section('title', 'Carte des Chauffeurs - ' . config('app.name'))
 
 @section('content')
-<div class="relative w-full h-[calc(100vh-80px)]">
+<div class="relative w-full h-[calc(100vh-80px)]" id="map-parent">
     <div id="map" class="w-full h-full z-0"></div>
     
     <!-- Status Indicator Overlay -->
-    <div class="absolute top-4 right-4 z-[400] bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 max-w-xs transition-all">
-        <div class="flex items-center justify-between gap-4 mb-2">
-            <h3 class="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white">Statut Chauffeur</h3>
-            <div id="status-indicator" class="w-3 h-3 rounded-full bg-gray-400 transition-colors duration-300"></div>
+    <div class="absolute top-4 right-4 left-4 sm:left-auto z-[400] bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700 sm:max-w-xs transition-all animate-in slide-in-from-top-4 duration-500">
+        <div class="flex items-center justify-between gap-4 mb-3">
+            <div class="flex flex-col">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">Statut Chauffeur</h3>
+                <div id="status-text" class="text-xs font-black text-gray-900 dark:text-white mt-0.5">Hors ligne</div>
+            </div>
+            <div id="status-indicator" class="w-2.5 h-2.5 rounded-full bg-gray-400 shadow-sm transition-all duration-300"></div>
         </div>
-        <p id="status-text" class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-4">Vous êtes actuellement hors ligne.</p>
         
         @if(auth()->check() && auth()->user()->isDriver())
-            <button id="toggle-online-btn" class="w-full py-3 px-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-gray-200 transition-all shadow-lg active:scale-95">
+            <button id="toggle-online-btn" class="w-full py-3 px-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-black/10 active:scale-95 transition-all">
                 Passer en ligne
             </button>
         @else
-            <div class="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30">
-                <p class="text-[10px] font-bold text-red-600 dark:text-red-400">Compte chauffeur requis pour diffuser la position.</p>
+            <div class="px-3 py-2 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-900/30 flex items-center gap-2">
+                <svg class="w-3 h-3 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <p class="text-[9px] font-black uppercase tracking-tight text-red-600 dark:text-red-400">Diffusion réservée aux livreurs</p>
             </div>
         @endif
     </div>
 </div>
+
+<style>
+    @media (max-width: 1023px) {
+        #map-parent { 
+            height: calc(100vh - 145px); /* Header + Bottom Nav Safe area */
+            margin-bottom: 65px;
+        }
+    }
+    .leaflet-control-zoom { border: none !important; border-radius: 12px !important; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background-color: white !important; color: #111827 !important; font-weight: bold !important; border-bottom: 1px solid #f3f4f6 !important; }
+</style>
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -44,18 +58,35 @@
         // 2. Stocker les markers des chauffeurs
         const driverMarkers = {};
 
-        // Icône personnalisée (Fallback si l'image moto n'existe pas encore)
-        // Vous devez ajouter 'moto-icon.png' dans public/assets/images/
-        const motoIcon = L.icon({
-            iconUrl: '{{ asset("assets/images/moto-icon.png") }}', 
+        // Icônes personnalisées
+        const driverIcon = L.divIcon({
+            className: 'custom-driver-marker',
+            html: `
+                <div class="relative group">
+                    <div class="w-10 h-10 bg-gray-900 border-2 border-white rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all">
+                        <span class="text-xl">🏍️</span>
+                    </div>
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 bg-black/20 blur-[1px] rounded-full"></div>
+                </div>
+            `,
             iconSize: [40, 40],
             iconAnchor: [20, 20],
-            popupAnchor: [0, -20],
-            // Fallback to standard marker if image fails to load is tricky in Leaflet directly without error handling on Image object
+            popupAnchor: [0, -20]
         });
-        
-        // Simple default icon
-        const defaultIcon = new L.Icon.Default();
+
+        const vendorIcon = L.divIcon({
+            className: 'custom-vendor-marker',
+            html: `
+                <div class="relative group">
+                    <div class="w-10 h-10 bg-red-600 border-2 border-white rounded-xl shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-all">
+                        <span class="text-xl">🏢</span>
+                    </div>
+                </div>
+            `,
+            iconSize: [40, 40],
+            iconAnchor: [20, 20],
+            popupAnchor: [0, -20]
+        });
 
         // 3. Écouter les positions en temps réel via WebSocket (Echo)
         if (window.Echo) {
@@ -88,12 +119,15 @@
                 `);
             } else {
                 // Créer un nouveau marker
-                const marker = L.marker(latlng) // Utiliser l'icone par défaut pour l'instant pour éviter les erreurs 404
+                const marker = L.marker(latlng, { icon: driverIcon })
                     .addTo(map)
                     .bindPopup(`
-                        <div class="text-center">
-                            <h4 class="font-bold text-sm">${driverName}</h4>
-                            <p class="text-xs text-green-600 font-bold">En ligne</p>
+                        <div class="text-center p-2">
+                            <h4 class="font-black text-sm text-gray-900 mb-1">${driverName}</h4>
+                            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                En ligne
+                            </div>
                         </div>
                     `);
                 
@@ -101,14 +135,38 @@
             }
         }
 
-        // 4. Charger les chauffeurs déjà en ligne au démarrage
+        // 3b. Fonction pour afficher les boutiques
+        function addVendorToMap(vendor) {
+            const latlng = [parseFloat(vendor.latitude), parseFloat(vendor.longitude)];
+            
+            L.marker(latlng, { icon: vendorIcon })
+                .addTo(map)
+                .bindPopup(`
+                    <div class="text-center p-2">
+                        @{{#if vendor.image}}
+                            <img src="${vendor.image}" class="w-16 h-16 rounded-lg object-cover mx-auto mb-2 border border-gray-100 shadow-sm">
+                        @{{/if}}
+                        <h4 class="font-black text-sm text-gray-900 mb-1">${vendor.name}</h4>
+                        <a href="${vendor.url}" class="text-[10px] font-black text-red-600 hover:text-red-700 uppercase tracking-widest">Voir la boutique</a>
+                    </div>
+                `);
+        }
+
+        // 4. Charger les données au démarrage
+        // Chauffeurs
         fetch('/api/drivers/online')
             .then(res => res.json())
             .then(drivers => {
-                console.log('Online drivers loaded:', drivers.length);
                 drivers.forEach(driver => updateDriverOnMap(driver));
+            });
+
+        // Boutiques
+        fetch('/api/vendors/active')
+            .then(res => res.json())
+            .then(vendors => {
+                vendors.forEach(vendor => addVendorToMap(vendor));
             })
-            .catch(err => console.error('Error fetching drivers:', err));
+            .catch(err => console.error('Error fetching vendors:', err));
 
         // 5. Logic pour le chauffeur actuel
         @if(auth()->check() && auth()->user()->isDriver())

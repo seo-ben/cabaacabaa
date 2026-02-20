@@ -67,4 +67,24 @@ class DriverController extends Controller
 
         return response()->json($drivers);
     }
+
+    public function getActiveVendors()
+    {
+        $vendors = \App\Models\Vendeur::where('actif', true)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get()
+            ->map(function ($vendor) {
+                return [
+                    'vendorId' => $vendor->id_vendeur,
+                    'name' => $vendor->nom_commercial,
+                    'latitude' => $vendor->latitude,
+                    'longitude' => $vendor->longitude,
+                    'image' => $vendor->image_principale ? asset('storage/' . $vendor->image_principale) : null,
+                    'url' => route('vendor.show', ['id' => $vendor->id_vendeur, 'slug' => $vendor->slug]),
+                ];
+            });
+
+        return response()->json($vendors);
+    }
 }

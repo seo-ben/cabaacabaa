@@ -74,7 +74,7 @@ class OrderController extends Controller
         $order = Commande::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $request->validate([
-            'statut' => 'required|in:en_attente,en_preparation,pret,termine,annule'
+            'statut' => 'required|in:en_attente,en_preparation,pret,en_livraison,termine,annule'
         ]);
 
         $previousStatus = $order->statut;
@@ -89,6 +89,18 @@ class OrderController extends Controller
         }
 
         $order->save();
+
+        if ($request->statut === 'en_livraison' && $previousStatus !== 'en_livraison') {
+             \App\Models\Notification::create([
+                'id_utilisateur' => $order->id_client,
+                'type_notification' => 'commande',
+                'titre' => 'Commande en route !',
+                'message' => "Le livreur est en route avec votre commande #{$order->numero_commande}.",
+                'id_commande' => $order->id_commande,
+                'id_vendeur' => $order->id_vendeur,
+                'date_creation' => now()
+            ]);
+        }
 
         if ($request->statut === 'termine' && $previousStatus !== 'termine') {
             $receiptUrl = route('order.receipt', ['code' => $order->numero_commande]);

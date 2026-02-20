@@ -185,6 +185,35 @@ class DeliveryController extends Controller
     }
 
     /**
+     * Driver: Mark a delivery as in progress
+     */
+    public function startDelivery($orderId)
+    {
+        $commande = Commande::where('id_livreur', Auth::id())
+            ->findOrFail($orderId);
+
+        $commande->update([
+            'statut' => 'en_livraison'
+        ]);
+
+        // Notify customer
+        Notification::create([
+            'id_utilisateur' => $commande->id_client,
+            'type_notification' => 'commande',
+            'titre' => 'Commande en route !',
+            'message' => "Le livreur est en route avec votre commande #{$commande->numero_commande}.",
+            'id_commande' => $commande->id_commande,
+            'id_vendeur' => $commande->id_vendeur,
+            'date_creation' => now()
+        ]);
+
+        // Broadcast status change
+        event(new \App\Events\OrderStatusChanged($commande));
+
+        return back()->with('success', 'Livraison démarrée !');
+    }
+
+    /**
      * Driver: Mark a delivery as completed
      */
     public function completeDelivery($orderId)
@@ -210,7 +239,6 @@ class DeliveryController extends Controller
             'date_creation' => now()
         ]);
 
-        // Notify vendor
         Notification::create([
             'id_utilisateur' => $commande->vendeur->id_user,
             'type_notification' => 'commande',
@@ -220,6 +248,9 @@ class DeliveryController extends Controller
             'id_vendeur' => $commande->id_vendeur,
             'date_creation' => now()
         ]);
+
+        // Broadcast status change
+        event(new \App\Events\OrderStatusChanged($commande));
 
         return back()->with('success', 'Livraison confirmée !');
     }

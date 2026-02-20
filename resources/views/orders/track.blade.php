@@ -44,12 +44,13 @@
             {{-- Vertical Steps (Mobile-friendly) --}}
             @php
                 $steps = [
-                    ['id' => 'en_attente', 'label' => 'Commande Reçue', 'desc' => 'Votre commande a été reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                    ['id' => 'en_preparation', 'label' => 'En Préparation', 'desc' => 'Votre commande est en cours', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'],
-                    ['id' => 'pret', 'label' => 'Prête', 'desc' => 'Votre commande est prête', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
-                    ['id' => 'termine', 'label' => 'Livrée', 'desc' => 'Commande terminée !', 'icon' => 'M5 13l4 4L19 7'],
+                    ['id' => 'en_attente', 'label' => 'Reçue', 'desc' => 'Commande reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+                    ['id' => 'en_preparation', 'label' => 'Cuisine', 'desc' => 'En préparation', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'],
+                    ['id' => 'pret', 'label' => 'Prête', 'desc' => 'Prête pour livraison', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+                    ['id' => 'en_livraison', 'label' => 'Livraison', 'desc' => 'En route vers vous', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    ['id' => 'termine', 'label' => 'Livrée', 'desc' => 'Bon appétit !', 'icon' => 'M5 13l4 4L19 7'],
                 ];
-                $statusRanks = ['en_attente' => 0, 'confirmee' => 0, 'en_preparation' => 1, 'pret' => 2, 'termine' => 3];
+                $statusRanks = ['en_attente' => 0, 'confirmee' => 0, 'en_preparation' => 1, 'pret' => 2, 'en_livraison' => 3, 'termine' => 4];
                 $currentRank = $statusRanks[$commande->statut] ?? 0;
             @endphp
 
@@ -75,6 +76,23 @@
             </div>
         </div>
     </section>
+    
+    {{-- Map Section (Mobile) --}}
+    @if($commande->id_livreur)
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <section class="px-4 mb-4" id="order-map-mobile-container" style="{{ $commande->statut == 'en_livraison' ? '' : 'display:none' }}">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
+                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position du livreur</span>
+                <div class="flex items-center gap-1.5 px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-[8px] font-black uppercase tracking-widest">
+                    <span class="w-1 h-1 rounded-full bg-green-500 animate-pulse"></span>
+                    En direct
+                </div>
+            </div>
+            <div id="order-map-mobile" class="w-full h-48 z-0"></div>
+        </div>
+    </section>
+    @endif
 
     {{-- Order Info Card --}}
     <section class="px-4 mb-4">
@@ -215,6 +233,24 @@
                     </div>
                 </div>
 
+                <!-- Tracking Map (Desktop) -->
+                @if($commande->id_livreur)
+                <div id="order-map-desktop-container" class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-700" style="{{ $commande->statut == 'en_livraison' ? '' : 'display:none' }}">
+                     <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-black text-gray-900 dark:text-white">Suivi livreur</h3>
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Position en temps réel</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="order-map-desktop" class="w-full h-80 z-0"></div>
+                </div>
+                @endif
+
                 <!-- Tracking Timeline -->
                 <div class="bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none overflow-x-auto">
                     <div class="flex items-center justify-between min-w-[500px] relative">
@@ -345,13 +381,89 @@
 <script>
     const orderCode = "{{ $commande->numero_commande }}";
     const statusRanks = {
-        'en_attente': 0, 'confirmee': 0, 'en_preparation': 1, 'pret': 2, 'termine': 3
+        'en_attente': 0, 'confirmee': 0, 'en_preparation': 1, 'pret': 2, 'en_livraison': 3, 'termine': 4
     };
+
+    @if($commande->id_livreur)
+    // Map Logic
+    let map = null;
+    let driverMarker = null;
+    const assignedDriverId = "{{ $commande->id_livreur }}";
+    
+    function initMap() {
+        const mapContainer = window.innerWidth >= 1024 ? 'order-map-desktop' : 'order-map-mobile';
+        if (!document.getElementById(mapContainer)) return;
+        
+        map = L.map(mapContainer).setView([6.1375, 1.2123], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        // Add vendor marker
+        const vendorLat = {{ $commande->vendeur->latitude ?? '6.1375' }};
+        const vendorLng = {{ $commande->vendeur->longitude ?? '1.2123' }};
+        L.marker([vendorLat, vendorLng], {
+            icon: L.divIcon({
+                className: 'vendor-marker',
+                html: '<div class="w-8 h-8 bg-red-600 rounded-lg border-2 border-white shadow-lg flex items-center justify-center text-white font-bold">🏢</div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            })
+        }).addTo(map).bindPopup('<b>Boutique</b><br>{{ $commande->vendeur->nom_commercial }}');
+
+        // Initial fetch
+        fetch('/api/drivers/online')
+            .then(res => res.json())
+            .then(drivers => {
+                const myDriver = drivers.find(d => d.driverId == assignedDriverId);
+                if (myDriver) updateDriverMarker(myDriver);
+            });
+    }
+
+    function updateDriverMarker(data) {
+        if (!map) return;
+        const latlng = [parseFloat(data.latitude), parseFloat(data.longitude)];
+        
+        if (driverMarker) {
+            driverMarker.setLatLng(latlng);
+        } else {
+            driverMarker = L.marker(latlng, {
+                icon: L.divIcon({
+                    className: 'driver-marker',
+                    html: '<div class="w-10 h-10 bg-gray-900 rounded-xl border-2 border-white shadow-xl flex items-center justify-center text-xl transform scale-110">🏍️</div>',
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 20]
+                })
+            }).addTo(map);
+            driverMarker.bindPopup('<b>Votre livreur</b>').openPopup();
+        }
+        
+        // Follow driver if in delivery
+        if ("{{ $commande->statut }}" === 'en_livraison') {
+            map.panTo(latlng);
+        }
+    }
+
+    // Load Leaflet JS
+    const script = document.createElement('script');
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = initMap;
+    document.head.appendChild(script);
+    @endif
 
     function updateTrackingUI(status, label = null) {
         const rank = statusRanks[status] ?? 0;
-        const progress = (rank / 3) * 100;
+        const progress = (rank / 4) * 100;
         
+        // Show/Hide Map
+        const mapM = document.getElementById('order-map-mobile-container');
+        const mapD = document.getElementById('order-map-desktop-container');
+        if (status === 'en_livraison') {
+            if (mapM) mapM.style.display = 'block';
+            if (mapD) mapD.style.display = 'block';
+            if (map) map.invalidateSize();
+        }
+
         // Desktop: Update line
         const activeLine = document.getElementById('active-line');
         if (activeLine) activeLine.style.width = progress + '%';
@@ -422,6 +534,14 @@
         window.Echo.channel('order.' + orderCode).listen('.order.status.changed', (e) => {
             updateTrackingUI(e.statut, e.label);
         });
+        
+        @if($commande->id_livreur)
+        window.Echo.channel('drivers-map').listen('.location.updated', (data) => {
+            if (data.driverId == assignedDriverId) {
+                updateDriverMarker(data);
+            }
+        });
+        @endif
     }
 
     const pollInterval = window.Echo ? 30000 : 10000;

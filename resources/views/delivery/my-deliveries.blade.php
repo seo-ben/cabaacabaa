@@ -156,20 +156,33 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                         Suivre
                     </a>
-                    {{-- Complete --}}
-                    @if($commande->statut !== 'livree')
+                    {{-- Action Button --}}
+                    @if($commande->statut === 'en_livraison')
                         <form action="{{ route('delivery.complete', $commande->id_commande) }}" method="POST" class="flex-1">
                             @csrf
                             <button type="submit"
                                     class="w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-500/25 active:scale-95 transition-all flex items-center justify-center gap-1.5">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                Terminé
+                                Terminer la livraison
                             </button>
                         </form>
-                    @else
-                        <div class="flex-1 py-3 bg-green-50 dark:bg-green-900/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 flex items-center justify-center gap-1.5">
+                    @elseif($commande->statut === 'pret' || $commande->statut === 'pret_pour_livraison')
+                        <form action="{{ route('delivery.start', $commande->id_commande) }}" method="POST" class="flex-1">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-orange-500/25 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                Démarrer la livraison
+                            </button>
+                        </form>
+                    @elseif($commande->statut === 'termine' || $commande->statut === 'livree')
+                         <div class="flex-1 py-3 bg-green-50 dark:bg-green-900/20 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30 flex items-center justify-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                            Livrée
+                            Livraison Terminée
+                        </div>
+                    @else
+                        <div class="flex-1 py-3 bg-gray-100 dark:bg-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-slate-700 flex items-center justify-center gap-1.5">
+                            En attente du vendeur
                         </div>
                     @endif
                 </div>
@@ -240,11 +253,18 @@
                                class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-gray-700 transition-all text-center">
                                 Suivre
                             </a>
-                            @if($commande->statut !== 'livree')
+                            @if($commande->statut === 'en_livraison')
                                 <form action="{{ route('delivery.complete', $commande->id_commande) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="w-full px-6 py-3 bg-green-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-green-700 transition-all shadow-lg shadow-green-200 dark:shadow-none">
-                                        Terminé
+                                        Terminer la livraison
+                                    </button>
+                                </form>
+                            @elseif($commande->statut === 'pret' || $commande->statut === 'pret_pour_livraison')
+                                <form action="{{ route('delivery.start', $commande->id_commande) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="w-full px-6 py-3 bg-orange-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-orange-700 transition-all shadow-lg shadow-orange-200 dark:shadow-none">
+                                        Démarrer la livraison
                                     </button>
                                 </form>
                             @endif

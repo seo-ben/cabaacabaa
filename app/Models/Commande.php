@@ -9,7 +9,7 @@ class Commande extends Model
     protected $table = 'commandes';
     protected $primaryKey = 'id_commande';
     public $timestamps = false;
-    protected $fillable = ['numero_commande', 'id_client', 'id_vendeur', 'statut', 'type_recuperation', 'mode_paiement_prevu', 'paiement_effectue', 'montant_plats', 'frais_service', 'montant_total', 'date_commande', 'heure_recuperation_souhaitee', 'heure_preparation_debut', 'heure_prete', 'heure_recuperation_effective', 'instructions_speciales', 'date_annulation', 'raison_annulation'];
+    protected $fillable = ['numero_commande', 'id_client', 'id_vendeur', 'id_livreur', 'statut', 'type_recuperation', 'mode_paiement_prevu', 'paiement_effectue', 'montant_plats', 'frais_service', 'montant_total', 'date_commande', 'heure_recuperation_souhaitee', 'heure_preparation_debut', 'heure_prete', 'heure_recuperation_effective', 'instructions_speciales', 'date_annulation', 'raison_annulation'];
 
     protected $casts = [
         'date_commande' => 'datetime',
@@ -28,6 +28,11 @@ class Commande extends Model
     public function vendeur()
     {
         return $this->belongsTo(Vendeur::class, 'id_vendeur', 'id_vendeur');
+    }
+
+    public function livreur()
+    {
+        return $this->belongsTo(User::class, 'id_livreur', 'id_user');
     }
 
     public function lignes()

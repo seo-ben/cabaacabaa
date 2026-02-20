@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterController;
@@ -185,12 +187,14 @@ Route::get('/devenir-livreur', [\App\Http\Controllers\DeliveryController::class,
     Route::middleware('auth')->group(function () {
     Route::post('/devenir-livreur/apply/{id}', [\App\Http\Controllers\DeliveryController::class, 'apply'])->name('delivery.apply');
     Route::get('/mes-livraisons', [\App\Http\Controllers\DeliveryController::class, 'myDeliveries'])->name('delivery.my-deliveries');
+    Route::post('/mes-livraisons/{id}/start', [\App\Http\Controllers\DeliveryController::class, 'startDelivery'])->name('delivery.start');
     Route::post('/mes-livraisons/{id}/complete', [\App\Http\Controllers\DeliveryController::class, 'completeDelivery'])->name('delivery.complete');
 });
 
 // Real-Time Driver Map
 Route::get('/carte-livreurs', [\App\Http\Controllers\DriverController::class, 'index'])->name('drivers.map');
 Route::get('/api/drivers/online', [\App\Http\Controllers\DriverController::class, 'getOnlineDrivers'])->name('api.drivers.online');
+Route::get('/api/vendors/active', [\App\Http\Controllers\DriverController::class, 'getActiveVendors'])->name('api.vendors.active');
 Route::post('/api/driver/location', [\App\Http\Controllers\DriverController::class, 'updateLocation'])->middleware('auth')->name('api.driver.location');
 
 
