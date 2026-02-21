@@ -340,7 +340,7 @@
                                  class="w-9 h-9 rounded-xl object-cover border-2 border-red-100"
                                  alt="">                        
                         @else
-                            <div class="w-9 h-9 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                            <div class="w-9 h-9 bg-linear-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
                                 <span class="text-sm font-black text-white uppercase">{{ mb_substr(Auth::user()->vendeur->nom_commercial ?? Auth::user()->name, 0, 1) }}</span>
                             </div>
                         @endif
@@ -508,8 +508,8 @@
                 <div class="relative flex flex-col items-center justify-center flex-1 -mt-4">
                     <a href="{{ vendor_route('vendeur.slug.plats.index') }}"
                        class="relative flex items-center justify-center w-14 h-14 rounded-2xl shadow-xl active:scale-90 transition-all duration-200 border-[3px] border-white dark:border-gray-950
-                       {{ request()->routeIs('vendeur.slug.plats.*') ? 'bg-red-600 shadow-red-600/40' : 'bg-gradient-to-br from-red-500 to-orange-500 shadow-red-500/30' }}">
-                        @if(request()->routeIs('vendeur.slug.plats.*'))
+                       {{ request()->routeIs('vendeur.slug.plats.*') || request()->routeIs('vendeur.plats.*') ? 'bg-red-600 shadow-red-600/40' : 'bg-linear-to-br from-red-500 to-orange-500 shadow-red-500/30' }}">
+                        @if(request()->routeIs('vendeur.slug.plats.*') || request()->routeIs('vendeur.plats.*'))
                             <span class="absolute inset-0 rounded-2xl animate-ping bg-red-500 opacity-20"></span>
                         @endif
                         {{-- Fork & knife icon (food/menu) --}}
@@ -519,7 +519,7 @@
                             <path d="M21 15V2v0a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
                         </svg>
                     </a>
-                    <span class="mt-1 text-[9px] font-black tracking-wide {{ request()->routeIs('vendeur.slug.plats.*') ? 'text-red-600 dark:text-red-400' : 'text-gray-400 dark:text-gray-500' }}">Menu</span>
+                    <span class="mt-1 text-[9px] font-black tracking-wide {{ request()->routeIs('vendeur.slug.plats.*') || request()->routeIs('vendeur.plats.*') ? 'text-red-600 dark:text-red-400' : 'text-gray-400 dark:text-gray-500' }}">Menu</span>
                 </div>
 
                 {{-- Wallet --}}

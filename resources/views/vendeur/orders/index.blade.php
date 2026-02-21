@@ -7,24 +7,24 @@
 <div class="space-y-6 sm:space-y-8 animate-in fade-in duration-700">
     
     {{-- ── Statistics Summary ── --}}
-    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 pb-2">
-        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
+    <div class="flex overflow-x-auto no-scrollbar gap-3 sm:gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
             <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">{{ $stats['total'] }}</span>
             <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Toutes</span>
         </div>
-        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-orange-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
+        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-orange-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
             <span class="text-xl sm:text-2xl font-black text-orange-600">{{ $stats['en_attente'] }}</span>
             <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Nouvelles</span>
         </div>
-        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-blue-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
+        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-blue-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
             <span class="text-xl sm:text-2xl font-black text-blue-600">{{ $stats['en_preparation'] }}</span>
             <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">En Cours</span>
         </div>
-        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-amber-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
+        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-amber-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
             <span class="text-xl sm:text-2xl font-black text-amber-500">{{ $stats['pret'] }}</span>
             <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Prêtes</span>
         </div>
-        <div class="bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-green-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
+        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-green-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
             <span class="text-xl sm:text-2xl font-black text-green-600">{{ $stats['termine'] }}</span>
             <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Livrées</span>
         </div>

@@ -32,40 +32,38 @@
     </div>
 
     <!-- Stats Overview -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <a href="{{ route('admin.orders.index') }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-black transition flex flex-col justify-between {{ !$status ? 'ring-4 ring-gray-900/10 border-gray-900' : '' }}">
+    <div class="flex overflow-x-auto no-scrollbar gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <a href="{{ route('admin.orders.index') }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-black transition flex flex-col justify-between {{ !$status ? 'ring-4 ring-gray-900/10 border-gray-900' : '' }}">
             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Toutes</p>
             <p class="text-2xl font-black text-gray-900">{{ $stats['total'] }}</p>
         </a>
-        <a href="{{ route('admin.orders.index', ['status' => 'en_attente']) }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-orange-500 transition flex flex-col justify-between {{ $status == 'en_attente' ? 'ring-4 ring-orange-500/10 border-orange-500' : '' }}">
-            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-3">Reçue</p>
+        <a href="{{ route('admin.orders.index', ['status' => 'en_attente']) }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-orange-500 transition flex flex-col justify-between {{ $status == 'en_attente' ? 'ring-4 ring-orange-500/10 border-orange-500' : '' }}">
+            <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest mb-3">Nouvelle</p>
             <div class="space-y-1">
                 <p class="text-2xl font-black text-gray-900">{{ $stats['en_attente']['count'] }}</p>
                 <p class="text-[10px] font-bold text-gray-400 italic">{{ number_format($stats['en_attente']['sum'], 0, ',', ' ') }} F</p>
             </div>
         </a>
-        <a href="{{ route('admin.orders.index', ['status' => 'termine']) }}" class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-green-500 transition flex flex-col justify-between {{ $status == 'termine' ? 'ring-4 ring-green-500/10 border-green-500' : '' }}">
-            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-3">Livre</p>
+        <a href="{{ route('admin.orders.index', ['status' => 'en_preparation']) }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-blue-500 transition flex flex-col justify-between {{ $status == 'en_preparation' ? 'ring-4 ring-blue-500/10 border-blue-500' : '' }}">
+            <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-3">En cours</p>
+            <p class="text-2xl font-black text-gray-900">{{ $stats['en_preparation'] }}</p>
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'pret']) }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-indigo-500 transition flex flex-col justify-between {{ $status == 'pret' ? 'ring-4 ring-indigo-500/10 border-indigo-500' : '' }}">
+            <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-3">Prêtes</p>
+            <p class="text-2xl font-black text-gray-900">{{ $stats['pret'] }}</p>
+        </a>
+        <a href="{{ route('admin.orders.index', ['status' => 'termine']) }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-green-500 transition flex flex-col justify-between {{ $status == 'termine' ? 'ring-4 ring-green-500/10 border-green-500' : '' }}">
+            <p class="text-[10px] font-black text-green-500 uppercase tracking-widest mb-3">Livré</p>
             <div class="space-y-1">
                 <p class="text-2xl font-black text-gray-900">{{ $stats['termine']['count'] }}</p>
                 <p class="text-[10px] font-bold text-green-600 italic">{{ number_format($stats['termine']['sum'], 0, ',', ' ') }} F</p>
             </div>
         </a>
-        <div class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm space-y-4 col-span-1">
-            <div>
-                <p class="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Préparation</p>
-                <p class="text-xl font-black text-gray-900">{{ $stats['en_preparation'] }}</p>
-            </div>
-            <div class="pt-2 border-t border-gray-50">
-                <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">Prête</p>
-                <p class="text-xl font-black text-gray-900">{{ $stats['pret'] }}</p>
-            </div>
-        </div>
-        <div class="bg-white p-5 rounded-4xl border border-gray-100 shadow-sm col-span-1 flex flex-col justify-center">
-            <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Annulées</p>
+        <a href="{{ route('admin.orders.index', ['status' => 'annule']) }}" class="flex-none w-44 bg-white p-5 rounded-4xl border border-gray-100 shadow-sm hover:border-red-500 transition flex flex-col justify-between {{ $status == 'annule' ? 'ring-4 ring-red-500/10 border-red-500' : '' }}">
+            <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mb-3">Annulées</p>
             <p class="text-2xl font-black text-gray-900">{{ $stats['annule'] }}</p>
-        </div>
-        <div class="bg-slate-900 p-5 rounded-4xl text-white flex flex-col justify-center">
+        </a>
+        <div class="flex-none w-44 bg-slate-900 p-5 rounded-4xl text-white flex flex-col justify-center">
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Ratio succès</p>
             <p class="text-2xl font-black">{{ $stats['total'] > 0 ? round(($stats['termine']['count'] / $stats['total']) * 100) : 0 }}%</p>
         </div>
@@ -166,10 +164,10 @@
                                     'annule' => 'bg-red-50 text-red-600 border-red-100',
                                 ];
                                 $statusLabels = [
-                                    'en_attente' => 'Reçue',
-                                    'en_preparation' => 'Préparation',
+                                    'en_attente' => 'Nouvelle',
+                                    'en_preparation' => 'En cours',
                                     'pret' => 'Prête',
-                                    'termine' => 'Livre',
+                                    'termine' => 'Livré',
                                     'annule' => 'Annulé',
                                 ];
                             @endphp
