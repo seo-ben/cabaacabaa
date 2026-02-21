@@ -100,18 +100,55 @@
                         </div>
 
                         <!-- Delivery Details (Hidden initially) -->
-                        <div id="delivery-details" class="md:col-span-2 pt-6 border-t border-gray-50 dark:border-gray-800 space-y-4 hidden">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white">Adresse de livraison</h3>
-                                <button type="button" onclick="detectLocation()" class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                                    Ma position actuelle
-                                </button>
+                        <div id="delivery-details" class="md:col-span-2 pt-6 border-t border-gray-50 dark:border-gray-800 space-y-6 hidden">
+                            
+                            <!-- Header -->
+                            <div class="space-y-1">
+                                <h3 class="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    Où livrer votre commande ?
+                                </h3>
+                                <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Cliquez sur le bouton ci-dessous ou touchez la carte pour indiquer votre position exacte.</p>
                             </div>
+
+                            <!-- GPS Button -->
+                            <button type="button" id="gps-btn" onclick="detectLocation()" 
+                                    class="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-500/20 active:scale-95 transition-all flex items-center justify-center gap-3">
+                                <svg id="gps-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <svg id="gps-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <span id="gps-text">📍 Prendre ma position GPS</span>
+                            </button>
+
+                            <!-- Map Container -->
+                            <div class="relative rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-700 shadow-inner">
+                                <div id="delivery-map" class="w-full h-64 sm:h-80 z-0"></div>
+                                <!-- Map Instruction Overlay -->
+                                <div id="map-instruction" class="absolute top-3 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg z-[500] pointer-events-none">
+                                    <p class="text-[9px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                                        <span class="text-base">👆</span> Touchez la carte ou glissez le marqueur
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Location Status -->
+                            <div id="location-status" class="hidden p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-800">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shrink-0">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Position enregistrée ✓</p>
+                                        <p class="text-[9px] text-green-600/70 dark:text-green-400/60 font-bold" id="coords-display"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address Input -->
                             <input type="text" name="adresse_livraison" id="adresse-livraison"
                                    class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600"
-                                   placeholder="Quartier, Rue, Maison...">
+                                   placeholder="Décrivez votre adresse (Quartier, Rue, Repère...)">
                             
+                            <!-- Distance & Fee Info -->
                             <div id="distance-info" class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-2xl hidden">
                                 <p class="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-widest flex justify-between">
                                     <span>Distance estimée : <span id="distance-val">0</span> km</span>
@@ -201,10 +238,23 @@
 </div>
 @endsection
 
+@section('head')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    .leaflet-control-zoom { border: none !important; border-radius: 12px !important; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { background-color: white !important; color: #111827 !important; font-weight: bold !important; }
+</style>
+@endsection
+
 @section('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     let subTotal = {{ $total }};
     let currentFee = 0;
+    let deliveryMap = null;
+    let deliveryMarker = null;
+    let mapInitialized = false;
 
     function toggleDelivery(show) {
         const details = document.getElementById('delivery-details');
@@ -212,22 +262,160 @@
         if (show) {
             details.classList.remove('hidden');
             summaryLine.classList.remove('hidden');
-            detectLocation(); // Auto detect when delivery is selected
+            // Init map after a short delay so container has dimensions
+            setTimeout(() => {
+                if (!mapInitialized) {
+                    initDeliveryMap();
+                } else {
+                    deliveryMap.invalidateSize();
+                }
+            }, 200);
         } else {
             details.classList.add('hidden');
             summaryLine.classList.add('hidden');
             currentFee = 0;
+            document.getElementById('user-lat').value = '';
+            document.getElementById('user-lng').value = '';
+            document.getElementById('location-status').classList.add('hidden');
             updateTotal();
         }
     }
 
+    function initDeliveryMap() {
+        // Default center: Lomé
+        const defaultLat = 6.1319;
+        const defaultLng = 1.2227;
+
+        deliveryMap = L.map('delivery-map', {
+            zoomControl: true,
+            tap: true
+        }).setView([defaultLat, defaultLng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap',
+            maxZoom: 19
+        }).addTo(deliveryMap);
+
+        // Create a draggable marker icon
+        const customerIcon = L.divIcon({
+            className: 'custom-customer-marker',
+            html: `<div style="position:relative">
+                        <div style="background:#f97316; width:40px; height:40px; border-radius:50%; border:3px solid white; box-shadow:0 4px 14px rgba(249,115,22,0.4); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:grab;">📍</div>
+                        <div style="position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:16px; height:6px; background:rgba(0,0,0,0.15); border-radius:50%; filter:blur(1px);"></div>
+                    </div>`,
+            iconSize: [40, 40],
+            iconAnchor: [20, 40],
+            popupAnchor: [0, -40]
+        });
+
+        deliveryMarker = L.marker([defaultLat, defaultLng], {
+            draggable: true,
+            icon: customerIcon
+        }).addTo(deliveryMap);
+
+        // Marker drag
+        deliveryMarker.on('dragend', function() {
+            const pos = deliveryMarker.getLatLng();
+            setDeliveryPosition(pos.lat, pos.lng);
+            // Hide instruction after first interaction
+            document.getElementById('map-instruction').classList.add('hidden');
+        });
+
+        // Map click
+        deliveryMap.on('click', function(e) {
+            deliveryMarker.setLatLng(e.latlng);
+            setDeliveryPosition(e.latlng.lat, e.latlng.lng);
+            document.getElementById('map-instruction').classList.add('hidden');
+        });
+
+        mapInitialized = true;
+    }
+
+    function setDeliveryPosition(lat, lng) {
+        document.getElementById('user-lat').value = lat;
+        document.getElementById('user-lng').value = lng;
+
+        // Show location status
+        const status = document.getElementById('location-status');
+        status.classList.remove('hidden');
+        document.getElementById('coords-display').textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+
+        // Auto calc fee
+        calculateFee(lat, lng);
+    }
+
     function detectLocation() {
+        const btn = document.getElementById('gps-btn');
+        const icon = document.getElementById('gps-icon');
+        const spinner = document.getElementById('gps-spinner');
+        const text = document.getElementById('gps-text');
+
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                document.getElementById('user-lat').value = position.coords.latitude;
-                document.getElementById('user-lng').value = position.coords.longitude;
-                calculateFee(position.coords.latitude, position.coords.longitude);
-            });
+            // Show loading state
+            icon.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            text.textContent = 'Localisation en cours...';
+            btn.disabled = true;
+            btn.classList.add('opacity-70');
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    // Update marker and map
+                    if (deliveryMap && deliveryMarker) {
+                        deliveryMarker.setLatLng([lat, lng]);
+                        deliveryMap.flyTo([lat, lng], 17, { duration: 1.2 });
+                    } else {
+                        // Map not ready yet, init then move
+                        initDeliveryMap();
+                        setTimeout(() => {
+                            deliveryMarker.setLatLng([lat, lng]);
+                            deliveryMap.flyTo([lat, lng], 17, { duration: 1.2 });
+                        }, 300);
+                    }
+
+                    setDeliveryPosition(lat, lng);
+                    document.getElementById('map-instruction').classList.add('hidden');
+
+                    // Reset button to success state
+                    icon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    text.textContent = '✅ Position détectée ! Recliquez pour mettre à jour';
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-70');
+                    btn.classList.remove('from-orange-500', 'to-orange-600');
+                    btn.classList.add('from-green-500', 'to-green-600', 'shadow-green-500/20');
+
+                    // Show toast
+                    if (typeof showToast === 'function') {
+                        showToast('Position GPS détectée avec succès !', 'success');
+                    }
+                },
+                function(error) {
+                    // Reset button on error
+                    icon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    text.textContent = '📍 Prendre ma position GPS';
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-70');
+
+                    let msg = 'Impossible de détecter votre position.';
+                    if (error.code === 1) msg = 'Veuillez autoriser l\'accès à votre position dans les réglages de votre navigateur.';
+                    if (error.code === 2) msg = 'Position indisponible. Vérifiez votre GPS.';
+                    if (error.code === 3) msg = 'La détection a pris trop de temps. Réessayez.';
+
+                    if (typeof showToast === 'function') {
+                        showToast(msg, 'error');
+                    } else {
+                        alert(msg);
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        } else {
+            alert('Votre navigateur ne supporte pas la géolocalisation. Touchez directement la carte pour indiquer votre position.');
         }
     }
 
@@ -247,7 +435,12 @@
         .then(response => response.json())
         .then(data => {
             if (data.out_of_range) {
-                window.showToast("Désolé, votre adresse est trop éloignée (" + data.distance + " km) pour une livraison. La distance maximale est de " + data.max_distance + " km.", 'error');
+                const msg = "Désolé, votre adresse est trop éloignée (" + data.distance + " km). Distance max : " + data.max_distance + " km.";
+                if (typeof showToast === 'function') {
+                    showToast(msg, 'error');
+                } else {
+                    alert(msg);
+                }
                 document.querySelector('input[name="type_recuperation"][value="emporter"]').checked = true;
                 toggleDelivery(false);
                 return;
@@ -255,15 +448,12 @@
 
             currentFee = data.fee;
             document.getElementById('distance-info').classList.remove('hidden');
-            document.getElementById('distance-val').innerText = data.distance;
-            document.getElementById('fee-val').innerText = data.fee.toLocaleString();
             
-            // Show estimated time
             let infoBox = document.getElementById('distance-info');
             infoBox.innerHTML = `
                 <div class="flex flex-col gap-2">
                     <p class="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-widest flex justify-between">
-                        <span>Distance estimée : ${data.distance} km</span>
+                        <span>Distance : ${data.distance} km</span>
                         <span>Frais : ${data.fee.toLocaleString()} FCFA</span>
                     </p>
                     <p class="text-[9px] font-bold text-orange-600/70 dark:text-orange-400/70 uppercase tracking-[0.2em] flex items-center gap-2">
@@ -283,5 +473,24 @@
         let total = subTotal + currentFee;
         document.getElementById('total-val').innerText = total.toLocaleString();
     }
+
+    // Validate form before submit - ensure location is set when delivery is selected
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const type = document.querySelector('input[name="type_recuperation"]:checked').value;
+        if (type === 'livraison') {
+            const lat = document.getElementById('user-lat').value;
+            const lng = document.getElementById('user-lng').value;
+            if (!lat || !lng) {
+                e.preventDefault();
+                const msg = 'Veuillez indiquer votre position de livraison en cliquant sur "Prendre ma position GPS" ou en touchant la carte.';
+                if (typeof showToast === 'function') {
+                    showToast(msg, 'error');
+                } else {
+                    alert(msg);
+                }
+                return false;
+            }
+        }
+    });
 </script>
 @endsection

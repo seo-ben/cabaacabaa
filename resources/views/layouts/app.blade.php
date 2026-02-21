@@ -90,10 +90,11 @@
             if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin') {
                 $dashboardRoute = route('admin.dashboard');
             } elseif(auth()->user()->isVendor()) {
-                $dashboardRoute = route('vendeur.dashboard');
+                $dashboardRoute = vendor_route('vendeur.slug.dashboard');
             }
         }
     @endphp
+    @yield('head')
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300" 
       x-data="{ 
@@ -948,7 +949,7 @@
                         @if(auth()->user()->isVendor())
                         <div class="p-2 border-t border-gray-100 dark:border-gray-800">
                             <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400">Espace Vendeur</div>
-                            <a href="{{ route('vendeur.dashboard') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
+                            <a href="{{ vendor_route('vendeur.slug.plats.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
                                 <div class="w-8 h-8 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                                 </div>
