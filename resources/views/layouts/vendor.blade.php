@@ -309,19 +309,48 @@
         </div>
     </aside>
 
+    <!-- Mobile Bottom Nav vars -->
+    @php
+        $mobileNav = [
+            'dashboard' => ['route' => vendor_route('vendeur.slug.dashboard'), 'label' => 'Dashboard', 'check' => request()->routeIs('vendeur.slug.dashboard')],
+            'orders'    => ['route' => vendor_route('vendeur.slug.orders.index'), 'label' => 'Commandes', 'check' => request()->routeIs('vendeur.slug.orders.*')],
+            'produits'  => ['route' => vendor_route('vendeur.slug.plats.index'), 'label' => 'Produits', 'check' => request()->routeIs('vendeur.slug.plats.*')],
+            'wallet'    => ['route' => vendor_route('vendeur.slug.payouts.index'), 'label' => 'Wallet', 'check' => request()->routeIs('vendeur.slug.payouts.*')],
+            'settings'  => ['route' => vendor_route('vendeur.slug.settings.index'), 'label' => 'Boutique', 'check' => request()->routeIs('vendeur.slug.settings.*')],
+        ];
+    @endphp
+
     <!-- Header & Content wrapper -->
     <div class="transition-all duration-300" :class="sidebarOpen ? 'lg:pl-72' : (window.innerWidth >= 1024 ? 'lg:pl-20' : 'lg:pl-0')">
         
         <!-- Header -->
         <header class="sticky top-0 z-40 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300">
-            <div class="px-8 flex items-center justify-between h-20">
-                <div class="flex items-center gap-6">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shadow-sm active:scale-95">
+            <div class="px-4 lg:px-8 flex items-center justify-between h-16 lg:h-20">
+                <div class="flex items-center gap-3 lg:gap-6">
+                    <!-- Sidebar toggle (desktop only) -->
+                    <button @click="sidebarOpen = !sidebarOpen" class="hidden lg:flex p-2.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shadow-sm active:scale-95">
                         <svg class="w-6 h-6 transition-transform duration-300" :class="!sidebarOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
                         </svg>
                     </button>
-                    <h2 class="text-xl font-black tracking-tight text-gray-900 dark:text-white">@yield('page_title', 'Dashboard')</h2>
+                    <!-- Mobile: boutique avatar + name -->
+                    <div class="flex lg:hidden items-center gap-3">
+                        @if(Auth::user()->vendeur && Auth::user()->vendeur->image_principale)
+                            <img src="{{ asset('storage/' . Auth::user()->vendeur->image_principale) }}"
+                                 class="w-9 h-9 rounded-xl object-cover border-2 border-red-100"
+                                 alt="">                        
+                        @else
+                            <div class="w-9 h-9 bg-gradient-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                                <span class="text-sm font-black text-white uppercase">{{ mb_substr(Auth::user()->vendeur->nom_commercial ?? Auth::user()->name, 0, 1) }}</span>
+                            </div>
+                        @endif
+                        <div>
+                            <p class="text-sm font-black text-gray-900 dark:text-white leading-none truncate max-w-[140px]">{{ Auth::user()->vendeur->nom_commercial ?? 'Ma Boutique' }}</p>
+                            <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Espace Vendeur</p>
+                        </div>
+                    </div>
+                    <!-- Desktop title -->
+                    <h2 class="hidden lg:block text-xl font-black tracking-tight text-gray-900 dark:text-white">@yield('page_title', 'Dashboard')</h2>
                 </div>
                 
                 <div class="flex items-center gap-2 sm:gap-4">
@@ -411,7 +440,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="p-8">
+        <main class="p-4 lg:p-8 pb-24 lg:pb-8">
             <!-- Messages Flush/Alerts -->
             @if(session('success'))
                 <div class="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 rounded-4xl flex items-center gap-4 text-green-700 dark:text-green-400 transition-colors">
@@ -434,6 +463,92 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- ============================================ -->
+    <!-- MOBILE BOTTOM NAVIGATION — Vendeur App Bar  -->
+    <!-- ============================================ -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+        <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-100/60 dark:border-gray-800/60 shadow-2xl shadow-black/10">
+            <div class="flex justify-around items-center px-1 pt-2 pb-3" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))">
+
+                {{-- Dashboard --}}
+                <a href="{{ vendor_route('vendeur.slug.dashboard') }}"
+                   class="flex flex-col items-center justify-center flex-1 py-1 group relative transition-all duration-200 active:scale-90">
+                    @if(request()->routeIs('vendeur.slug.dashboard') || request()->routeIs('vendeur.dashboard'))
+                        <span class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-red-600 rounded-full"></span>
+                    @endif
+                    <div class="relative w-9 h-9 flex items-center justify-center rounded-2xl transition-all duration-200 {{ request()->routeIs('vendeur.slug.dashboard') ? 'bg-red-600 shadow-lg shadow-red-500/30' : 'bg-transparent group-active:bg-gray-100 dark:group-active:bg-gray-800' }}">
+                        <svg class="w-5 h-5 {{ request()->routeIs('vendeur.slug.dashboard') ? 'text-white' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->routeIs('vendeur.slug.dashboard') ? '2.5' : '1.8' }}" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.dashboard') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Dashboard</span>
+                </a>
+
+                {{-- Commandes --}}
+                <a href="{{ vendor_route('vendeur.slug.orders.index') }}"
+                   class="flex flex-col items-center justify-center flex-1 py-1 group relative transition-all duration-200 active:scale-90">
+                    @if(request()->routeIs('vendeur.slug.orders.*'))
+                        <span class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-orange-500 rounded-full"></span>
+                    @endif
+                    <div class="relative w-9 h-9 flex items-center justify-center rounded-2xl transition-all duration-200 {{ request()->routeIs('vendeur.slug.orders.*') ? 'bg-orange-500 shadow-lg shadow-orange-500/30' : 'bg-transparent group-active:bg-gray-100 dark:group-active:bg-gray-800' }}">
+                        <svg class="w-5 h-5 {{ request()->routeIs('vendeur.slug.orders.*') ? 'text-white' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->routeIs('vendeur.slug.orders.*') ? '2.5' : '1.8' }}" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        @if(isset($activeOrders) && $activeOrders > 0)
+                            <span class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 bg-red-600 text-white text-[8px] font-black rounded-full flex items-center justify-center animate-pulse shadow-sm">
+                                {{ $activeOrders > 9 ? '9+' : $activeOrders }}
+                            </span>
+                        @endif
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.orders.*') ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Commandes</span>
+                </a>
+
+                {{-- Produits (Central elevated) --}}
+                <div class="relative flex flex-col items-center justify-center flex-1 -mt-5">
+                    <a href="{{ vendor_route('vendeur.slug.plats.index') }}"
+                       class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl shadow-xl shadow-red-500/35 active:scale-90 transition-all duration-200 border-4 border-white dark:border-gray-950 relative group">
+                        <div class="absolute inset-0 rounded-2xl bg-red-400 animate-ping opacity-20 {{ request()->routeIs('vendeur.slug.plats.*') ? 'block' : 'hidden' }}"></div>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                        </svg>
+                    </a>
+                    <span class="mt-1 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.plats.*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Produits</span>
+                </div>
+
+                {{-- Wallet --}}
+                <a href="{{ vendor_route('vendeur.slug.payouts.index') }}"
+                   class="flex flex-col items-center justify-center flex-1 py-1 group relative transition-all duration-200 active:scale-90">
+                    @if(request()->routeIs('vendeur.slug.payouts.*'))
+                        <span class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-green-500 rounded-full"></span>
+                    @endif
+                    <div class="w-9 h-9 flex items-center justify-center rounded-2xl transition-all duration-200 {{ request()->routeIs('vendeur.slug.payouts.*') ? 'bg-green-500 shadow-lg shadow-green-500/30' : 'bg-transparent group-active:bg-gray-100 dark:group-active:bg-gray-800' }}">
+                        <svg class="w-5 h-5 {{ request()->routeIs('vendeur.slug.payouts.*') ? 'text-white' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->routeIs('vendeur.slug.payouts.*') ? '2.5' : '1.8' }}" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.payouts.*') ? 'text-green-500' : 'text-gray-400 dark:text-gray-500' }}">Wallet</span>
+                </a>
+
+                {{-- Boutique/Settings --}}
+                <a href="{{ vendor_route('vendeur.slug.settings.index') }}"
+                   class="flex flex-col items-center justify-center flex-1 py-1 group relative transition-all duration-200 active:scale-90">
+                    @if(request()->routeIs('vendeur.slug.settings.*') || request()->routeIs('vendeur.slug.team.*') || request()->routeIs('vendeur.slug.coupons.*'))
+                        <span class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-1 bg-indigo-500 rounded-full"></span>
+                    @endif
+                    <div class="w-9 h-9 flex items-center justify-center rounded-2xl transition-all duration-200 {{ request()->routeIs('vendeur.slug.settings.*') || request()->routeIs('vendeur.slug.team.*') || request()->routeIs('vendeur.slug.coupons.*') ? 'bg-indigo-500 shadow-lg shadow-indigo-500/30' : 'bg-transparent group-active:bg-gray-100 dark:group-active:bg-gray-800' }}">
+                        <svg class="w-5 h-5 {{ request()->routeIs('vendeur.slug.settings.*') || request()->routeIs('vendeur.slug.team.*') || request()->routeIs('vendeur.slug.coupons.*') ? 'text-white' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.settings.*') || request()->routeIs('vendeur.slug.team.*') || request()->routeIs('vendeur.slug.coupons.*') ? 'text-indigo-500' : 'text-gray-400 dark:text-gray-500' }}">Boutique</span>
+                </a>
+
+            </div>
+        </div>
+    </nav>
+    <!-- /MOBILE BOTTOM NAVIGATION -->
 
     @yield('scripts')
 </body>
