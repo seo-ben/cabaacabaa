@@ -243,6 +243,7 @@ Route::prefix('vendeur')->middleware(['auth', \App\Http\Middleware\EnsureUserIsV
     Route::post('/parametres/horaires', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'updateHours'])->name('vendeur.settings.hours');
     Route::post('/parametres/categories', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'updateCategories'])->name('vendeur.settings.categories');
     Route::post('/parametres/toggle-status', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'toggleStatus'])->name('vendeur.settings.toggle');
+    Route::post('/parametres/toggle-busy', [\App\Http\Controllers\Vendor\VendorSettingsController::class, 'toggleBusy'])->name('vendeur.settings.toggle-busy');
     Route::post('/payouts', [\App\Http\Controllers\Vendor\PayoutController::class, 'store'])->name('vendeur.payouts.store');
     Route::post('/coupons', [\App\Http\Controllers\Vendor\CouponController::class, 'store'])->name('vendeur.coupons.store');
     Route::patch('/coupons/{coupon}/toggle', [\App\Http\Controllers\Vendor\CouponController::class, 'toggle'])->name('vendeur.coupons.toggle');
