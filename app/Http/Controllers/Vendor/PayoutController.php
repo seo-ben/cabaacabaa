@@ -16,7 +16,7 @@ class PayoutController extends Controller
     // TODO: Réactiver quand le système de paiement en ligne sera opérationnel
     // ============================================================================
     
-    public function index()
+    public function index(Request $request)
     {
         // Fonctionnalité désactivée temporairement
         return redirect()->back()->with('info', 'La fonctionnalité de retrait n\'est pas encore disponible. Les paiements se font actuellement en espèces uniquement.');

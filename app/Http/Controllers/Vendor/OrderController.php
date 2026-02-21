@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $status = $request->get('status');
         $search = $request->get('search');
 
@@ -70,7 +70,7 @@ class OrderController extends Controller
      */
     public function updateStatus(Request $request, $vendor_slug, $id)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $order = Commande::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $request->validate([

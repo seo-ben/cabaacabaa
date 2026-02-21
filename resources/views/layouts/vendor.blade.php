@@ -10,6 +10,8 @@
         
         $finalLogo = $siteLogo ? asset('storage/' . $siteLogo) : ($siteLogoUrl ?: null);
         $finalFavicon = $siteFavicon ? asset('storage/' . $siteFavicon) : ($siteFaviconUrl ?: null);
+        
+        $currentVendor = $vendeur ?? request()->get('current_vendor') ?? (Auth::user()->vendeur ?? null);
     @endphp
 
     <meta charset="utf-8">
@@ -94,7 +96,7 @@
           },
           init() {
               if (window.Echo) {
-                  window.Echo.private('vendeur.{{ Auth::user()->vendeur->id_vendeur }}')
+                  window.Echo.private('vendeur.{{ $currentVendor->id_vendeur ?? 0 }}')
                       .listen('.order.placed', (e) => {
                           this.newOrder = e.order;
                           this.playNotificationSound();
@@ -335,18 +337,18 @@
                     </button>
                     <!-- Mobile: boutique avatar + name -->
                     <div class="flex lg:hidden items-center gap-3">
-                        @if(Auth::user()->vendeur && Auth::user()->vendeur->image_principale)
-                            <img src="{{ asset('storage/' . Auth::user()->vendeur->image_principale) }}"
+                        @if($currentVendor && $currentVendor->image_principale)
+                            <img src="{{ asset('storage/' . $currentVendor->image_principale) }}"
                                  class="w-9 h-9 rounded-xl object-cover border-2 border-red-100"
                                  alt="">                        
                         @else
                             <div class="w-9 h-9 bg-linear-to-br from-red-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                                <span class="text-sm font-black text-white uppercase">{{ mb_substr(Auth::user()->vendeur->nom_commercial ?? Auth::user()->name, 0, 1) }}</span>
+                                <span class="text-sm font-black text-white uppercase">{{ mb_substr($currentVendor->nom_commercial ?? Auth::user()->name, 0, 1) }}</span>
                             </div>
                         @endif
                         <div>
-                            <p class="text-sm font-black text-gray-900 dark:text-white leading-none truncate max-w-[140px]">{{ Auth::user()->vendeur->nom_commercial ?? 'Ma Boutique' }}</p>
-                            <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Espace Vendeur</p>
+                            <p class="text-sm font-black text-gray-900 dark:text-white leading-none truncate max-w-[140px]">{{ $currentVendor->nom_commercial ?? 'Ma Boutique' }}</p>
+                            <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Espace {{ $currentVendor && Auth::id() === $currentVendor->id_user ? 'Vendeur' : 'Collaborateur' }}</p>
                         </div>
                     </div>
                     <!-- Desktop title -->

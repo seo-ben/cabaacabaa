@@ -172,6 +172,8 @@ Route::prefix('{vendor_slug}')->middleware(['auth', \App\Http\Middleware\Identif
     Route::get('/team', [\App\Http\Controllers\Vendor\TeamController::class, 'index'])->name('vendeur.slug.team.index');
     Route::get('/team/create', [\App\Http\Controllers\Vendor\TeamController::class, 'create'])->name('vendeur.slug.team.create');
     Route::post('/team', [\App\Http\Controllers\Vendor\TeamController::class, 'store'])->name('vendeur.slug.team.store');
+    Route::get('/team/{id}/edit', [\App\Http\Controllers\Vendor\TeamController::class, 'edit'])->name('vendeur.slug.team.edit');
+    Route::put('/team/{id}', [\App\Http\Controllers\Vendor\TeamController::class, 'update'])->name('vendeur.slug.team.update');
     Route::delete('/team/{id}', [\App\Http\Controllers\Vendor\TeamController::class, 'destroy'])->name('vendeur.slug.team.destroy');
 
     // Delivery Management for Vendor

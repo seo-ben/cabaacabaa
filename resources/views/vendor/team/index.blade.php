@@ -104,13 +104,19 @@
                                 @endif
                             </td>
                             <td class="px-6 py-5 text-right">
-                                <form action="{{ route('vendeur.slug.team.destroy', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir révoquer cet accès ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all" title="Révoquer l'accès">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
-                                </form>
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('vendeur.slug.team.edit', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" 
+                                       class="p-3 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-2xl transition-all" title="Modifier">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    </a>
+                                    <form action="{{ route('vendeur.slug.team.destroy', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir révoquer cet accès ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-all" title="Révoquer l'accès">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -155,13 +161,18 @@
                         </div>
                     @endif
 
-                    <div class="pt-4 border-t border-gray-50 dark:border-gray-800 flex justify-end">
+                    <div class="pt-4 border-t border-gray-50 dark:border-gray-800 flex justify-end gap-3">
+                        <a href="{{ route('vendeur.slug.team.edit', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" 
+                           class="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            Modifier
+                        </a>
                         <form action="{{ route('vendeur.slug.team.destroy', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr ?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                Révoquer l'accès
+                                Révoquer
                             </button>
                         </form>
                     </div>

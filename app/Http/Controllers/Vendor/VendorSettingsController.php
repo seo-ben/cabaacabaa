@@ -16,9 +16,9 @@ class VendorSettingsController extends Controller
     /**
      * Page des paramètres de la boutique.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $vendeur->load(['horaires', 'contacts', 'categories']);
         $allCategories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
         $vendorCategories = \App\Models\VendorCategory::where('is_active', true)->get();
@@ -29,9 +29,9 @@ class VendorSettingsController extends Controller
     /**
      * Mettre à jour les infos commerciales.
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
 
         $rules = [
             'nom_commercial' => 'required|string|max:100',
@@ -76,9 +76,9 @@ class VendorSettingsController extends Controller
     /**
      * Mettre à jour les horaires d'ouverture.
      */
-    public function updateHours(Request $request)
+    public function updateHours(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
 
         $request->validate([
             'hours' => 'required|array',
@@ -111,9 +111,9 @@ class VendorSettingsController extends Controller
         return back()->with('success', 'Horaires mis à jour !');
     }
 
-    public function updateCategories(Request $request)
+    public function updateCategories(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
 
         $request->validate([
             'categories' => 'nullable|array',
@@ -141,9 +141,10 @@ class VendorSettingsController extends Controller
     /**
      * Mettre à jour l'état actif de la boutique.
      */
-    public function toggleStatus()
+    public function toggleStatus(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        if (!$vendeur) return back()->with('error', 'Profil vendeur introuvable.');
         $vendeur->actif = !$vendeur->actif;
         $vendeur->save();
 
@@ -154,9 +155,10 @@ class VendorSettingsController extends Controller
     /**
      * Mettre en mode "Occupé" (Pause temporaire).
      */
-    public function toggleBusy()
+    public function toggleBusy(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        if (!$vendeur) return back()->with('error', 'Profil vendeur introuvable.');
         $vendeur->is_busy = !$vendeur->is_busy;
         $vendeur->save();
 

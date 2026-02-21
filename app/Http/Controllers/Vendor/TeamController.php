@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class TeamController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $vendor_slug)
     {
         $vendor = $request->get('current_vendor');
         if (!$vendor)
@@ -18,13 +18,13 @@ class TeamController extends Controller
         return view('vendor.team.index', compact('vendor', 'staffMembers'));
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $vendor_slug)
     {
         $vendor = $request->get('current_vendor');
         return view('vendor.team.create', compact('vendor'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $vendor_slug)
     {
         $vendor = $request->get('current_vendor');
 
@@ -65,7 +65,56 @@ class TeamController extends Controller
             ->with('success', "Membre ajouté avec succès. Lien de connexion : {$loginUrl}");
     }
 
-    public function destroy(Request $request, $id)
+    public function edit(Request $request, $vendor_slug, $id)
+    {
+        $vendor = $request->get('current_vendor');
+        $staff = \App\Models\VendorStaff::where('id_vendeur', $vendor->id_vendeur)
+            ->where('id', $id)
+            ->with('user')
+            ->firstOrFail();
+
+        return view('vendor.team.edit', compact('vendor', 'staff'));
+    }
+
+    public function update(Request $request, $vendor_slug, $id)
+    {
+        $vendor = $request->get('current_vendor');
+        $staff = \App\Models\VendorStaff::where('id_vendeur', $vendor->id_vendeur)
+            ->where('id', $id)
+            ->with('user')
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $staff->id_user . ',id_user',
+            'password' => 'nullable|string|min:8',
+            'permissions' => 'nullable|array',
+            'role_name' => 'required|string|max:50',
+        ]);
+
+        // Update User
+        $userUpdate = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $userUpdate['password'] = Hash::make($validated['password']);
+        }
+
+        $staff->user->update($userUpdate);
+
+        // Update Staff Link
+        $staff->update([
+            'role_name' => $validated['role_name'],
+            'permissions' => $request->permissions ?? [],
+        ]);
+
+        return redirect()->route('vendeur.slug.team.index', ['vendor_slug' => $vendor->slug])
+            ->with('success', "Membre mis à jour avec succès.");
+    }
+
+    public function destroy(Request $request, $vendor_slug, $id)
     {
         $vendor = $request->get('current_vendor');
 

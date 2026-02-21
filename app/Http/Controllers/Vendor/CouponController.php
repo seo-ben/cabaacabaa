@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 
 class CouponController extends Controller
 {
-    public function index()
+    public function index(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $coupons = Coupon::where('id_vendeur', $vendeur->id_vendeur)
             ->orderBy('id_coupon', 'desc')
             ->get();
@@ -20,9 +20,9 @@ class CouponController extends Controller
         return view('vendeur.coupons.index', compact('coupons'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
 
         $request->validate([
             'code' => 'required|string|max:20|unique:coupons,code',
@@ -47,28 +47,29 @@ class CouponController extends Controller
         return redirect()->back()->with('success', 'Coupon créé avec succès !');
     }
 
-    public function toggle(Coupon $coupon)
+    public function toggle(Request $request, $vendor_slug, Coupon $coupon)
     {
-        $this->authorizeOwner($coupon);
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $this->authorizeOwner($coupon, $vendeur);
 
         $coupon->update(['actif' => !$coupon->actif]);
 
         return redirect()->back()->with('success', 'Statut du coupon mis à jour !');
     }
 
-    public function destroy(Coupon $coupon)
+    public function destroy(Request $request, $vendor_slug, Coupon $coupon)
     {
-        $this->authorizeOwner($coupon);
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $this->authorizeOwner($coupon, $vendeur);
 
         $coupon->delete();
 
         return redirect()->back()->with('success', 'Coupon supprimé !');
     }
 
-    private function authorizeOwner(Coupon $coupon)
+    private function authorizeOwner(Coupon $coupon, $vendeur)
     {
-        $vendeur = Auth::user()->vendeur;
-        if ($coupon->id_vendeur !== $vendeur->id_vendeur) {
+        if (!$vendeur || $coupon->id_vendeur !== $vendeur->id_vendeur) {
             abort(403, 'Action non autorisée.');
         }
     }

@@ -15,9 +15,9 @@ class PlatController extends Controller
     /**
      * Liste des plats du vendeur.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         if (!$vendeur)
             return redirect()->route('home')->with('error', 'Profil vendeur introuvable.');
 
@@ -28,9 +28,9 @@ class PlatController extends Controller
     /**
      * Formulaire d'ajout d'un plat.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         if (!$vendeur)
             return redirect()->route('home')->with('error', 'Profil vendeur introuvable.');
 
@@ -50,7 +50,7 @@ class PlatController extends Controller
      */
     public function store(Request $request)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
 
         $validated = $request->validate([
             'nom_plat' => 'required|string|max:100',
@@ -108,9 +108,9 @@ class PlatController extends Controller
     /**
      * Formulaire de modification d'un plat.
      */
-    public function edit($vendor_slug, $id)
+    public function edit(Request $request, $vendor_slug, $id)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
         $categories = $vendeur->categories;
 
@@ -122,7 +122,7 @@ class PlatController extends Controller
      */
     public function update(Request $request, $vendor_slug, $id)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $validated = $request->validate([
@@ -156,9 +156,9 @@ class PlatController extends Controller
     /**
      * Supprimer un plat.
      */
-    public function destroy($vendor_slug, $id)
+    public function destroy(Request $request, $vendor_slug, $id)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $plat->delete();
@@ -169,9 +169,9 @@ class PlatController extends Controller
     /**
      * Basculer la disponibilité d'un plat (Rupture de stock).
      */
-    public function toggleAvailability($vendor_slug, $id)
+    public function toggleAvailability(Request $request, $vendor_slug, $id)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
         $plat->is_available = !$plat->is_available;

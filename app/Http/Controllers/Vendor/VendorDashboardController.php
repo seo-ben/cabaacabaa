@@ -13,9 +13,14 @@ class VendorDashboardController extends Controller
     /**
      * Dashboard principal du vendeur.
      */
-    public function index()
+    public function index(Request $request, $vendor_slug)
     {
-        $vendeur = Auth::user()->vendeur;
+        $vendeur = $request->get('current_vendor');
+
+        if (!$vendeur) {
+            // Fallback for legacy routes if they don't use IdentifyVendorBySlug middleware
+            $vendeur = Auth::user()->vendeur;
+        }
 
         if (!$vendeur) {
             return redirect()->route('home')->with('error', 'Profil vendeur introuvable.');
