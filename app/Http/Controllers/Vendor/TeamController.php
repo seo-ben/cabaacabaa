@@ -59,7 +59,7 @@ class TeamController extends Controller
         ]);
 
         // Generate unique login URL
-        $loginUrl = url("/{$vendor->slug}/staff-login?token={$accessToken}");
+        $loginUrl = route('vendor.staff.login', ['vendor_slug' => $vendor->slug, 'token' => $accessToken]);
 
         return redirect()->route('vendeur.slug.team.index', ['vendor_slug' => $vendor->slug])
             ->with('success', "Membre ajouté avec succès. Lien de connexion : {$loginUrl}");
