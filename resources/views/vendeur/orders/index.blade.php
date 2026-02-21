@@ -7,52 +7,41 @@
 <div class="space-y-6 sm:space-y-8 animate-in fade-in duration-700">
     
     {{-- ── Statistics Summary ── --}}
-    <div class="flex overflow-x-auto no-scrollbar gap-3 sm:gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
-            <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white">{{ $stats['total'] }}</span>
-            <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Toutes</span>
-        </div>
-        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-orange-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
-            <span class="text-xl sm:text-2xl font-black text-orange-600">{{ $stats['en_attente'] }}</span>
-            <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Nouvelles</span>
-        </div>
-        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-blue-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
-            <span class="text-xl sm:text-2xl font-black text-blue-600">{{ $stats['en_preparation'] }}</span>
-            <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">En Cours</span>
-        </div>
-        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-amber-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
-            <span class="text-xl sm:text-2xl font-black text-amber-500">{{ $stats['pret'] }}</span>
-            <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Prêtes</span>
-        </div>
-        <div class="flex-none w-40 sm:w-48 bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border-l-4 border-l-green-500 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col items-center justify-center text-center">
-            <span class="text-xl sm:text-2xl font-black text-green-600">{{ $stats['termine'] }}</span>
-            <span class="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">Livrées</span>
-        </div>
-    </div>
-
-    {{-- ── Filters & Search ── --}}
-    <div class="bg-white dark:bg-gray-900 p-3 sm:p-4 rounded-[2rem] sm:rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        {{-- Status Pills --}}
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 sm:pb-0 px-1">
+    {{-- ── Filters, Stats & Search Bar ── --}}
+    <div class="bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-[2rem] sm:rounded-full border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
+        {{-- Status Pills with Counts --}}
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto px-1">
             <a href="{{ vendor_route('vendeur.slug.orders.index') }}" 
-               class="shrink-0 px-5 py-2.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all {{ !$status ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg' : 'bg-gray-50 dark:bg-gray-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-               Toutes
+               class="shrink-0 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 {{ !$status ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-lg' : 'bg-gray-50 dark:bg-gray-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+               <span>Toutes</span>
+               <span class="px-1.5 py-0.5 rounded-md {{ !$status ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500' }}">{{ $stats['total'] }}</span>
             </a>
-            @foreach(['en_attente' => 'Nouvelles', 'en_preparation' => 'En Cours', 'pret' => 'Prêtes', 'termine' => 'Livrées'] as $key => $label)
+            
+            @php
+                $statusConfig = [
+                    'en_attente' => ['label' => 'Nouvelles', 'color' => 'orange', 'count' => $stats['en_attente']],
+                    'en_preparation' => ['label' => 'En Cours', 'color' => 'blue', 'count' => $stats['en_preparation']],
+                    'pret' => ['label' => 'Prêtes', 'color' => 'amber', 'count' => $stats['pret']],
+                    'termine' => ['label' => 'Livrées', 'color' => 'green', 'count' => $stats['termine']],
+                ];
+            @endphp
+
+            @foreach($statusConfig as $key => $cfg)
                 <a href="{{ vendor_route('vendeur.slug.orders.index', ['status' => $key]) }}" 
-                   class="shrink-0 px-5 py-2.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all 
-                   {{ $status === $key ? 'bg-orange-600 text-white shadow-lg' : 'bg-gray-50 dark:bg-gray-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                   {{ $label }}
+                   class="shrink-0 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 
+                   {{ $status === $key ? 'bg-'.$cfg['color'].'-600 text-white shadow-lg' : 'bg-gray-50 dark:bg-gray-800 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                   <span>{{ $cfg['label'] }}</span>
+                   <span class="px-1.5 py-0.5 rounded-md {{ $status === $key ? 'bg-white/20 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500' }}">{{ $cfg['count'] }}</span>
                 </a>
             @endforeach
         </div>
 
         {{-- Search Form --}}
-        <form action="{{ vendor_route('vendeur.slug.orders.index') }}" method="GET" class="relative w-full md:w-72">
+        <form action="{{ vendor_route('vendeur.slug.orders.index') }}" method="GET" class="relative w-full lg:w-64">
             @if($status) <input type="hidden" name="status" value="{{ $status }}"> @endif
-            <input type="text" name="search" value="{{ $search }}" placeholder="Rechercher #CMD ou Client..." 
-                   class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl text-[10px] font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 transition-all">
-            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" name="search" value="{{ $search }}" placeholder="Rechercher..." 
+                   class="w-full pl-9 pr-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-none rounded-full text-[10px] font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 transition-all">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </form>
     </div>
 
