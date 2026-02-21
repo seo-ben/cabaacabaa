@@ -504,16 +504,22 @@
                     <span class="mt-0.5 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.orders.*') ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Commandes</span>
                 </a>
 
-                {{-- Produits (Central elevated) --}}
-                <div class="relative flex flex-col items-center justify-center flex-1 -mt-5">
+                {{-- Produits (Central FAB elevated) --}}
+                <div class="relative flex flex-col items-center justify-center flex-1 -mt-4">
                     <a href="{{ vendor_route('vendeur.slug.plats.index') }}"
-                       class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl shadow-xl shadow-red-500/35 active:scale-90 transition-all duration-200 border-4 border-white dark:border-gray-950 relative group">
-                        <div class="absolute inset-0 rounded-2xl bg-red-400 animate-ping opacity-20 {{ request()->routeIs('vendeur.slug.plats.*') ? 'block' : 'hidden' }}"></div>
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                       class="relative flex items-center justify-center w-14 h-14 rounded-2xl shadow-xl active:scale-90 transition-all duration-200 border-[3px] border-white dark:border-gray-950
+                       {{ request()->routeIs('vendeur.slug.plats.*') ? 'bg-red-600 shadow-red-600/40' : 'bg-gradient-to-br from-red-500 to-orange-500 shadow-red-500/30' }}">
+                        @if(request()->routeIs('vendeur.slug.plats.*'))
+                            <span class="absolute inset-0 rounded-2xl animate-ping bg-red-500 opacity-20"></span>
+                        @endif
+                        {{-- Fork & knife icon (food/menu) --}}
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2"/>
+                            <path d="M7 2v20"/>
+                            <path d="M21 15V2v0a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
                         </svg>
                     </a>
-                    <span class="mt-1 text-[8px] font-bold tracking-wide {{ request()->routeIs('vendeur.slug.plats.*') ? 'text-red-600 dark:text-red-500' : 'text-gray-400 dark:text-gray-500' }}">Produits</span>
+                    <span class="mt-1 text-[9px] font-black tracking-wide {{ request()->routeIs('vendeur.slug.plats.*') ? 'text-red-600 dark:text-red-400' : 'text-gray-400 dark:text-gray-500' }}">Menu</span>
                 </div>
 
                 {{-- Wallet --}}
