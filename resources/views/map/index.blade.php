@@ -21,9 +21,14 @@
                 Passer en ligne
             </button>
         @else
-            <div class="px-3 py-2 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-900/30 flex items-center gap-2">
-                <svg class="w-3 h-3 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                <p class="text-[9px] font-black uppercase tracking-tight text-red-600 dark:text-red-400">Diffusion réservée aux livreurs</p>
+            <div class="space-y-3">
+                <div class="px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-100 dark:border-green-900/30 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <p class="text-[9px] font-black uppercase tracking-tight text-green-600 dark:text-green-400">Réseau de livraison actif</p>
+                </div>
+                <a href="{{ route('delivery.index') }}" class="block w-full py-3 px-6 bg-orange-600 hover:bg-orange-700 text-white text-center rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-orange-500/20 active:scale-95 transition-all no-underline">
+                    Devenir Livreur
+                </a>
             </div>
         @endif
     </div>

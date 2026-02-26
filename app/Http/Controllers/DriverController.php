@@ -10,6 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class DriverController extends Controller
 {
+    private function formatDriverName($name)
+    {
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            $parts = explode(' ', trim($name));
+            if (count($parts) > 1) {
+                // Return First Name + Last Initial (e.g., "John D.")
+                $lastName = $parts[count($parts) - 1];
+                return $parts[0] . ' ' . mb_substr($lastName, 0, 1) . '.';
+            }
+        }
+        return $name;
+    }
+
     public function index()
     {
         return view('map.index');
@@ -44,7 +57,7 @@ class DriverController extends Controller
             $driver->id,
             $request->latitude,
             $request->longitude,
-            $user->nom_complet ?? $user->name ?? 'Chauffeur'
+            $this->formatDriverName($user->nom_complet ?? $user->name ?? 'Chauffeur')
         ));
 
         return response()->json(['success' => true]);
@@ -61,7 +74,7 @@ class DriverController extends Controller
                     'driverId' => $driver->id,
                     'latitude' => $driver->latitude,
                     'longitude' => $driver->longitude,
-                    'driverName' => $driver->user->nom_complet ?? $driver->user->name ?? 'Chauffeur',
+                    'driverName' => $this->formatDriverName($driver->user->nom_complet ?? $driver->user->name ?? 'Chauffeur'),
                 ];
             });
 
