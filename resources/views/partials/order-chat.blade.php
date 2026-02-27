@@ -66,7 +66,7 @@
                     <!-- Metadata below bubble -->
                     <div :class="message.id_user == currentUserId ? 'text-right' : 'text-left'" class="mt-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <span class="text-[9px] font-black uppercase text-gray-400 dark:text-gray-600 tracking-tighter" 
-                              x-text="message.id_user == currentUserId ? 'Vous' : (message.user ? message.user.name : 'Client')"></span>
+                              x-text="message.id_user == currentUserId ? 'Vous' : (message.user ? message.user.short_name : 'Intervenant')"></span>
                         <span class="w-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></span>
                         <span class="text-[9px] font-black uppercase text-gray-400 dark:text-gray-600 tracking-tighter" x-text="formatTime(message.created_at)"></span>
                     </div>

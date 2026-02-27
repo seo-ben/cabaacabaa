@@ -16,6 +16,8 @@ class User extends Authenticatable
     public $incrementing = true;
     protected $keyType = 'int';
 
+    protected $appends = ['short_name'];
+
     protected $fillable = [
         'name',
         'nom_complet',
@@ -413,5 +415,19 @@ class User extends Authenticatable
     public function isVerified()
     {
         return $this->is_verified === true;
+    }
+
+    /**
+     * Get a shortened version of the user name for privacy (First Name + Last Initial)
+     */
+    public function getShortNameAttribute()
+    {
+        $fullName = $this->nom_complet ?? $this->name ?? 'Utilisateur';
+        $parts = explode(' ', trim($fullName));
+        if (count($parts) > 1) {
+            $lastName = array_pop($parts);
+            return implode(' ', $parts) . ' ' . mb_substr($lastName, 0, 1) . '.';
+        }
+        return $fullName;
     }
 }

@@ -195,7 +195,7 @@
             .then(data => {
                 if(data.success) {
                     window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
-                    window.showToast(data.success, 'success');
+                    // Success toast removed for faster UX as requested
                 } else if(data.error) {
                     window.showToast(data.error, 'error');
                 }
