@@ -305,7 +305,7 @@
                  class="relative inline-block px-8 py-10 overflow-hidden text-center align-bottom transition-all transform bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl sm:my-8 sm:align-middle sm:max-w-md w-full border border-gray-100 dark:border-gray-800">
                 
                 <div class="flex flex-col items-center">
-                    <!-- Icon -->
+                    <!-- Icon --> 
                     <div :class="{
                         'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400': modalType === 'success',
                         'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400': modalType === 'error',
@@ -766,7 +766,7 @@
 
     <!-- Footer Mobile (page d'accueil uniquement) -->
     @if(request()->routeIs('home'))
-    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-8 pb-20 overflow-hidden relative">
+    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-2 overflow-hidden relative">
         <div class="px-6 space-y-6">
             <!-- Brand & Tagline -->
             <div class="flex flex-col items-center text-center space-y-3">
