@@ -35,11 +35,13 @@ class VendorMapController extends Controller
             $radius = 0.2; // 200 mètres = 0.2 km
         }
 
-        // Récupérer tous les vendeurs actifs avec coordonnées
+        // Récupérer tous les vendeurs actifs avec coordonnées et les 6 premiers produits
         $vendeurs = Vendeur::where('actif', true)
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->with(['category', 'categories']) // Charger les catégories pour savoir ce qu'ils vendent
+            ->with(['category', 'categories', 'plats' => function($query) {
+                $query->where('disponible', true)->take(6);
+            }])
             ->get();
 
         // Calculer la distance et filtrer
@@ -83,7 +85,8 @@ class VendorMapController extends Controller
                 'note_moyenne' => $vendeur->note_moyenne ?? 0,
                 'nombre_avis' => $vendeur->nombre_avis ?? 0,
                 'category' => $vendeur->category ? $vendeur->category->nom : 'Restaurant',
-                'specialties' => $specialties, // Ce qu'ils vendent
+                'products' => $vendeur->plats->pluck('nom_plat')->toArray(), // Les 6 premiers produits
+                'specialties' => $specialties, 
                 'specialties_text' => !empty($specialties) ? implode(', ', $specialties) : 'Divers',
                 'adresse' => $vendeur->adresse_complete,
                 'url' => route('vendor.show', ['id' => $vendeur->id_vendeur, 'slug' => $vendeur->slug]),

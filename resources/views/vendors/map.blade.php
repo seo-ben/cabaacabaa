@@ -170,23 +170,25 @@
     .user-marker-container { overflow: visible !important; }
     .vendor-marker-wrapper { overflow: visible !important; }
 
-    /* Specialty tags in popup */
-    .specialty-tag {
+    /* Product tags in popup */
+    .product-tag {
         display: inline-block;
         padding: 2px 8px;
-        background: #fdf2f8;
-        color: #db2777;
+        background: #f0fdf4;
+        color: #16a34a;
         border-radius: 6px;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.02em;
         margin-right: 4px;
         margin-bottom: 4px;
+        border: 1px solid #dcfce7;
     }
-    .dark .specialty-tag {
-        background: rgba(219, 39, 119, 0.1);
-        color: #f472b6;
+    .dark .product-tag {
+        background: rgba(22, 163, 74, 0.1);
+        color: #4ade80;
+        border-color: rgba(22, 163, 74, 0.2);
     }
 </style>
 @endsection
@@ -387,9 +389,9 @@
                         iconAnchor: [19, 38]
                     });
 
-                    // Prendre les 6 premières spécialités
-                    const specialties = v.specialties ? v.specialties.slice(0, 6) : [];
-                    const specialtiesHtml = specialties.map(s => `<span class="specialty-tag">${s}</span>`).join('');
+                    // Prendre les 6 premiers produits
+                    const products = v.products ? v.products.slice(0, 6) : [];
+                    const productsHtml = products.map(p => `<span class="product-tag">${p}</span>`).join('');
 
                     const popupHtml = `
                         <div class="leaflet-popup-card group p-3">
@@ -403,7 +405,8 @@
                                     <h4 class="text-sm font-black text-gray-900 group-hover:text-orange-600 transition-colors uppercase truncate mb-2">${v.nom}</h4>
                                     
                                     <div class="flex flex-wrap gap-1 mb-2">
-                                        ${specialtiesHtml}
+                                        ${productsHtml}
+                                        ${v.products.length > 6 ? `<span class="text-[8px] font-bold text-gray-400">...</span>` : ''}
                                     </div>
 
                                     <div class="popup-btn">Voir la boutique</div>
