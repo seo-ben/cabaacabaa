@@ -210,6 +210,7 @@
             method: "PATCH",
             data: { _token: '{{ csrf_token() }}', id: id, quantity: quantity },
             success: function (response) {
+                $(".cart-quantity[data-id='" + id + "']").text(response.quantity);
                 $("#item-total-" + id).text(response.item_total);
                 $(".cart-total-val").text(response.cart_total);
                 $("#final-total-val").text(response.final_total || response.cart_total);

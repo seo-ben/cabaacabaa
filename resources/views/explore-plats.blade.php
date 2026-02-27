@@ -88,46 +88,49 @@
 
         <!-- 4. Professional List Architecture -->
         <section class="px-4 pb-12">
-            <div class="flex flex-col">
+            <div class="space-y-0.5 mt-2">
                 @foreach($plats as $plat)
-                <div class="py-5 border-b border-gray-100 dark:border-slate-800/60 flex items-center gap-4 last:border-0">
-                    <!-- Left: Info -->
+                <div class="bg-white dark:bg-slate-900 flex items-center gap-4 p-3 border-b border-gray-50 dark:border-slate-800/50 group active:bg-gray-50 transition-colors">
+                    <!-- Left: Content Container -->
                     <div class="flex-1 min-w-0">
-                        <div class="flex flex-wrap items-center gap-1.5 mb-1">
-                            <span class="text-[7px] font-black text-red-600 uppercase tracking-tighter">{{ $plat->categorie->nom_categorie ?? 'Article' }}</span>
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="text-[7px] font-black text-red-600 uppercase tracking-widest">{{ $plat->categorie->nom_categorie ?? 'Produit' }}</span>
                             @if($plat->en_promotion)
-                                <span class="bg-red-50 text-red-600 border border-red-100 text-[6px] font-black px-1 py-0.5 rounded-sm uppercase">Promo</span>
+                                <span class="bg-red-50 text-red-600 text-[6px] font-black px-1 rounded-sm uppercase">Promo</span>
                             @endif
                             @if($plat->stock_limite && $plat->quantite_disponible <= 4 && $plat->quantite_disponible > 0)
-                                <span class="bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-[6.5px] font-black px-1.5 py-0.5 rounded-sm uppercase tracking-tighter">Stock limité: {{ $plat->quantite_disponible }}</span>
+                                <span class="bg-orange-50 text-orange-600 text-[6px] font-black px-1 rounded-sm uppercase">Stock: {{ $plat->quantite_disponible }}</span>
                             @endif
                         </div>
-
-                        <h4 class="font-extrabold text-sm text-slate-900 dark:text-white truncate mb-0.5">{{ $plat->nom_plat }}</h4>
+                        <h4 class="text-[13px] font-black text-gray-900 dark:text-white truncate mb-0.5">{{ $plat->nom_plat }}</h4>
                         
                         <a href="{{ route('vendor.show', ['id' => $plat->vendeur->id_vendeur, 'slug' => \Str::slug($plat->vendeur->nom_commercial)]) }}" 
-                           class="text-[9px] text-gray-400 font-bold hover:text-red-600 transition-colors uppercase tracking-widest whitespace-nowrap overflow-hidden text-ellipsis block mt-0.5">
-                            boutique: {{ $plat->vendeur->nom_commercial }}
+                           class="text-[8px] text-gray-400 font-bold hover:text-red-600 transition-colors uppercase tracking-widest block mb-1">
+                            {{ $plat->vendeur->nom_commercial }}
                         </a>
 
-                        <div class="mt-2 flex items-center gap-3">
-                            <span class="text-xs font-black text-slate-900 dark:text-white">{{ number_format($plat->en_promotion ? $plat->prix_promotion : $plat->prix, 0, ',', ' ') }} F</span>
-                            <button @click="@if($plat->groupesVariantes->isNotEmpty()) openModal({{ Js::from($plat) }}) @else addCart({{ $plat->id_plat }}) @endif" 
-                                    class="h-6 px-3 bg-red-600 text-white rounded-lg text-[7px] font-black uppercase tracking-widest active:scale-95 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1.5">
+                                @if($plat->en_promotion)
+                                    <span class="text-sm font-black text-red-600">{{ number_format($plat->prix_promotion, 0, ',', ' ') }} F</span>
+                                    <span class="text-[9px] text-gray-300 line-through">{{ number_format($plat->prix, 0, ',', ' ') }}</span>
+                                @else
+                                    <span class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($plat->prix, 0, ',', ' ') }} F</span>
+                                @endif
+                            </div>
+                            
+                            <button type="button"
+                                @if($plat->groupesVariantes->isNotEmpty()) @click="openModal({{ Js::from($plat) }})" @else @click="addCart({{ $plat->id_plat }})" @endif
+                                class="h-6 px-3 bg-red-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest active:scale-95 transition-all">
                                 + Panier
                             </button>
                         </div>
                     </div>
 
-                    <!-- Right: Compact Image -->
-                    <div class="relative w-20 h-20 shrink-0 overflow-hidden rounded-xl bg-gray-50 dark:bg-slate-800">
+                    <!-- Right: Image -->
+                    <div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-800">
                         <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
                              class="w-full h-full object-cover">
-                        @if(!$plat->is_available)
-                            <div class="absolute inset-0 bg-white/80 backdrop-blur-[1px] flex items-center justify-center">
-                                <span class="text-[7px] font-black text-gray-900 uppercase tracking-widest">Épuisé</span>
-                            </div>
-                        @endif
                     </div>
                 </div>
                 @endforeach

@@ -387,11 +387,22 @@
         .then(response => response.json())
         .then(data => {
             if (data.out_of_range) {
-                if (window.showToast) showToast("Trop loin ! Distance max : " + data.max_distance + " km", 'error');
-                document.querySelector('input[name="type_recuperation"][value="emporter"]').checked = true;
-                toggleDelivery(false);
+                if (window.showToast) showToast("Désolé, votre adresse est trop éloignée (" + data.distance + " km). Distance max: " + data.max_distance + " km", 'error');
+                document.getElementById('fee-val').innerText = 'TROP LOIN';
+                document.getElementById('distance-info').classList.replace('bg-red-50', 'bg-red-600');
+                document.getElementById('distance-info').classList.add('text-white');
+                document.querySelector('button[type="submit"]').disabled = true;
+                document.querySelector('button[type="submit"]').innerText = 'Zone non couverte';
+                document.querySelector('button[type="submit"]').classList.replace('bg-red-600', 'bg-gray-400');
                 return;
             }
+
+            // In range
+            document.querySelector('button[type="submit"]').disabled = false;
+            document.querySelector('button[type="submit"]').innerText = 'Commander';
+            document.querySelector('button[type="submit"]').classList.replace('bg-gray-400', 'bg-red-600');
+            document.getElementById('distance-info').classList.replace('bg-red-600', 'bg-red-50');
+            document.getElementById('distance-info').classList.remove('text-white');
 
             currentFee = data.fee;
             document.getElementById('distance-info').classList.remove('hidden');

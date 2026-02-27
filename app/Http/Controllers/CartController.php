@@ -177,10 +177,19 @@ class CartController extends Controller
                     $total += $item['price'] * $item['quantity'];
                 }
 
+                $finalTotal = $total;
+                if (session()->has('coupon')) {
+                    $coupon = session('coupon');
+                    $discount = $coupon['type'] === 'percentage' ? ($total * ($coupon['valeur'] / 100)) : $coupon['valeur'];
+                    $finalTotal = $total - $discount;
+                }
+
                 return response()->json([
                     'success' => 'Panier mis à jour !',
+                    'quantity' => intval($request->quantity),
                     'item_total' => number_format($itemTotal, 0, ',', ' '),
                     'cart_total' => number_format($total, 0, ',', ' '),
+                    'final_total' => number_format($finalTotal, 0, ',', ' '),
                     'cart_count' => count($cart)
                 ]);
             }

@@ -232,6 +232,7 @@ class HomeController extends Controller
     public function explorePlats(Request $request)
     {
         $query = Plat::where('disponible', 1)
+            ->where('is_available', 1)
             ->with(['categorie', 'vendeur.zone', 'groupesVariantes.variantes'])
             ->join('vendeurs', 'plats.id_vendeur', '=', 'vendeurs.id_vendeur')
             ->select('plats.*');

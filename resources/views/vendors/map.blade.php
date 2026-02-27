@@ -235,10 +235,11 @@
                 tap: false
             }).setView([lat, lng], 17);
 
-            // Layer Routes - CartoDB Voyager (Much clearer and shows houses/spaces better)
-            roadLayer = L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/voyager_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap',
-                maxZoom: 19
+            // Layer Routes - CartoDB Voyager (Premium Detail)
+            roadLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CartoDB',
+                subdomains: 'abcd',
+                maxZoom: 20
             });
 
             // Layer Satellite
@@ -348,9 +349,17 @@
                 data.vendors.forEach(v => {
                     const icon = L.divIcon({
                         className: 'vendor-marker-wrapper',
-                        html: `<div class="bg-red-600 w-9 h-9 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white text-lg">📍</div>`,
-                        iconSize: [36, 36],
-                        iconAnchor: [18, 36]
+                        html: `
+                            <div class="relative group">
+                                <div class="w-10 h-10 bg-red-600 border-2 border-white rounded-xl shadow-xl flex items-center justify-center transform group-hover:scale-110 transition-all">
+                                    <span class="text-xl">🛍️</span>
+                                </div>
+                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-1.5 bg-black/20 blur-[1px] rounded-full"></div>
+                            </div>
+                        `,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20],
+                        popupAnchor: [0, -20]
                     });
 
                     const products = v.products ? v.products.slice(0, 6) : [];
