@@ -44,7 +44,8 @@ class Vendeur extends Model
         'is_boosted',
         'boost_expires_at',
         'actif',
-        'is_busy'
+        'is_busy',
+        'delivery_rate_per_km'
     ];
 
     protected $casts = [

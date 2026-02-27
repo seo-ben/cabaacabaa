@@ -96,19 +96,23 @@ class OrderController extends Controller
         $distanceKm = $earthRadius * $c;
 
         // Business rules for delivery
-        $baseFee = 300;
-        $perKmRate = 150;
+    // 1. Get rate: from vendor, or from app settings, or default 300
+    $perKmRate = $vendeur->delivery_rate_per_km
+                 ?? (int) \App\Models\AppSetting::get('default_delivery_rate_per_km', 300);
 
-        // Final calculation
-        $calculatedFee = $baseFee + ($distanceKm * $perKmRate);
+    // 2. Base fee (can be 0 if only per KM is desired, but usually there is a minimum)
+    $baseFee = (int) \App\Models\AppSetting::get('base_delivery_fee', 0);
 
-        // Round to nearest 50 FCFA
-        $fee = round($calculatedFee / 50) * 50;
+    // Final calculation
+    $calculatedFee = $baseFee + ($distanceKm * $perKmRate);
 
-        // Minimum fee from settings
-        $minFee = (int) \App\Models\AppSetting::get('default_delivery_fee', 500);
-        if ($fee < $minFee)
-            $fee = $minFee;
+    // Round to nearest 50 FCFA
+    $fee = round($calculatedFee / 50) * 50;
+
+    // Minimum fee from settings
+    $minFee = (int) \App\Models\AppSetting::get('min_delivery_fee', 300);
+    if ($fee < $minFee)
+        $fee = $minFee;
 
         // Max distance check (e.g., 25km)
         $maxDistance = 25;

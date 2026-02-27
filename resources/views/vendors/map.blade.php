@@ -192,24 +192,12 @@
         </button>
     </div>
 
-    <!-- Permission Panel -->
-    <div id="permission-card" class="loader-overlay hidden">
-        <div class="glass-panel text-center max-w-xs mx-4">
-            <div class="w-16 h-16 bg-red-50 rounded-3xl flex items-center justify-center text-red-600 mx-auto mb-6">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
-            <h2 class="text-xl font-black mb-2">Localisation requise</h2>
-            <p class="text-gray-600 text-sm mb-6 font-medium leading-relaxed">Pour voir les boutiques autour de vous, nous avons besoin de votre position GPS.</p>
-            <button onclick="requestLocation()" class="w-full py-4 bg-red-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-red-200 active:scale-95 transition-all">
-                Autoriser l'accès
-            </button>
+    <!-- Moving Loader to a small indicator -->
+    <div id="loader" class="absolute top-24 left-1/2 -translate-x-1/2 z-[2000] hidden">
+        <div class="bg-gray-900/80 backdrop-blur-md px-6 py-3 rounded-2xl flex items-center gap-3 shadow-2xl border border-white/10">
+            <div class="spinner w-4 h-4 border-2 border-white/20 border-top-white animate-spin rounded-full"></div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-white">Recherche...</p>
         </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div id="loader" class="loader-overlay hidden">
-        <div class="spinner mb-4"></div>
-        <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Recherche...</p>
     </div>
 </div>
 @endsection
@@ -228,14 +216,30 @@
     let roadLayer, satelliteLayer;
     let isSatellite = false;
 
-    function initMap(lat, lng) {
+    // Fallback toast function
+    const showToast = (message, type = 'info') => {
+        if (window.showToast) {
+            window.showToast(message, type);
+        } else {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-24 left-1/2 -translate-x-1/2 z-[5000] px-6 py-3 rounded-2xl text-white text-[10px] font-black uppercase tracking-widest shadow-2xl animate-in fade-in slide-in-from-bottom-4 ${type === 'error' ? 'bg-red-600' : 'bg-slate-900'}`;
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('animate-out', 'fade-out', 'slide-out-to-bottom-4');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+    };
+
+    function initMap(lat, lng, zoom = 17) {
         if (!map) {
             map = L.map('map', {
                 zoomControl: false,
                 tap: false
-            }).setView([lat, lng], 17);
+            }).setView([lat, lng], zoom);
 
-            // Layer Routes - CartoDB Voyager (Premium Detail)
+            // Layer Routes - CartoDB Voyager
             roadLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OpenStreetMap &copy; CartoDB',
                 subdomains: 'abcd',
@@ -250,8 +254,11 @@
 
             roadLayer.addTo(map);
             L.control.zoom({ position: 'bottomleft' }).addTo(map);
+            
+            // Fix for map size
+            setTimeout(() => map.invalidateSize(), 100);
         } else {
-            map.setView([lat, lng]);
+            map.setView([lat, lng], zoom);
         }
 
         updateUserMarker(lat, lng);
@@ -266,22 +273,22 @@
         if (isSatellite) {
             map.removeLayer(roadLayer);
             satelliteLayer.addTo(map);
-            btn.classList.add('bg-red-600', 'text-white');
-            if (window.showToast) showToast("Mode satellite activé", "info");
+            btn.classList.add('active');
+            showToast("Mode satellite activé", "info");
         } else {
             map.removeLayer(satelliteLayer);
             roadLayer.addTo(map);
-            btn.classList.remove('bg-red-600', 'text-white');
-            if (window.showToast) showToast("Mode plan activé", "info");
+            btn.classList.remove('active');
+            showToast("Mode plan activé", "info");
         }
     }
 
     function updateUserMarker(lat, lng) {
         const userIcon = L.divIcon({
             className: 'user-marker-container',
-            html: '<div class="w-5 h-5 bg-red-600 border-2 border-white rounded-full shadow-lg"></div>',
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
+            html: '<div class="w-6 h-6 bg-blue-600 border-4 border-white rounded-full shadow-xl"></div>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         });
 
         if (userMarker) {
@@ -295,50 +302,76 @@
         if (radiusCircle) map.removeLayer(radiusCircle);
         
         radiusCircle = L.circle([lat, lng], {
-            color: '#ef4444',
-            fillColor: '#ef4444',
-            fillOpacity: 0.05,
-            weight: 1,
-            dashArray: '5, 5',
+            color: '#dc2626',
+            fillColor: '#dc2626',
+            fillOpacity: 0.08,
+            weight: 2,
+            dashArray: '5, 10',
             radius: currentRadius * 1000
         }).addTo(map);
     }
 
     function requestLocation() {
         const loader = document.getElementById('loader');
-        const permissionCard = document.getElementById('permission-card');
         
         loader.classList.remove('hidden');
-        permissionCard.classList.add('hidden');
 
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     userLat = pos.coords.latitude;
                     userLng = pos.coords.longitude;
-                    initMap(userLat, userLng);
-                    loadVendors(true);
-                    loader.classList.add('hidden');
+                    
+                    if (!map) {
+                        initMap(userLat, userLng);
+                    } else {
+                        map.setView([userLat, userLng], 17);
+                        updateUserMarker(userLat, userLng);
+                        updateRadiusCircle(userLat, userLng);
+                    }
+                    
+                    loadVendors(true).finally(() => {
+                        loader.classList.add('hidden');
+                    });
                 },
                 (err) => {
                     loader.classList.add('hidden');
-                    if (isInitialLoad) permissionCard.classList.remove('hidden');
-                    if (window.showToast) showToast("Localisation impossible.", "error");
+                    console.warn("Geolocation error:", err);
+                    
+                    // Already initialized if we follow the new DOMContentLoaded logic
+                    // Just fallback to default search if needed
+                    if (!userLat) {
+                        userLat = 6.1319; // Lomé
+                        userLng = 1.2227;
+                    }
+                    loadVendors(false);
+                    showToast("Utilisation de la position par défaut.", "info");
                 },
-                { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
             );
+        } else {
+            loader.classList.add('hidden');
+            showToast("Géolocalisation non supportée.", "error");
+            if (!userLat) {
+                userLat = 6.1319;
+                userLng = 1.2227;
+            }
+            loadVendors(false);
         }
-        isInitialLoad = false;
     }
 
     async function loadVendors(shouldFitBounds = false) {
         const countDisplay = document.getElementById('vendor-count');
+        if (!userLat || !userLng) return;
+
         try {
             const response = await fetch('{{ route('vendors.nearby') }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                 body: JSON.stringify({ lat: userLat, lng: userLng, radius: currentRadius })
             });
+
+            if (!response.ok) throw new Error("Server error");
 
             const data = await response.json();
             if (data.success) {
@@ -390,16 +423,20 @@
                     vendorMarkers.push(marker);
                 });
 
-                if (data.count > 0 && shouldFitBounds) {
+                if (data.count > 0 && shouldFitBounds && map) {
                     const group = new L.featureGroup([...vendorMarkers, userMarker]);
                     map.fitBounds(group.getBounds().pad(0.2));
                 }
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error(e);
+            showToast("Erreur lors de la récupération des boutiques.", "error");
+        }
     }
 
     function recenterMap() {
-        if (userLat && userLng) map.flyTo([userLat, userLng], 16); else requestLocation();
+        if (userLat && userLng) map.flyTo([userLat, userLng], 16); 
+        requestLocation();
     }
 
     document.querySelectorAll('.radius-item').forEach(item => {
@@ -411,6 +448,14 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', requestLocation);
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialiser avec Lomé par défaut immédiatement
+        userLat = 6.1319;
+        userLng = 1.2227;
+        initMap(userLat, userLng, 13);
+        
+        // Puis tenter la géolocalisation
+        requestLocation();
+    });
 </script>
 @endsection

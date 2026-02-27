@@ -123,6 +123,19 @@
                                class="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all font-semibold text-gray-900 dark:text-white">
                     </div>
 
+                    <div class="p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30">
+                        <label class="block text-[10px] font-black text-red-600 dark:text-red-400 uppercase mb-2 tracking-widest flex items-center gap-2">
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                             Tarification Livraison (FCFA / KM)
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="number" name="delivery_rate_per_km" value="{{ $vendeur->delivery_rate_per_km }}" placeholder="Par défaut: 300"
+                                   class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-700 border border-red-200 dark:border-gray-600 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all font-bold text-gray-900 dark:text-white">
+                            <span class="text-[10px] font-bold text-red-400 uppercase tracking-tighter whitespace-nowrap">FCFA par Km</span>
+                        </div>
+                        <p class="text-[9px] text-gray-400 mt-2 italic font-medium">Si vide, le tarif standard de 300 FCFA/km sera appliqué.</p>
+                    </div>
+
                     <div class="border-t border-gray-100 dark:border-gray-700 pt-4">
                         <h4 class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-3">Réseaux Sociaux</h4>
                         <div class="grid grid-cols-2 gap-3">

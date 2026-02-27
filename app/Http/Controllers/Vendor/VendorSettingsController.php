@@ -46,6 +46,7 @@ class VendorSettingsController extends Controller
             'website_url' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'delivery_rate_per_km' => 'nullable|integer|min:0',
         ];
 
         // Only allow setting category if not already set

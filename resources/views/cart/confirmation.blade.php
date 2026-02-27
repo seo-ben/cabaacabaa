@@ -184,7 +184,19 @@
                     </div>
                 </div> 
 
-                <div class="pt-8 border-t border-gray-50 dark:border-gray-800">
+                <div class="pt-8 border-t border-gray-50 dark:border-gray-800 space-y-3">
+                    <div class="flex justify-between items-center text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                        <span>Articles</span>
+                        <span class="text-gray-900 dark:text-white">{{ number_format($commande->montant_plats, 0) }} FCFA</span>
+                    </div>
+
+                    @if($commande->type_recuperation == 'livraison')
+                    <div class="flex justify-between items-center text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                        <span>Livraison ({{ number_format($commande->distance_livraison, 1) }} km)</span>
+                        <span class="text-gray-900 dark:text-white">{{ number_format($commande->frais_livraison, 0) }} FCFA</span>
+                    </div>
+                    @endif
+
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Date de commande</span>
                         <span class="text-sm font-black text-gray-900 dark:text-white">{{ $commande->date_commande ? $commande->date_commande->format('d M Y à H:i') : now()->format('d M Y à H:i') }}</span>
