@@ -137,6 +137,52 @@
         #map-container { height: calc(100vh - 145px); margin-bottom: 65px; }
         .action-group { bottom: 85px; }
     }
+
+    /* Missing Loader & Spinner Styles */
+    .loader-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .loader-overlay.hidden { display: none !important; }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #f97316;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .user-marker-container { overflow: visible !important; }
+    .vendor-marker-wrapper { overflow: visible !important; }
+
+    /* Specialty tags in popup */
+    .specialty-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        background: #fdf2f8;
+        color: #db2777;
+        border-radius: 6px;
+        font-size: 9px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin-right: 4px;
+        margin-bottom: 4px;
+    }
+    .dark .specialty-tag {
+        background: rgba(219, 39, 119, 0.1);
+        color: #f472b6;
+    }
 </style>
 @endsection
 
@@ -146,7 +192,7 @@
     <div class="status-overlay">
         <div class="glass-panel">
             <div class="flex items-center justify-between mb-2">
-                <div class="flex flex-col">
+                <div class="flex flex-col" id="stats-pill">
                     <h3 class="text-[10px] font-black uppercase tracking-[0.15em] text-gray-500">Rayon de recherche</h3>
                     <div id="stats-display" class="text-xs font-black text-gray-900 mt-0.5">
                         <span id="vendor-count">0</span> boutiques trouvées
@@ -280,7 +326,7 @@
                     userLng = pos.coords.longitude;
                     
                     initMap(userLat, userLng);
-                    loadVendors();
+                    loadVendors(true); // Fit bounds on first load
                     loader.classList.add('hidden');
                 },
                 (err) => {
@@ -299,7 +345,7 @@
         isInitialLoad = false;
     }
 
-    async function loadVendors() {
+    async function loadVendors(shouldFitBounds = false) {
         const pill = document.getElementById('stats-pill');
         const countDisplay = document.getElementById('vendor-count');
         
@@ -326,7 +372,7 @@
 
                 // Affichage count
                 countDisplay.textContent = data.count;
-                pill.classList.remove('hidden');
+                if (pill) pill.classList.remove('hidden');
 
                 data.vendors.forEach(v => {
                     const icon = L.divIcon({
@@ -336,21 +382,37 @@
                         iconAnchor: [22, 22]
                     });
 
+                    // Prendre les 6 premières spécialités
+                    const specialties = v.specialties ? v.specialties.slice(0, 6) : [];
+                    const specialtiesHtml = specialties.map(s => `<span class="specialty-tag">${s}</span>`).join('');
+
                     const popupHtml = `
-                        <div class="leaflet-popup-card">
-                            ${v.image 
-                                ? `<img src="${v.image}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">`
-                                : `<div class="w-full h-[140px] bg-orange-50 flex items-center justify-center text-4xl">🛍️</div>`
-                            }
-                            <div class="popup-info">
-                                <div class="text-sm font-black text-gray-900 mb-1">${v.nom}</div>
-                                <div class="flex items-center gap-2 text-[10px] font-bold text-gray-500 mb-3">
-                                    <span class="flex items-center gap-1">📍 ${v.distance_text}</span>
-                                    <span>•</span>
-                                    <span class="text-orange-600 uppercase tracking-widest">${v.category}</span>
+                        <div class="leaflet-popup-card group">
+                            <a href="${v.url}" class="block no-underline">
+                                ${v.image_full 
+                                    ? `<img src="${v.image_full}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">`
+                                    : `<div class="w-full h-[140px] bg-orange-50 flex items-center justify-center text-4xl">🛍️</div>`
+                                }
+                                <div class="popup-info">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <div class="text-sm font-black text-gray-900 group-hover:text-orange-600 transition-colors">${v.nom}</div>
+                                        <div class="text-[10px] font-black text-orange-600">★ ${v.note_moyenne || '5.0'}</div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-[9px] font-bold text-gray-500 mb-3 uppercase tracking-wider">
+                                        <span>📍 ${v.distance_text}</span>
+                                        <span>•</span>
+                                        <span>${v.category}</span>
+                                    </div>
+
+                                    <div class="mb-3 flex flex-wrap">
+                                        ${specialtiesHtml}
+                                        ${v.specialties.length > 6 ? `<span class="text-[8px] font-bold text-gray-400">...</span>` : ''}
+                                    </div>
+
+                                    <div class="popup-btn no-underline">COMMANDER ICI</div>
                                 </div>
-                                <a href="${v.url}" class="popup-btn no-underline">DÉCOUVRIR LA BOUTIQUE</a>
-                            </div>
+                            </a>
                         </div>
                     `;
 
@@ -361,7 +423,7 @@
                     vendorMarkers.push(marker);
                 });
 
-                if (data.count > 0 && isInitialLoad) {
+                if (data.count > 0 && shouldFitBounds) {
                     const group = new L.featureGroup([...vendorMarkers, userMarker]);
                     map.fitBounds(group.getBounds().pad(0.1));
                 }
