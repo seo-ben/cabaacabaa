@@ -214,13 +214,40 @@ class OrderController extends Controller
             foreach ($cart as $id => $item) {
                 $ligne = new LigneCommande();
                 $ligne->id_commande = $commande->id_commande;
-                $ligne->id_plat = $item['id']; // Use the actual product ID, not the cart key
+                $ligne->id_plat = $item['id'];
                 $ligne->nom_plat_snapshot = $item['name'];
                 $ligne->quantite = $item['quantity'];
                 $ligne->prix_unitaire = $item['price'];
                 $ligne->sous_total = $item['price'] * $item['quantity'];
-                $ligne->options = $item['options'] ?? null; // Save the selected options
+                $ligne->options = $item['options'] ?? null;
                 $ligne->save();
+
+                // Gestion du stock
+                $plat = \App\Models\Plat::find($item['id']);
+                if ($plat && $plat->stock_limite) {
+                    $plat->quantite_disponible -= $item['quantity'];
+                    
+                    if ($plat->quantite_disponible <= 0) {
+                        $plat->quantite_disponible = 0;
+                        $plat->is_available = false;
+                        $plat->disponible = false; // Sortie du marché auto
+
+                        // Notification automatique au vendeur
+                        $vendeur = \App\Models\Vendeur::find($id_vendeur);
+                        if ($vendeur && $vendeur->id_user) {
+                            \App\Models\Notification::create([
+                                'id_utilisateur' => $vendeur->id_user,
+                                'type_notification' => 'stock_alerte',
+                                'titre' => 'Produit épuisé !',
+                                'message' => "Le produit '{$plat->nom_plat}' est désormais en rupture de stock et a été retiré de la vente.",
+                                'id_vendeur' => $id_vendeur,
+                                'lue' => false,
+                                'date_creation' => now(),
+                            ]);
+                        }
+                    }
+                    $plat->save();
+                }
             }
 
             DB::commit();
