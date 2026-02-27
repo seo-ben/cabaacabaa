@@ -15,6 +15,13 @@
         background: #f3f4f6;
     }
 
+    @media (max-width: 1023px) {
+        #map-container { 
+            height: calc(100vh - 145px); /* Header + Bottom Nav Safe area */
+            margin-bottom: 65px;
+        }
+    }
+
     #map {
         height: 100%;
         width: 100%;
@@ -184,9 +191,6 @@
 
     <!-- Action Buttons -->
     <div class="action-group">
-        <button id="satellite-btn" onclick="toggleSatellite()" class="map-btn" title="Mode Satellite">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2 2 2 0 012 2v.656c0 .53.21 1.039.586 1.414l.344.344m-7.377-12.81c.563-.544 1.348-.87 2.21-.87 1.768 0 3.2 1.432 3.2 3.2 0 .862-.326 1.647-.87 2.21l-4.54 4.54a2.21 2.21 0 01-3.126 0 2.21 2.21 0 010-3.126l4.54-4.54z"/></svg>
-        </button>
         <button onclick="recenterMap()" class="map-btn" title="Ma position">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.49-4.39-4.04-7.94-8.43-8.42V1c0-.55-.45-1-1-1s-1 .45-1 1v1.58C6.11 3.06 2.56 6.61 2.07 11H.5c-.55 0-1 .45-1 1s.45 1 1 1h1.57c.49 4.39 4.04 7.94 8.43 8.42V23c0 .55.45 1 1 1s1-.45 1-1v-1.58c4.39-.48 7.94-4.03 8.43-8.42H23.5c.55 0 1-.45 1-1s-.45-1-1-1h-1.56z"/></svg>
         </button>
@@ -212,10 +216,6 @@
     let userLat, userLng;
     let isInitialLoad = true;
 
-    // Configuration de la carte
-    let roadLayer, satelliteLayer;
-    let isSatellite = false;
-
     // Fallback toast function
     const showToast = (message, type = 'info') => {
         if (window.showToast) {
@@ -239,20 +239,12 @@
                 tap: false
             }).setView([lat, lng], zoom);
 
-            // Layer Routes - CartoDB Voyager
-            roadLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OpenStreetMap &copy; CartoDB',
                 subdomains: 'abcd',
                 maxZoom: 20
-            });
+            }).addTo(map);
 
-            // Layer Satellite
-            satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri',
-                maxZoom: 19
-            });
-
-            roadLayer.addTo(map);
             L.control.zoom({ position: 'bottomleft' }).addTo(map);
             
             // Fix for map size
@@ -265,23 +257,6 @@
         updateRadiusCircle(lat, lng);
     }
 
-    function toggleSatellite() {
-        if (!map) return;
-        isSatellite = !isSatellite;
-        const btn = document.getElementById('satellite-btn');
-        
-        if (isSatellite) {
-            map.removeLayer(roadLayer);
-            satelliteLayer.addTo(map);
-            btn.classList.add('active');
-            showToast("Mode satellite activé", "info");
-        } else {
-            map.removeLayer(satelliteLayer);
-            roadLayer.addTo(map);
-            btn.classList.remove('active');
-            showToast("Mode plan activé", "info");
-        }
-    }
 
     function updateUserMarker(lat, lng) {
         const userIcon = L.divIcon({
