@@ -183,6 +183,13 @@ class OrderController extends Controller
                 'lat' => $request->lat,
                 'lng' => $request->lng
             ]))->getData();
+            
+            if (isset($deliveryInfo->out_of_range) && $deliveryInfo->out_of_range) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['adresse_livraison' => "Désolé, votre adresse est trop éloignée de l'établissement (Plus de {$deliveryInfo->max_distance} km)."]);
+            }
+
             $fraisLivraison = $deliveryInfo->fee;
             $distance = $deliveryInfo->distance;
         }

@@ -53,11 +53,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // 1. Initialiser la carte sur Lomé (Togo) ou la position actuelle si possible
-        const map = L.map('map').setView([6.1375, 1.2123], 13);
+        const map = L.map('map').setView([6.1375, 1.2123], 15);
 
-        // Tiles OpenStreetMap (gratuit)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // Tiles Premium (Buildings & Better detail)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap, © CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 20
         }).addTo(map);
 
         // 2. Stocker les markers des chauffeurs

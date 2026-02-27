@@ -152,7 +152,9 @@ function productOptionsManager() {
                             window.location.href = '/panier';
                         }
 
-                        // window.showToast(data.success, 'success'); // Removed for speed
+                        if (window.showToast) {
+                            window.showToast(data.success, 'success');
+                        }
                     } else if (data.error) {
                         if (data.can_clear && confirm(data.error)) {
                             // Logic to clear cart could be added here or via a separate call

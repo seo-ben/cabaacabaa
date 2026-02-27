@@ -113,17 +113,29 @@
         showModal: false,
         modalTitle: '',
         modalMessage: '',
-        modalType: 'success', // success, error, info
+        modalType: 'success',
         notifications: [],
         unreadCount: 0,
         notificationPermission: Notification.permission,
+        toasts: [],
         
         init() {
+            this.toasts = [];
             window.showToast = (message, type = 'success', title = '') => {
-                this.modalMessage = message;
-                this.modalType = type;
-                this.modalTitle = title || (type === 'success' ? 'Succès' : (type === 'error' ? 'Erreur' : 'Information'));
-                this.showModal = true;
+                if (type === 'success' || type === 'info') {
+                    // Floating Toast for success/info (Faster UX)
+                    const id = Date.now();
+                    this.toasts.push({ id, message, type });
+                    setTimeout(() => {
+                        this.toasts = this.toasts.filter(t => t.id !== id);
+                    }, 4000);
+                } else {
+                    // Full Modal for errors (Attention needed)
+                    this.modalMessage = message;
+                    this.modalType = type;
+                    this.modalTitle = title || 'Erreur';
+                    this.showModal = true;
+                }
             };
 
             // Session Messages
@@ -244,6 +256,25 @@
             });
         }
       }">
+
+    <!-- Floating Toasts Container -->
+    <div class="fixed top-24 right-6 z-[200] flex flex-col gap-3 w-full max-w-[320px] pointer-events-none">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-x-8 scale-90"
+                 x-transition:enter-end="opacity-100 translate-x-0 scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-90"
+                 class="pointer-events-auto flex items-center gap-3 px-5 py-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800">
+                <div :class="toast.type === 'success' ? 'bg-green-500' : 'bg-blue-500'" class="w-3 h-3 rounded-full shrink-0"></div>
+                <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white" x-text="toast.message"></p>
+                <button @click="toasts = toasts.filter(t => t.id !== toast.id)" class="ml-auto text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </template>
+    </div>
 
     <!-- Global Modal Alert -->
     <div x-show="showModal" 

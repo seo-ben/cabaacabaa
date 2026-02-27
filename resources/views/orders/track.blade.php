@@ -394,9 +394,11 @@
         const mapContainer = window.innerWidth >= 1024 ? 'order-map-desktop' : 'order-map-mobile';
         if (!document.getElementById(mapContainer)) return;
         
-        map = L.map(mapContainer).setView([6.1375, 1.2123], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
+        map = L.map(mapContainer).setView([6.1375, 1.2123], 16);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap, © CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 20
         }).addTo(map);
 
         // Add vendor marker

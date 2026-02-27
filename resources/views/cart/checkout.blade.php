@@ -1,235 +1,216 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-[#FDFCFB] dark:bg-gray-950 py-24 transition-colors duration-300">
-    <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 py-12 lg:py-24 transition-colors duration-300">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Breadcrumbs / Back -->
+        <div class="mb-8 flex items-center justify-between">
+            <a href="{{ route('cart.index') }}" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                Retour au panier
+            </a>
+            <div class="lg:hidden text-[10px] font-black uppercase tracking-widest text-gray-400">Étape 2 sur 2</div>
+        </div>
+
         <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
             @csrf
             <!-- Hidden Fields for Location -->
-            <input type="hidden" name="lat" id="user-lat">
-            <input type="hidden" name="lng" id="user-lng">
-            <input type="hidden" name="delivery_fee" id="delivery-fee-val" value="0">
+            <input type="hidden" name="lat" id="user-lat" value="{{ old('lat') }}">
+            <input type="hidden" name="lng" id="user-lng" value="{{ old('lng') }}">
+            <input type="hidden" name="delivery_fee" id="delivery-fee-val" value="{{ old('delivery_fee', 0) }}">
+            <input type="hidden" name="mode_paiement" value="espece">
 
-            <div class="flex flex-col lg:flex-row gap-12">
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 
-                <!-- Form Side -->
-                <div class="flex-1 space-y-12">
-                    <div class="space-y-4">
-                        <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">Finalisez votre commande</h1>
-                        <p class="text-gray-500 dark:text-gray-400 font-medium">Laissez-nous vos coordonnées pour la suite.</p>
+                <!-- Main Form (Left) -->
+                <div class="flex-1 space-y-8">
+                    <div class="space-y-2">
+                        <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Finaliser ma commande</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium italic">Veuillez confirmer vos détails pour la préparation.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-8 bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">Nom Complet</label>
-                            <input type="text" name="nom_complet" value="{{ auth()->check() ? auth()->user()->nom_complet : '' }}" required
-                                   class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600"
-                                   placeholder="Ex: Jean Dupont">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">Numéro de téléphone</label>
-                            <input type="tel" name="phone" value="{{ auth()->check() ? auth()->user()->telephone : '' }}" required
-                                   class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600"
-                                   placeholder="+228 00 00 00 00">
+                    <!-- Step 1: Identity -->
+                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center font-black text-sm">01</div>
+                            <h2 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white">Informations de contact</h2>
                         </div>
 
-                        <div class="md:col-span-2 pt-10 border-t border-gray-100 dark:border-gray-800 space-y-8">
-                            <div class="space-y-1">
-                                <h3 class="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white">Mode de récupération</h3>
-                                <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Choisissez comment vous souhaitez recevoir vos articles.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Nom Complet</label>
+                                <input type="text" name="nom_complet" value="{{ old('nom_complet', auth()->check() ? auth()->user()->nom_complet : '') }}" required
+                                       class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600 @error('nom_complet') border-red-500 @enderror"
+                                       placeholder="Ex: Jean Dupont">
+                                @error('nom_complet') <p class="text-[10px] text-red-500 font-bold ml-2">{{ $message }}</p> @enderror
                             </div>
-                            
-                            <div class="grid grid-cols-3 gap-2 sm:gap-6">
-                                <!-- À Emporter -->
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="type_recuperation" value="emporter" class="peer sr-only" checked onchange="toggleDelivery(false)">
-                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
-                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-6 transition-transform">
-                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                                        </div>
-                                        <div>
-                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">À emporter</span>
-                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Je récupère moi-même à l'établissement</span>
-                                        </div>
-                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <!-- Sur Place -->
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="type_recuperation" value="sur_place" class="peer sr-only" onchange="toggleDelivery(false)">
-                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
-                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gray-900 dark:bg-white dark:text-gray-900 text-white flex items-center justify-center shadow-lg shadow-gray-900/20 group-hover:-rotate-6 transition-transform">
-                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 16v2m3-6v6m3-3v3M9 12h6M4 21h16a1 1 0 001-1V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1z"/></svg>
-                                        </div>
-                                        <div>
-                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">Sur place</span>
-                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Réservez une table et profitez ici</span>
-                                        </div>
-                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <!-- Livraison -->
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="type_recuperation" value="livraison" class="peer sr-only" onchange="toggleDelivery(true)">
-                                    <div class="h-full p-2 sm:p-8 bg-white dark:bg-gray-800 border-2 border-gray-50 dark:border-gray-700 rounded-2xl transition-all duration-300 peer-checked:border-orange-500 dark:peer-checked:border-orange-500 peer-checked:bg-orange-50/30 dark:peer-checked:bg-orange-900/20 peer-checked:shadow-2xl peer-checked:shadow-orange-200/40 dark:peer-checked:shadow-none hover:border-gray-200 dark:hover:border-gray-600 group-active:scale-95 flex flex-col items-center text-center gap-2 sm:gap-4">
-                                        <div class="w-8 h-8 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:rotate-12 transition-transform">
-                                            <svg class="w-4 h-4 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                        </div>
-                                        <div>
-                                            <span class="block text-[8px] sm:text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white mb-0 sm:mb-1">Livraison</span>
-                                            <span class="hidden sm:block text-[9px] text-gray-400 dark:text-gray-500 font-bold leading-tight">Frais calculés par distance GPS</span>
-                                        </div>
-                                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 opacity-0 peer-checked:opacity-100 transition-opacity">
-                                            <div class="w-3 h-3 sm:w-5 sm:h-5 bg-orange-500 rounded-full flex items-center justify-center">
-                                                <svg class="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Numéro de téléphone</label>
+                                <input type="tel" name="phone" value="{{ old('phone', auth()->check() ? auth()->user()->telephone : '') }}" required
+                                       class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600 @error('phone') border-red-500 @enderror"
+                                       placeholder="+228 00 00 00 00">
+                                @error('phone') <p class="text-[10px] text-red-500 font-bold ml-2">{{ $message }}</p> @enderror
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Delivery Details (Hidden initially) -->
-                        <div id="delivery-details" class="md:col-span-2 pt-6 border-t border-gray-50 dark:border-gray-800 space-y-6 hidden">
-                            
-                            <!-- Header -->
-                            <div class="space-y-1">
-                                <h3 class="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    Où livrer votre commande ?
-                                </h3>
-                                <p class="text-[11px] text-gray-400 dark:text-gray-500 font-medium italic">Cliquez sur le bouton ci-dessous ou touchez la carte pour indiquer votre position exacte.</p>
-                            </div>
-
-                            <!-- GPS Button -->
-                            <button type="button" id="gps-btn" onclick="detectLocation()" 
-                                    class="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-orange-500/20 active:scale-95 transition-all flex items-center justify-center gap-3">
-                                <svg id="gps-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <svg id="gps-spinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                <span id="gps-text">📍 Prendre ma position GPS</span>
-                            </button>
-
-                            <!-- Map Container -->
-                            <div class="relative rounded-2xl overflow-hidden border-2 border-gray-100 dark:border-gray-700 shadow-inner">
-                                <div id="delivery-map" class="w-full h-64 sm:h-80 z-0"></div>
-                                <!-- Map Instruction Overlay -->
-                                <div id="map-instruction" class="absolute top-3 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg z-[500] pointer-events-none">
-                                    <p class="text-[9px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                                        <span class="text-base">👆</span> Touchez la carte ou glissez le marqueur
-                                    </p>
+                    <!-- Step 2: Recovery Mode -->
+                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-black text-sm">02</div>
+                            <h2 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white">Mode de récupération</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-3">
+                            @php
+                                $modes = [
+                                    ['val' => 'emporter', 'label' => 'Emporter', 'icon' => 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z', 'desc' => 'Je récupère'],
+                                    ['val' => 'sur_place', 'label' => 'Sur Place', 'icon' => 'M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 16v2m3-6v6m3-3v3M9 12h6M4 21h16a1 1 0 001-1V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1z', 'desc' => 'Je mange ici'],
+                                    ['val' => 'livraison', 'label' => 'Livraison', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z', 'desc' => 'On me livre']
+                                ];
+                            @endphp
+                            @foreach($modes as $mode)
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="type_recuperation" value="{{ $mode['val'] }}" class="peer sr-only" 
+                                       {{ old('type_recuperation', 'emporter') == $mode['val'] ? 'checked' : '' }} 
+                                       onchange="toggleDelivery(this.value === 'livraison')">
+                                <div class="h-full py-4 bg-gray-50 dark:bg-gray-800/50 border-2 border-transparent rounded-2xl transition-all duration-300 peer-checked:border-red-500 peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:shadow-xl group-active:scale-95 flex flex-col items-center justify-center text-center gap-2">
+                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 peer-checked:bg-red-500 peer-checked:text-white transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $mode['icon'] }}"/></svg>
+                                    </div>
+                                    <div class="px-1">
+                                        <span class="block text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">{{ $mode['label'] }}</span>
+                                        <span class="hidden sm:block text-[8px] text-gray-400 font-bold uppercase tracking-tighter">{{ $mode['desc'] }}</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </label>
+                            @endforeach
+                        </div>
 
-                            <!-- Location Status -->
-                            <div id="location-status" class="hidden p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-800">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shrink-0">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                        <!-- Delivery Specifics -->
+                        <div id="delivery-details" class="pt-6 space-y-6 {{ old('type_recuperation') == 'livraison' ? '' : 'hidden' }}">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Position de livraison</h3>
+                                    <span class="text-[9px] font-bold text-red-500 italic">* Requis pour la livraison</span>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <button type="button" id="gps-btn" onclick="detectLocation()" 
+                                            class="w-full py-4 bg-red-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-500/20 active:scale-95 transition-all flex items-center justify-center gap-3">
+                                        <svg id="gps-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        <svg id="gps-spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        <span id="gps-text">Ma position GPS</span>
+                                    </button>
+                                    <div class="relative rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 h-40 group">
+                                        <div id="delivery-map" class="w-full h-full z-0"></div>
+                                        <div class="absolute inset-x-0 bottom-0 p-2 bg-black/50 backdrop-blur-sm text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                            <span class="text-[8px] font-bold text-white uppercase">Glissez pour ajuster</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="text-[10px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Position enregistrée ✓</p>
-                                        <p class="text-[9px] text-green-600/70 dark:text-green-400/60 font-bold" id="coords-display"></p>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="space-y-2">
+                                        <label class="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Adresse détaillée</label>
+                                        <input type="text" name="adresse_livraison" id="adresse-livraison" value="{{ old('adresse_livraison') }}"
+                                               class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none @error('adresse_livraison') border-red-500 @enderror"
+                                               placeholder="Quartier, N° Maison, Repère visuel...">
+                                        @error('adresse_livraison') <p class="text-[10px] text-red-500 font-bold ml-2">{{ $message }}</p> @enderror
+                                    </div>
+
+                                    <div id="distance-info" class="p-4 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20 hidden">
+                                        <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-red-600 dark:text-red-400">
+                                            <span>Distance : <span id="distance-val">0</span> km</span>
+                                            <span class="px-2 py-0.5 bg-red-600 text-white rounded-md">+ <span id="fee-val">0</span> FCFA</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Address Input -->
-                            <input type="text" name="adresse_livraison" id="adresse-livraison"
-                                   class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none placeholder-gray-400 dark:placeholder-gray-600"
-                                   placeholder="Décrivez votre adresse (Quartier, Rue, Repère...)">
-                            
-                            <!-- Distance & Fee Info -->
-                            <div id="distance-info" class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-2xl hidden">
-                                <p class="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-widest flex justify-between">
-                                    <span>Distance estimée : <span id="distance-val">0</span> km</span>
-                                    <span>Frais : <span id="fee-val">0</span> FCFA</span>
-                                </p>
-                            </div>
                         </div>
+                    </div>
 
-                        <div class="md:col-span-2 pt-6 space-y-2">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">Instructions spéciales (optionnel)</label>
-                            <textarea name="notes" rows="3" 
-                                      class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-orange-500 focus:bg-white dark:focus:bg-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none resize-none placeholder-gray-400 dark:placeholder-gray-600"
-                                      placeholder="Ex: Pas de piment, code porte..."></textarea>
-                        </div>
+                    <!-- Step 3: Special Notes -->
+                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Instructions Spéciales (Optionnel)</label>
+                        <textarea name="notes" rows="2" 
+                                  class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none resize-none"
+                                  placeholder="Ex: Sans piment, code entrée 1234...">{{ old('notes') }}</textarea>
                     </div>
                 </div>
 
-                <!-- Summary Side -->
-                <div class="lg:w-96">
-                    <div class="sticky top-32 space-y-8">
-                        <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl p-6 sm:p-10 text-white space-y-8 shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-700 w-full overflow-hidden">
-                            <h3 class="text-lg sm:text-xl font-black border-b border-white/10 pb-6 uppercase tracking-widest">Résumé</h3>
+                <!-- Order Summary (Right) -->
+                <div class="lg:w-[400px] shrink-0">
+                    <div class="sticky top-28 space-y-6">
+                        <div class="bg-gray-900 dark:bg-gray-900 rounded-[2.5rem] p-10 text-white shadow-2xl border border-white/5 space-y-8 overflow-hidden relative">
+                            <!-- Subtle Glow -->
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/20 blur-3xl rounded-full"></div>
                             
-                            <div class="space-y-4">
-                                <div class="flex justify-between text-white/60">
-                                    <span class="text-[10px] font-black uppercase tracking-widest">Articles ({{ count($cart) }})</span>
-                                    <span class="text-sm font-bold">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
+                            <h2 class="text-xl font-black uppercase tracking-widest border-b border-white/10 pb-6 mb-2">Mon Panier</h2>
+                            
+                            <!-- Items List (Compact) -->
+                            <div class="space-y-4 max-h-[300px] overflow-y-auto no-scrollbar">
+                                @foreach($cart as $item)
+                                <div class="flex items-center gap-4 py-2 border-b border-white/5 last:border-0">
+                                    <div class="w-10 h-10 rounded-xl bg-gray-800 overflow-hidden shrink-0 border border-white/10">
+                                        <img src="{{ $item['image'] ? asset('storage/'.$item['image']) : asset('assets/default-plat.png') }}" class="w-full h-full object-cover" alt="">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[11px] font-black uppercase tracking-tight truncate">{{ $item['name'] }}</p>
+                                        <p class="text-[9px] text-gray-400 font-bold">x{{ $item['quantity'] }} • {{ number_format($item['price'], 0, ',', ' ') }} FCFA</p>
+                                    </div>
                                 </div>
-                                <div id="delivery-fee-line" class="hidden justify-between text-white/60">
-                                    <span class="text-[10px] font-black uppercase tracking-widest">Livraison</span>
-                                    <span class="text-sm font-bold"><span id="summary-fee">0</span> FCFA</span>
-                                </div>
-                                <div class="pt-6 border-t border-white/10 flex justify-between items-end">
-                                    <span class="text-[10px] font-black uppercase tracking-widest">Total</span>
-                                    <span class="text-3xl font-black text-orange-400 tracking-tighter">
-                                        <span id="total-val">{{ number_format($total, 0, ',', ' ') }}</span> 
-                                        <small class="text-[10px]">FCFA</small>
-                                    </span>
-                                </div>
+                                @endforeach
                             </div>
 
-                            <div class="pt-4 space-y-4">
-                                <h3 class="text-[10px] font-black uppercase tracking-widest text-white/40">Mode de paiement</h3>
-                                
-                                {{-- ============================================================================ --}}
-                                {{-- PAIEMENT EN LIGNE - TEMPORAIREMENT DÉSACTIVÉ --}}
-                                {{-- ============================================================================ --}}
-                                {{-- TODO: Réactiver quand Tmoney, Flooz, carte bancaire seront opérationnels --}}
-                                {{-- ============================================================================ --}}
-                                
-                                <div class="grid grid-cols-1 gap-3">
-                                    <label class="cursor-pointer group">
-                                        <input type="radio" name="mode_paiement" value="espece" class="peer sr-only" checked>
-                                        <div class="py-3 px-4 bg-white/5 border border-white/10 peer-checked:border-orange-500 peer-checked:bg-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center transition-all">
-                                            💵 Paiement en Espèces (Uniquement disponible)
-                                        </div>
-                                    </label>
-                                    
-                                    {{-- Option Mobile Money désactivée temporairement --}}
-                                    {{--
-                                    <label class="cursor-pointer group opacity-50 cursor-not-allowed">
-                                        <input type="radio" name="mode_paiement" value="mobile_money" class="peer sr-only" disabled>
-                                        <div class="py-3 px-4 bg-white/5 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest text-center">
-                                            Mobile Money (Bientôt disponible)
-                                        </div>
-                                    </label>
-                                    --}}
+                            <!-- Totals -->
+                            <div class="pt-6 space-y-4 border-t border-white/10">
+                                <div class="flex justify-between text-white/50 text-[10px] font-black uppercase tracking-widest">
+                                    <span>Sous-total</span>
+                                    <span class="text-white">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
                                 </div>
-                                
-                                <div class="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-                                    <p class="text-[9px] font-bold text-orange-300 leading-relaxed">
-                                        ℹ️ <strong>Information:</strong> Le paiement en ligne (Tmoney, Flooz, carte bancaire) sera bientôt disponible. Pour le moment, seul le paiement en espèces est accepté.
+                                <div id="delivery-fee-line" class="hidden justify-between text-white/50 text-[10px] font-black uppercase tracking-widest">
+                                    <span>Livraison</span>
+                                    <span class="text-white"><span id="summary-fee">0</span> FCFA</span>
+                                </div>
+                                <div class="flex justify-between items-end pt-4">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-red-500">Total à payer</p>
+                                    <p class="text-4xl font-black tracking-tighter text-white">
+                                        <span id="total-val">{{ number_format($total, 0, ',', ' ') }}</span>
+                                        <span class="text-[10px] text-gray-400 ml-1">FCFA</span>
                                     </p>
                                 </div>
                             </div>
 
-                            <button type="submit" class="w-full py-6 bg-orange-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/20 dark:shadow-none active:scale-95 flex items-center justify-center gap-3">
-                                Confirmer la commande
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            <!-- Payment Info -->
+                            <div class="space-y-4">
+                                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-white/30">Paiement</p>
+                                <div class="flex items-center gap-3 px-4 py-4 bg-white/5 border border-white/10 rounded-2xl">
+                                    <div class="w-8 h-8 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-[10px] font-black uppercase tracking-widest">Espèces</p>
+                                        <p class="text-[8px] text-white/40 font-bold uppercase tracking-tighter">À la livraison / Sur place</p>
+                                    </div>
+                                </div>
+                                <p class="text-[9px] text-gray-400 font-bold italic leading-relaxed text-center">
+                                    Mobile Money & Carte bancaire bientôt disponibles.
+                                </p>
+                            </div>
+
+                            <button type="submit" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-600/20 active:scale-95 flex items-center justify-center gap-3">
+                                Commander 
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             </button>
                         </div>
+
+                        <!-- Back Button Mobile -->
+                        <a href="{{ route('cart.index') }}" class="lg:hidden w-full flex items-center justify-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-gray-900 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                            Modifier ma commande
+                        </a>
                     </div>
                 </div>
             </div>
@@ -251,10 +232,15 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     let subTotal = {{ $total }};
-    let currentFee = 0;
+    let currentFee = {{ old('delivery_fee', 0) }};
     let deliveryMap = null;
     let deliveryMarker = null;
     let mapInitialized = false;
+
+    // Check if we already have old input to show delivery details
+    if (document.querySelector('input[name="type_recuperation"]:checked').value === 'livraison') {
+        setTimeout(() => toggleDelivery(true), 100);
+    }
 
     function toggleDelivery(show) {
         const details = document.getElementById('delivery-details');
@@ -276,36 +262,35 @@
             currentFee = 0;
             document.getElementById('user-lat').value = '';
             document.getElementById('user-lng').value = '';
-            document.getElementById('location-status').classList.add('hidden');
+            document.getElementById('distance-info').classList.add('hidden');
             updateTotal();
         }
     }
 
     function initDeliveryMap() {
-        // Default center: Lomé
-        const defaultLat = 6.1319;
-        const defaultLng = 1.2227;
+        // Default center: Lomé or old coordinates
+        const oldLat = document.getElementById('user-lat').value;
+        const oldLng = document.getElementById('user-lng').value;
+        const defaultLat = oldLat ? parseFloat(oldLat) : 6.1319;
+        const defaultLng = oldLng ? parseFloat(oldLng) : 1.2227;
 
         deliveryMap = L.map('delivery-map', {
-            zoomControl: true,
+            zoomControl: false,
             tap: true
-        }).setView([defaultLat, defaultLng], 13);
+        }).setView([defaultLat, defaultLng], oldLat ? 16 : 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/voyager_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap',
             maxZoom: 19
         }).addTo(deliveryMap);
 
-        // Create a draggable marker icon
         const customerIcon = L.divIcon({
             className: 'custom-customer-marker',
             html: `<div style="position:relative">
-                        <div style="background:#f97316; width:40px; height:40px; border-radius:50%; border:3px solid white; box-shadow:0 4px 14px rgba(249,115,22,0.4); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:grab;">📍</div>
-                        <div style="position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:16px; height:6px; background:rgba(0,0,0,0.15); border-radius:50%; filter:blur(1px);"></div>
+                        <div style="background:#ef4444; width:40px; height:40px; border-radius:50%; border:3px solid white; box-shadow:0 4px 14px rgba(239,68,68,0.4); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:grab;">📍</div>
                     </div>`,
             iconSize: [40, 40],
-            iconAnchor: [20, 40],
-            popupAnchor: [0, -40]
+            iconAnchor: [20, 40]
         });
 
         deliveryMarker = L.marker([defaultLat, defaultLng], {
@@ -313,19 +298,18 @@
             icon: customerIcon
         }).addTo(deliveryMap);
 
-        // Marker drag
+        if (oldLat) {
+            calculateFee(oldLat, oldLng);
+        }
+
         deliveryMarker.on('dragend', function() {
             const pos = deliveryMarker.getLatLng();
             setDeliveryPosition(pos.lat, pos.lng);
-            // Hide instruction after first interaction
-            document.getElementById('map-instruction').classList.add('hidden');
         });
 
-        // Map click
         deliveryMap.on('click', function(e) {
             deliveryMarker.setLatLng(e.latlng);
             setDeliveryPosition(e.latlng.lat, e.latlng.lng);
-            document.getElementById('map-instruction').classList.add('hidden');
         });
 
         mapInitialized = true;
@@ -334,13 +318,6 @@
     function setDeliveryPosition(lat, lng) {
         document.getElementById('user-lat').value = lat;
         document.getElementById('user-lng').value = lng;
-
-        // Show location status
-        const status = document.getElementById('location-status');
-        status.classList.remove('hidden');
-        document.getElementById('coords-display').textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
-
-        // Auto calc fee
         calculateFee(lat, lng);
     }
 
@@ -351,24 +328,20 @@
         const text = document.getElementById('gps-text');
 
         if ("geolocation" in navigator) {
-            // Show loading state
             icon.classList.add('hidden');
             spinner.classList.remove('hidden');
-            text.textContent = 'Localisation en cours...';
+            text.textContent = 'Localisation...';
             btn.disabled = true;
-            btn.classList.add('opacity-70');
 
             navigator.geolocation.getCurrentPosition(
                 function(position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
-                    // Update marker and map
                     if (deliveryMap && deliveryMarker) {
                         deliveryMarker.setLatLng([lat, lng]);
                         deliveryMap.flyTo([lat, lng], 17, { duration: 1.2 });
                     } else {
-                        // Map not ready yet, init then move
                         initDeliveryMap();
                         setTimeout(() => {
                             deliveryMarker.setLatLng([lat, lng]);
@@ -377,45 +350,24 @@
                     }
 
                     setDeliveryPosition(lat, lng);
-                    document.getElementById('map-instruction').classList.add('hidden');
-
-                    // Reset button to success state
                     icon.classList.remove('hidden');
                     spinner.classList.add('hidden');
-                    text.textContent = '✅ Position détectée ! Recliquez pour mettre à jour';
+                    text.textContent = 'Position OK !';
                     btn.disabled = false;
-                    btn.classList.remove('opacity-70');
-                    btn.classList.remove('from-orange-500', 'to-orange-600');
-                    btn.classList.add('from-green-500', 'to-green-600', 'shadow-green-500/20');
+                    btn.classList.replace('bg-red-600', 'bg-green-600');
 
-                    // Show toast
-                    if (typeof showToast === 'function') {
-                        showToast('Position GPS détectée avec succès !', 'success');
-                    }
+                    if (window.showToast) showToast('Position détectée !', 'success');
                 },
                 function(error) {
-                    // Reset button on error
                     icon.classList.remove('hidden');
                     spinner.classList.add('hidden');
-                    text.textContent = '📍 Prendre ma position GPS';
+                    text.textContent = 'Ma position GPS';
                     btn.disabled = false;
-                    btn.classList.remove('opacity-70');
-
-                    let msg = 'Impossible de détecter votre position.';
-                    if (error.code === 1) msg = 'Veuillez autoriser l\'accès à votre position dans les réglages de votre navigateur.';
-                    if (error.code === 2) msg = 'Position indisponible. Vérifiez votre GPS.';
-                    if (error.code === 3) msg = 'La détection a pris trop de temps. Réessayez.';
-
-                    if (typeof showToast === 'function') {
-                        showToast(msg, 'error');
-                    } else {
-                        alert(msg);
-                    }
+                    let msg = 'Erreur GPS : ' + error.message;
+                    if (window.showToast) showToast(msg, 'error');
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );
-        } else {
-            alert('Votre navigateur ne supporte pas la géolocalisation. Touchez directement la carte pour indiquer votre position.');
         }
     }
 
@@ -435,12 +387,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.out_of_range) {
-                const msg = "Désolé, votre adresse est trop éloignée (" + data.distance + " km). Distance max : " + data.max_distance + " km.";
-                if (typeof showToast === 'function') {
-                    showToast(msg, 'error');
-                } else {
-                    alert(msg);
-                }
+                if (window.showToast) showToast("Trop loin ! Distance max : " + data.max_distance + " km", 'error');
                 document.querySelector('input[name="type_recuperation"][value="emporter"]').checked = true;
                 toggleDelivery(false);
                 return;
@@ -448,21 +395,8 @@
 
             currentFee = data.fee;
             document.getElementById('distance-info').classList.remove('hidden');
-            
-            let infoBox = document.getElementById('distance-info');
-            infoBox.innerHTML = `
-                <div class="flex flex-col gap-2">
-                    <p class="text-[10px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-widest flex justify-between">
-                        <span>Distance : ${data.distance} km</span>
-                        <span>Frais : ${data.fee.toLocaleString()} FCFA</span>
-                    </p>
-                    <p class="text-[9px] font-bold text-orange-600/70 dark:text-orange-400/70 uppercase tracking-[0.2em] flex items-center gap-2">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Arrivée estimée dans ${data.estimated_time} minutes
-                    </p>
-                </div>
-            `;
-
+            document.getElementById('distance-val').innerText = data.distance;
+            document.getElementById('fee-val').innerText = data.fee.toLocaleString();
             document.getElementById('summary-fee').innerText = data.fee.toLocaleString();
             document.getElementById('delivery-fee-val').value = data.fee;
             updateTotal();
@@ -474,7 +408,6 @@
         document.getElementById('total-val').innerText = total.toLocaleString();
     }
 
-    // Validate form before submit - ensure location is set when delivery is selected
     document.getElementById('checkout-form').addEventListener('submit', function(e) {
         const type = document.querySelector('input[name="type_recuperation"]:checked').value;
         if (type === 'livraison') {
@@ -482,12 +415,7 @@
             const lng = document.getElementById('user-lng').value;
             if (!lat || !lng) {
                 e.preventDefault();
-                const msg = 'Veuillez indiquer votre position de livraison en cliquant sur "Prendre ma position GPS" ou en touchant la carte.';
-                if (typeof showToast === 'function') {
-                    showToast(msg, 'error');
-                } else {
-                    alert(msg);
-                }
+                if (window.showToast) showToast('Veuillez indiquer votre position sur la carte.', 'error');
                 return false;
             }
         }
