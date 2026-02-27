@@ -108,15 +108,20 @@
     /* Custom Markers */
     .vendor-marker { 
         background: #f97316; 
-        border: 3px solid white; 
-        border-radius: 50%; 
-        width: 44px; 
-        height: 44px; 
+        border: 2px solid white; 
+        border-radius: 20px 20px 20px 0;
+        width: 38px; 
+        height: 38px; 
         display: flex; 
         align-items: center; 
         justify-content: center; 
-        box-shadow: 0 8px 16px rgba(249, 115, 22, 0.3); 
-        font-size: 20px; 
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4); 
+        font-size: 16px; 
+        transform: rotate(-45deg);
+        margin-top: -19px;
+    }
+    .vendor-marker-inner {
+        transform: rotate(45deg);
     }
     
     .user-marker { 
@@ -126,11 +131,11 @@
     @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(2); opacity: 0; } }
 
     /* Popup Style */
-    .leaflet-popup-content-wrapper { border-radius: 24px; padding: 0; overflow: hidden; }
-    .leaflet-popup-content { margin: 0 !important; width: 260px !important; }
-    .popup-img { width: 100%; height: 140px; object-fit: cover; }
-    .popup-info { padding: 16px; }
-    .popup-btn { display: block; width: 100%; padding: 10px; background: #f97316; color: white; text-align: center; border-radius: 12px; font-weight: 800; font-size: 12px; margin-top: 12px; }
+    .leaflet-popup-content-wrapper { border-radius: 24px; padding: 0; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+    .leaflet-popup-content { margin: 0 !important; width: 300px !important; }
+    .popup-info { padding: 0; }
+    .popup-btn { display: inline-block; padding: 6px 12px; background: #111827; color: white; text-align: center; border-radius: 10px; font-weight: 900; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 8px; }
+    .dark .popup-btn { background: white; color: #111827; }
 
     /* Desktop Adjustments for Bottom Nav */
     @media (max-width: 1023px) {
@@ -377,9 +382,9 @@
                 data.vendors.forEach(v => {
                     const icon = L.divIcon({
                         className: 'vendor-marker-wrapper',
-                        html: `<div class="vendor-marker">🛍️</div>`,
-                        iconSize: [44, 44],
-                        iconAnchor: [22, 22]
+                        html: `<div class="vendor-marker"><div class="vendor-marker-inner">🛍️</div></div>`,
+                        iconSize: [38, 38],
+                        iconAnchor: [19, 38]
                     });
 
                     // Prendre les 6 premières spécialités
@@ -387,30 +392,28 @@
                     const specialtiesHtml = specialties.map(s => `<span class="specialty-tag">${s}</span>`).join('');
 
                     const popupHtml = `
-                        <div class="leaflet-popup-card group">
-                            <a href="${v.url}" class="block no-underline">
-                                ${v.image_full 
-                                    ? `<img src="${v.image_full}" class="popup-img" onerror="this.src='/images/default-vendor.jpg'">`
-                                    : `<div class="w-full h-[140px] bg-orange-50 flex items-center justify-center text-4xl">🛍️</div>`
-                                }
-                                <div class="popup-info">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <div class="text-sm font-black text-gray-900 group-hover:text-orange-600 transition-colors">${v.nom}</div>
-                                        <div class="text-[10px] font-black text-orange-600">★ ${v.note_moyenne || '5.0'}</div>
+                        <div class="leaflet-popup-card group p-3">
+                            <a href="${v.url}" class="flex items-center gap-4 no-underline">
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <div class="text-[10px] font-black text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-md">★ ${v.note_moyenne || '5.0'}</div>
+                                        <div class="text-[9px] font-bold text-gray-400">📍 ${v.distance_text}</div>
                                     </div>
                                     
-                                    <div class="flex items-center gap-2 text-[9px] font-bold text-gray-500 mb-3 uppercase tracking-wider">
-                                        <span>📍 ${v.distance_text}</span>
-                                        <span>•</span>
-                                        <span>${v.category}</span>
-                                    </div>
-
-                                    <div class="mb-3 flex flex-wrap">
+                                    <h4 class="text-sm font-black text-gray-900 group-hover:text-orange-600 transition-colors uppercase truncate mb-2">${v.nom}</h4>
+                                    
+                                    <div class="flex flex-wrap gap-1 mb-2">
                                         ${specialtiesHtml}
-                                        ${v.specialties.length > 6 ? `<span class="text-[8px] font-bold text-gray-400">...</span>` : ''}
                                     </div>
 
-                                    <div class="popup-btn no-underline">COMMANDER ICI</div>
+                                    <div class="popup-btn">Voir la boutique</div>
+                                </div>
+
+                                <div class="shrink-0 w-24 h-24 rounded-2xl overflow-hidden shadow-lg shadow-black/5 border border-gray-100">
+                                    ${v.image_full 
+                                        ? `<img src="${v.image_full}" class="w-full h-full object-cover" onerror="this.src='/images/default-vendor.jpg'">`
+                                        : `<div class="w-full h-full bg-orange-50 flex items-center justify-center text-2xl">🛍️</div>`
+                                    }
                                 </div>
                             </a>
                         </div>
