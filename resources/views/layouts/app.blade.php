@@ -1052,8 +1052,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Bottom Safe Area Padding -->
-    <div class="lg:hidden h-24"></div>
 
     <style>
         /* iOS Safe Area Support */

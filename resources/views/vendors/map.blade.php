@@ -31,15 +31,20 @@
     /* Floating UI - Matching Driver Map Style */
     .status-overlay {
         position: absolute; 
-        top: 20px; 
-        right: 20px; 
-        left: 20px;
-        z-index: 1000;
+        top: 16px; 
+        right: 16px; 
+        left: 16px;
+        z-index: 40;
         pointer-events: none;
     }
 
     @media (min-width: 640px) {
-        .status-overlay { left: auto; width: 320px; }
+        .status-overlay { 
+            top: 20px;
+            right: 20px;
+            left: auto; 
+            width: 320px; 
+        }
     }
 
     .glass-panel {
@@ -47,10 +52,17 @@
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 24px;
+        border-radius: 20px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
         pointer-events: auto;
-        padding: 20px;
+        padding: 16px; /* Reduced from 20px for mobile */
+    }
+
+    @media (min-width: 640px) {
+        .glass-panel {
+            border-radius: 24px;
+            padding: 20px;
+        }
     }
 
     /* Radius Selection */
@@ -197,10 +209,10 @@
     </div>
 
     <!-- Moving Loader to a small indicator -->
-    <div id="loader" class="absolute top-24 left-1/2 -translate-x-1/2 z-[2000] hidden">
-        <div class="bg-gray-900/80 backdrop-blur-md px-6 py-3 rounded-2xl flex items-center gap-3 shadow-2xl border border-white/10">
-            <div class="spinner w-4 h-4 border-2 border-white/20 border-top-white animate-spin rounded-full"></div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-white">Recherche...</p>
+    <div id="loader" class="absolute top-24 left-1/2 -translate-x-1/2 z-45 hidden">
+        <div class="bg-gray-900/80 backdrop-blur-md px-5 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl border border-white/10">
+            <div class="spinner w-3.3 h-3.3 border-2 border-white/20 border-t-white animate-spin rounded-full"></div>
+            <p class="text-[9px] font-black uppercase tracking-widest text-white">Recherche...</p>
         </div>
     </div>
 </div>
