@@ -81,7 +81,7 @@
     @if($commande->type_recuperation == 'livraison')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <section class="block px-4 mb-4" id="order-map-mobile-container">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-50 dark:border-slate-800/50 flex items-center justify-between bg-white/50 dark:bg-slate-900/50">
                 <div>
                     <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block mb-0.5">Itinéraire Livraison</span>
@@ -248,7 +248,7 @@
 
                 <!-- Tracking Map (Desktop) -->
                 @if($commande->type_recuperation == 'livraison')
-                <div id="order-map-desktop-container" class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-700">
+                <div id="order-map-desktop-container" class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-700">
                      <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-900/30">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white dark:bg-gray-800 text-orange-600 rounded-2xl shadow-sm flex items-center justify-center border border-gray-100 dark:border-gray-700">

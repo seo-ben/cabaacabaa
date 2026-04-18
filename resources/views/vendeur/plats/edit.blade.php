@@ -25,11 +25,11 @@
         {{-- ───────────────────────────────────────
              Section 1 : IMAGE (Visuel)
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-5 h-5 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 text-[10px] font-black">1</span>
-                    Photo de l'article
+                    <span class="w-5 h-5 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-green-400 text-[10px] font-black">1</span>
+                    Photo principale
                 </h2>
             </div>
             <div class="p-5" x-data="{ photoPreview: '{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : '' }}' }">
@@ -65,10 +65,72 @@
             </div>
         </div>
 
+        {{-- Galerie Photos & Vidéo (Premium) --}}
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4 {{ !Auth::user()->vendeur->canUseGallery() ? 'opacity-60 cursor-not-allowed grayscale' : '' }}">
+            <div class="p-5 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
+                <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.53 4.47a1 1 0 10-1.42 1.44 6 6 0 008.38 0 1 1 0 00-1.42-1.44 4 4 0 01-5.54 0z" clip-rule="evenodd"/></svg>
+                    Galerie & Vidéo
+                </h2>
+                @if(!Auth::user()->vendeur->canUseGallery())
+                    <span class="px-2 py-0.5 bg-gray-900 text-white text-[8px] font-black uppercase rounded-lg">Premium</span>
+                @endif
+            </div>
+            
+            <div class="p-5 space-y-6">
+                @if(Auth::user()->vendeur->canUseGallery())
+                    {{-- Médias existants --}}
+                    @if($plat->medias->count() > 0)
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                            @foreach($plat->medias as $media)
+                                <div class="relative aspect-square rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 group">
+                                    @if($media->type === 'image')
+                                        <img src="{{ asset('storage/' . $media->chemin) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path></svg>
+                                        </div>
+                                    @endif
+                                    <label class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                                        <input type="checkbox" name="remove_medias[]" value="{{ $media->id }}" class="sr-only peer">
+                                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-600 peer-checked:bg-red-600 peer-checked:text-white transition-colors shadow-lg">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </div>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        <p class="text-[8px] text-red-400 font-bold uppercase italic">Cochez une image (au survol) pour la supprimer lors de l'enregistrement.</p>
+                    @endif
+
+                    <div class="pt-4 border-t border-gray-50 dark:border-gray-800 space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Ajouter des photos</label>
+                            <input type="file" name="gallery[]" multiple accept="image/*"
+                                   class="w-full text-[10px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-red-50 file:text-red-600 hover:file:bg-red-100">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Vidéo de présentation (URL)</label>
+                            @php $video = $plat->medias->where('type', 'video')->first(); @endphp
+                            <input type="url" name="video_url" value="{{ $video ? $video->chemin : '' }}" placeholder="Lien YouTube, TikTok ou MP4..."
+                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-[11px] font-bold focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all">
+                        </div>
+                    </div>
+                @else
+                    <div class="py-4 text-center">
+                        <p class="text-[10px] font-black text-gray-400 uppercase leading-relaxed">
+                            Passez à l'abonnement <span class="text-orange-500 font-black">Standard</span> ou <span class="text-orange-500 font-black">Premium</span><br>
+                            pour ajouter plusieurs photos et des vidéos à vos produits.
+                        </p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
         {{-- ─────────────────────────────────────────
              Section 2 : STATUT & VISIBILITÉ
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-green-50 dark:bg-green-900/30 rounded-lg flex items-center justify-center text-green-600 dark:text-green-400 text-[10px] font-black">2</span>
@@ -119,7 +181,7 @@
         {{-- ─────────────────────────────────────────
              Section 3 : INFOS PRINCIPALES
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-orange-50 dark:bg-orange-900/30 rounded-lg flex items-center justify-center text-orange-600 dark:text-orange-400 text-[10px] font-black">3</span>
@@ -167,7 +229,7 @@
         {{-- ─────────────────────────────────────────
              Section 4 : OPTIONS & SUPPLÉMENTS
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-[10px] font-black">4</span>
@@ -260,7 +322,7 @@
              Boutons ACTION fixe en bas sur mobile
         ──────────────────────────────────────────── --}}
         <div class="sticky bottom-20 lg:bottom-0 lg:static mt-4 mb-2">
-            <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md rounded-3xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-black/10 p-4 flex gap-3">
+            <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-black/10 p-4 flex gap-3">
                 <a href="{{ vendor_route('vendeur.slug.plats.index') }}"
                    class="flex-shrink-0 px-5 py-3.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">
                     Annuler

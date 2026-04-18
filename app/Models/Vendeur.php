@@ -43,6 +43,10 @@ class Vendeur extends Model
         'id_category_vendeur',
         'is_boosted',
         'boost_expires_at',
+        'subscription_plan_id',
+        'trial_ends_at',
+        'subscription_expires_at',
+        'trial_used',
         'actif',
         'is_busy',
         'delivery_rate_per_km'
@@ -53,7 +57,64 @@ class Vendeur extends Model
         'images_galerie' => 'array',
         'date_inscription' => 'datetime',
         'date_verification' => 'datetime',
+        'boost_expires_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'subscription_expires_at' => 'datetime',
+        'trial_used' => 'boolean',
     ];
+
+    public function plan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
+    }
+
+    /**
+     * Get the limit for products (plats) based on the plan.
+     */
+    public function getPlatLimit()
+    {
+        return $this->plan ? $this->plan->product_limit : 5;
+    }
+
+    /**
+     * Get the limit for staff members based on the plan.
+     */
+    public function getStaffLimit()
+    {
+        return $this->plan ? $this->plan->staff_limit : 1;
+    }
+
+    /**
+     * Get the limit for active coupons based on the plan.
+     */
+    public function getCouponLimit()
+    {
+        return $this->plan ? $this->plan->coupon_limit : 0;
+    }
+
+    /**
+     * Check if the vendor can use galleries.
+     */
+    public function canUseGallery()
+    {
+        return $this->plan ? $this->plan->has_gallery : false;
+    }
+
+    /**
+     * Check if the vendor can use social links.
+     */
+    public function canUseSocials()
+    {
+        return $this->plan ? $this->plan->has_socials : false;
+    }
+
+    /**
+     * Check if the vendor can recruit drivers.
+     */
+    public function canRecruitDrivers()
+    {
+        return $this->plan ? $this->plan->can_recruit_drivers : false;
+    }
 
     protected static function boot()
     {
@@ -62,6 +123,20 @@ class Vendeur extends Model
         static::creating(function ($vendeur) {
             if (empty($vendeur->slug)) {
                 $vendeur->slug = Str::slug($vendeur->nom_commercial);
+            }
+            
+            // Logic for first registration (Trial + Boost)
+            if (!$vendeur->trial_used) {
+                $vendeur->is_boosted = true;
+                $vendeur->boost_expires_at = now()->addDays(15);
+                $vendeur->trial_ends_at = now()->addMonth();
+                $vendeur->trial_used = true; // Mark that trial is assigned
+                
+                // Assign Free Plan ID (price = 0)
+                $freePlan = \App\Models\SubscriptionPlan::where('price', 0)->first();
+                if ($freePlan) {
+                    $vendeur->subscription_plan_id = $freePlan->id;
+                }
             }
         });
 

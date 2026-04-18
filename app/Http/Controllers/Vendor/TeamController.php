@@ -36,6 +36,12 @@ class TeamController extends Controller
             'role_name' => 'required|string|max:50',
         ]);
 
+        // Vérification de la limite de l'équipe (Staff)
+        $currentStaffCount = $vendor->staff()->count();
+        if ($currentStaffCount >= $vendor->getStaffLimit()) {
+            return back()->with('error', 'Vous avez atteint la limite de ' . $vendor->getStaffLimit() . ' membres pour votre équipe. Passez au niveau supérieur pour agrandir votre équipe !')->withInput();
+        }
+
         // Create User
         $user = \App\Models\User::create([
             'name' => $validated['name'],

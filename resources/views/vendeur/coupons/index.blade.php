@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-8" x-data="{ showModal: false }">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-gray-900 p-8 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
         <div>
             <h1 class="text-3xl font-display font-black text-gray-900 dark:text-white tracking-tighter">Coupons & Promos</h1>
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Créez des offres pour booster vos ventes</p>
@@ -19,7 +19,7 @@
     <!-- Coupons Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($coupons as $coupon)
-        <div class="bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 p-8 relative overflow-hidden group transition-all hover:border-red-100 dark:hover:border-red-900/30 shadow-sm">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-8 relative overflow-hidden group transition-all hover:border-red-100 dark:hover:border-red-900/30 shadow-sm">
             <!-- Background Accent -->
             <div class="absolute -top-12 -right-12 w-24 h-24 bg-red-50 dark:bg-red-900/10 rounded-full blur-2xl group-hover:bg-red-100 dark:group-hover:bg-red-900/20 transition-all"></div>
             
@@ -74,8 +74,8 @@
             </div>
         </div>
         @empty
-        <div class="col-span-full bg-white dark:bg-gray-900 rounded-[2.5rem] p-24 text-center border border-gray-100 dark:border-gray-800 shadow-sm">
-            <div class="w-24 h-24 bg-gray-50 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-gray-100 dark:border-gray-700">
+        <div class="col-span-full bg-white dark:bg-gray-900 rounded-2xl p-24 text-center border border-gray-100 dark:border-gray-800 shadow-sm">
+            <div class="w-24 h-24 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-8 border border-gray-100 dark:border-gray-700">
                 <svg class="w-12 h-12 text-gray-200 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
             </div>
             <h2 class="text-2xl font-display font-black text-gray-900 dark:text-white mb-2 tracking-tight">Aucun coupon actif</h2>
@@ -91,7 +91,7 @@
 
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-            <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block align-bottom bg-white dark:bg-gray-900 rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-gray-100 dark:border-gray-800 p-10">
+            <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block align-bottom bg-white dark:bg-gray-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-gray-100 dark:border-gray-800 p-10">
                 <div class="flex justify-between items-center mb-10">
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white tracking-tighter">Nouveau Coupon</h3>
                     <button @click="showModal = false" class="p-2 bg-gray-50 dark:bg-gray-800 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">

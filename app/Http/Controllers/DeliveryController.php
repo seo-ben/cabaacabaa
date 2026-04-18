@@ -87,6 +87,12 @@ class DeliveryController extends Controller
     public function vendorIndex($vendor_slug)
     {
         $vendeur = Auth::user()->vendeur;
+
+        if (!$vendeur->canRecruitDrivers()) {
+            return redirect()->route('vendeur.slug.dashboard', ['vendor_slug' => $vendor_slug])
+                ->with('error', 'Le recrutement de livreurs est réservé aux abonnements Standard (15 000 FCFA) et Premium.');
+        }
+
         $activeRequest = DeliveryRequest::where('id_vendeur', $vendeur->id_vendeur)
             ->where('status', 'open')
             ->first();
@@ -114,6 +120,10 @@ class DeliveryController extends Controller
     public function storeRequest(Request $request, $vendor_slug)
     {
         $vendeur = Auth::user()->vendeur;
+
+        if (!$vendeur->canRecruitDrivers()) {
+            return back()->with('error', 'Action non autorisée sur votre plan actuel.');
+        }
         
         $deliveryRequest = DeliveryRequest::updateOrCreate(
             ['id_vendeur' => $vendeur->id_vendeur, 'status' => 'open'],

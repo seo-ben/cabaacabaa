@@ -36,7 +36,7 @@
                     x-transition:enter-end="opacity-100 translate-y-0"
                     class="space-y-8">
                     
-                    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-4">
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
                         <div class="mb-6 flex items-center gap-4">
                             @php
                                 $icons = [
@@ -67,7 +67,7 @@
                                         <textarea name="{{ $setting->key }}" id="{{ $setting->key }}" rows="4" 
                                             class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none shadow-sm">{{ $setting->value }}</textarea>
                                     @elseif($setting->type === 'image')
-                                        <div class="flex flex-col md:flex-row items-center gap-4 p-4 bg-gray-50 rounded-[2rem] border-2 border-dashed border-gray-200 hover:border-red-200 transition-all">
+                                        <div class="flex flex-col md:flex-row items-center gap-4 p-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 hover:border-red-200 transition-all">
                                             <div class="w-32 h-32 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-gray-100 shadow-sm">
                                                 @if($setting->value)
                                                     <img src="{{ asset('storage/' . $setting->value) }}" class="w-full h-full object-contain p-2">
@@ -103,7 +103,7 @@
                 @endforeach
 
                 <div class="flex justify-end mt-6">
-                    <button type="submit" class="px-10 py-5 bg-gray-900 text-white rounded-[2rem] text-sm font-black uppercase tracking-widest hover:bg-black transition-all shadow-2xl active:scale-95 flex items-center gap-4">
+                    <button type="submit" class="px-10 py-5 bg-gray-900 text-white rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-black transition-all shadow-2xl active:scale-95 flex items-center gap-4">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                         Enregistrer ces paramètres
                     </button>

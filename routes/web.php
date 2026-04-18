@@ -45,7 +45,7 @@ Route::get('/storage/{path}', function ($path) {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
 Route::get('/produits', [HomeController::class, 'explorePlats'])->name('explore.plats');
-Route::get('/vendor/{id}-{slug?}', [HomeController::class, 'vendor'])->name('vendor.show');
+Route::get('/vendor/{id}-{slug?}', [HomeController::class, 'vendor'])->name('vendor.show')->where('id', '[0-9]+');
 
 // Static pages
 Route::get('/conditions-utilisation', [HomeController::class, 'terms'])->name('terms');
@@ -269,6 +269,16 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
     Route::post('/vendors/{id}/suspend', [VendorController::class, 'suspend'])->name('admin.vendors.suspend');
     Route::post('/vendors/{id}/unsuspend', [VendorController::class, 'unsuspend'])->name('admin.vendors.unsuspend');
 
+    // Subscriptions management
+    Route::resource('subscriptions', \App\Http\Controllers\Admin\SubscriptionPlanController::class)->except(['show'])->names([
+        'index' => 'admin.subscriptions.index',
+        'create' => 'admin.subscriptions.create',
+        'store' => 'admin.subscriptions.store',
+        'edit' => 'admin.subscriptions.edit',
+        'update' => 'admin.subscriptions.update',
+        'destroy' => 'admin.subscriptions.destroy',
+    ]);
+
     // Zones management
     Route::resource('/zones', \App\Http\Controllers\Admin\ZoneController::class, [
         'names' => [
@@ -318,6 +328,8 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdm
     Route::resource('produits', \App\Http\Controllers\Admin\PlatController::class, [
         'names' => [
             'index' => 'admin.plats.index',
+            'create' => 'admin.plats.create',
+            'store' => 'admin.plats.store',
             'show' => 'admin.plats.show',
             'edit' => 'admin.plats.edit',
             'update' => 'admin.plats.update',

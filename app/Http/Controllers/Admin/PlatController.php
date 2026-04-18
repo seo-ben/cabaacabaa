@@ -79,6 +79,47 @@ class PlatController extends Controller
     }
 
     /**
+     * Formulaire d'ajout d'un produit (Admin)
+     */
+    public function create()
+    {
+        $categories = CategoryPlat::orderBy('nom_categorie')->get();
+        $vendors = Vendeur::orderBy('nom_commercial')->get(['id_vendeur', 'nom_commercial']);
+        
+        return view('admin.plats.create', compact('categories', 'vendors'));
+    }
+
+    /**
+     * Enregistrer un nouveau produit
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'id_vendeur' => 'required|exists:vendeurs,id_vendeur',
+            'id_categorie' => 'required|exists:categories_plats,id_categorie',
+            'nom_plat' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'prix' => 'required|numeric|min:0',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $plat = new Plat($validated);
+        
+        if ($request->hasFile('image')) {
+            // Utiliser le helper s'il existe ou une méthode standard
+            if (class_exists('\App\Helpers\ImageHelper')) {
+                $plat->image_principale = \App\Helpers\ImageHelper::uploadAndConvert($request->file('image'), 'plats', 80, 1200, true);
+            } else {
+                $plat->image_principale = $request->file('image')->store('plats', 'public');
+            }
+        }
+
+        $plat->save();
+
+        return redirect()->route('admin.plats.index')->with('success', 'Le produit a été créé avec succès.');
+    }
+
+    /**
      * Supprimer un produit (Action admin)
      */
     public function destroy($id)

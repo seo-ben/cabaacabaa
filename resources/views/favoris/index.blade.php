@@ -31,7 +31,7 @@
 
         @if($favoris->count() === 0)
             {{-- Empty state --}}
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-10 text-center border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-10 text-center border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
                 <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-pink-300 dark:text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                 </div>
@@ -46,7 +46,7 @@
         @else
             @foreach($favoris as $favori)
                 @if($favori->vendeur)
-                <div class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden fav-card" data-id="{{ $favori->vendeur->id_vendeur }}">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden fav-card" data-id="{{ $favori->vendeur->id_vendeur }}">
 
                     {{-- Cover image --}}
                     <div class="relative h-32 bg-gray-100 dark:bg-slate-800 overflow-hidden">
@@ -128,9 +128,9 @@
 {{-- DESKTOP --}}
 <div class="hidden lg:block max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-12">
     <div class="space-y-12">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-gray-900 rounded-[2.5rem] p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
             <div class="flex items-center gap-6">
-                <div class="w-20 h-20 bg-gradient-to-br from-pink-600 to-red-500 rounded-[1.5rem] flex items-center justify-center text-white text-3xl shadow-xl shadow-pink-200 dark:shadow-pink-900/20">
+                <div class="w-20 h-20 bg-gradient-to-br from-pink-600 to-red-500 rounded-2xl flex items-center justify-center text-white text-3xl shadow-xl shadow-pink-200 dark:shadow-pink-900/20">
                     <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 </div>
                 <div>
@@ -145,7 +145,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @foreach($favoris as $favori)
                 @if($favori->vendeur)
-                <div class="group bg-white dark:bg-gray-900 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 fav-card" data-id="{{ $favori->vendeur->id_vendeur }}">
+                <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 fav-card" data-id="{{ $favori->vendeur->id_vendeur }}">
                     <div class="relative h-48 bg-gray-100 dark:bg-gray-800 overflow-hidden">
                         @if($favori->vendeur->photo_couverture)
                             <img src="{{ asset('storage/' . $favori->vendeur->photo_couverture) }}" alt="{{ $favori->vendeur->nom_boutique }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -190,8 +190,8 @@
             @endforeach
         </div>
         @else
-        <div class="bg-white dark:bg-gray-900 rounded-[3rem] p-20 border border-gray-100 dark:border-gray-800 shadow-sm text-center">
-            <div class="w-24 h-24 bg-pink-50 dark:bg-pink-900/20 rounded-3xl flex items-center justify-center mx-auto mb-8"><svg class="w-12 h-12 text-pink-300 dark:text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-20 border border-gray-100 dark:border-gray-800 shadow-sm text-center">
+            <div class="w-24 h-24 bg-pink-50 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center mx-auto mb-8"><svg class="w-12 h-12 text-pink-300 dark:text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
             <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Aucun favori pour le moment</h2>
             <p class="text-gray-400 dark:text-gray-500 font-medium mb-8 max-w-md mx-auto">Explorez nos vendeurs et ajoutez vos préférés en cliquant sur le cœur.</p>
             <a href="{{ route('explore') }}" class="inline-block px-10 py-5 bg-pink-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-pink-700 transition-all shadow-xl shadow-pink-600/20 active:scale-95">Découvrir les vendeurs</a>

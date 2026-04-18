@@ -61,6 +61,11 @@ class ZoneController extends Controller
             $message = 'Zone créée avec succès.';
         }
 
+        // Mapping pour compatibilité avec l'ancien schéma de base de données
+        $validated['nom_zone'] = $validated['nom'];
+        $validated['latitude_centre'] = $validated['latitude'] ?? 0;
+        $validated['longitude_centre'] = $validated['longitude'] ?? 0;
+
         ZoneGeographique::create($validated);
 
         return redirect()->route('admin.zones.index')
@@ -120,9 +125,12 @@ class ZoneController extends Controller
                 $validated['longitude'] = $zone->longitude;
             }
             $message = 'Zone mise à jour avec succès.';
-        } else {
-            $message = 'Zone mise à jour avec succès.';
         }
+
+        // Mapping pour compatibilité avec l'ancien schéma de base de données
+        $validated['nom_zone'] = $validated['nom'];
+        $validated['latitude_centre'] = $validated['latitude'] ?? $zone->latitude_centre;
+        $validated['longitude_centre'] = $validated['longitude'] ?? $zone->longitude_centre;
 
         $zone->update($validated);
 
@@ -303,11 +311,15 @@ class ZoneController extends Controller
         $encodedSearch = urlencode($search);
 
         try {
-            $response = @file_get_contents(
-                "https://nominatim.openstreetmap.org/search?q={$encodedSearch}&format=json&limit=5&timeout=10"
-            );
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'User-Agent' => 'CabaaCabaa-App/1.0 (contact@cabaacabaa.com)'
+            ])->withoutVerifying()->timeout(10)->get("https://nominatim.openstreetmap.org/search", [
+                'q' => $search,
+                'format' => 'json',
+                'limit' => 5
+            ]);
 
-            if ($response === false) {
+            if ($response->failed()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Impossible de chercher les coordonnées. Service indisponible.',
@@ -315,7 +327,7 @@ class ZoneController extends Controller
                 ], 503);
             }
 
-            $data = json_decode($response, true);
+            $data = $response->json();
 
             if (empty($data)) {
                 return response()->json([
@@ -367,21 +379,22 @@ class ZoneController extends Controller
             $encodedAddress = urlencode($searchTerm);
 
             try {
-                $response = @file_get_contents(
-                    "https://nominatim.openstreetmap.org/search?q={$encodedAddress}&format=json&limit=1&timeout=10"
-                );
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'User-Agent' => 'CabaaCabaa-App/1.0 (contact@cabaacabaa.com)'
+                ])->withoutVerifying()->timeout(10)->get("https://nominatim.openstreetmap.org/search", [
+                    'q' => $searchTerm,
+                    'format' => 'json',
+                    'limit' => 1
+                ]);
 
-                if ($response === false) {
-                    continue; // Essayer la variante suivante
-                }
-
-                $data = json_decode($response, true);
-
-                if (!empty($data) && isset($data[0]['lat'], $data[0]['lon'])) {
-                    return [
-                        'latitude' => (float) $data[0]['lat'],
-                        'longitude' => (float) $data[0]['lon'],
-                    ];
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (!empty($data) && isset($data[0]['lat'], $data[0]['lon'])) {
+                        return [
+                            'latitude' => (float) $data[0]['lat'],
+                            'longitude' => (float) $data[0]['lon'],
+                        ];
+                    }
                 }
             } catch (\Exception $e) {
                 // Log et essayer la variante suivante

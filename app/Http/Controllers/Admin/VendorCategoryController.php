@@ -11,7 +11,7 @@ class VendorCategoryController extends Controller
 {
     public function index()
     {
-        $categories = VendorCategory::latest()->get();
+        $categories = VendorCategory::withCount('vendeurs')->with('vendeurs')->latest()->get();
         return view('admin.vendor_categories.index', compact('categories'));
     }
 

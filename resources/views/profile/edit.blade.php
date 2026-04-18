@@ -158,7 +158,7 @@
                     <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
                     <h2 class="text-xl font-black text-gray-900 dark:text-white">Informations Générales</h2>
                 </div>
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-900 rounded-[2rem] p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
                     @csrf @method('PATCH')
                     <div class="flex items-center gap-6">
                         <div class="relative group">
@@ -186,7 +186,7 @@
                     <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
                     <h2 class="text-xl font-black text-gray-900 dark:text-white">Sécurité</h2>
                 </div>
-                <form action="{{ route('password.update') }}" method="POST" class="bg-white dark:bg-gray-900 rounded-[2rem] p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
+                <form action="{{ route('password.update') }}" method="POST" class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
                     @csrf @method('PUT')
                     <div class="space-y-4">
                         <div class="space-y-2"><label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Mot de passe actuel</label><input type="password" name="current_password" class="w-full px-5 py-3 bg-gray-50 dark:bg-gray-800 border border-transparent rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 outline-none"></div>

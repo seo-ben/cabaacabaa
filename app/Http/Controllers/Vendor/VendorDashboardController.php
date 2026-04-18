@@ -47,13 +47,33 @@ class VendorDashboardController extends Controller
         // Vérifier si le vendeur a configuré ses spécialités
         $hasCategories = $vendeur->categories()->exists();
 
+        // Statistiques d'utilisation de l'abonnement
+        $usage = [
+            'plats' => [
+                'used' => $totalPlats,
+                'limit' => $vendeur->getPlatLimit(),
+                'percent' => $vendeur->getPlatLimit() > 0 ? min(100, ($totalPlats / $vendeur->getPlatLimit()) * 100) : 100
+            ],
+            'staff' => [
+                'used' => $vendeur->staff()->count(),
+                'limit' => $vendeur->getStaffLimit(),
+                'percent' => $vendeur->getStaffLimit() > 0 ? min(100, ($vendeur->staff()->count() / $vendeur->getStaffLimit()) * 100) : 100
+            ],
+            'coupons' => [
+                'used' => $vendeur->coupons()->count(),
+                'limit' => $vendeur->getCouponLimit(),
+                'percent' => $vendeur->getCouponLimit() > 0 ? min(100, ($vendeur->coupons()->count() / $vendeur->getCouponLimit()) * 100) : 100
+            ]
+        ];
+
         return view('vendeur.dashboard', compact(
             'vendeur',
             'totalSales',
             'activeOrders',
             'totalPlats',
             'recentOrders',
-            'hasCategories'
+            'hasCategories',
+            'usage'
         ));
     }
 }

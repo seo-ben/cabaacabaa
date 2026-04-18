@@ -10,7 +10,7 @@
         </div>
 
         <!-- Content -->
-        <div class="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-slate-100 prose prose-slate max-w-none">
+        <div class="bg-white rounded-2xl p-8 sm:p-12 shadow-sm border border-slate-100 prose prose-slate max-w-none">
             <div class="space-y-12">
                 <section>
                     <h2 class="text-2xl font-bold text-slate-900 mb-4">Collecte des informations</h2>

@@ -56,7 +56,7 @@
 
         @if($deliveries->isEmpty())
             {{-- Empty state --}}
-            <div class="bg-white dark:bg-slate-900 rounded-3xl p-10 text-center border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-10 text-center border border-gray-100 dark:border-slate-800 shadow-sm mt-4">
                 <div class="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                 </div>
@@ -71,7 +71,7 @@
         @else
             @foreach($deliveries as $commande)
             {{-- Delivery Card --}}
-            <div class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
 
                 {{-- Card Header --}}
                 <div class="flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-50 dark:border-slate-800">
@@ -211,8 +211,8 @@
         </div>
 
         @if($deliveries->isEmpty())
-            <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-16 text-center shadow-xl border border-gray-100 dark:border-gray-800">
-                <div class="w-24 h-24 bg-red-50 dark:bg-red-900/20 rounded-3xl flex items-center justify-center mx-auto mb-8 text-red-600">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-16 text-center shadow-xl border border-gray-100 dark:border-gray-800">
+                <div class="w-24 h-24 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-8 text-red-600">
                     <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 </div>
                 <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Aucune livraison en cours</h3>
@@ -224,7 +224,7 @@
         @else
             <div class="space-y-6">
                 @foreach($deliveries as $commande)
-                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-8 shadow-xl border border-gray-100 dark:border-gray-800 flex flex-col lg:flex-row gap-8 items-start lg:items-center">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border border-gray-100 dark:border-gray-800 flex flex-col lg:flex-row gap-8 items-start lg:items-center">
                         <div class="shrink-0">
                             <div class="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>

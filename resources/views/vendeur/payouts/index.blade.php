@@ -8,7 +8,7 @@
     
     <!-- Wallet Overview -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="md:col-span-2 bg-gray-900 dark:bg-gray-900/50 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-10 p-10 text-white shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-800 transition-colors">
+        <div class="md:col-span-2 bg-gray-900 dark:bg-gray-900/50 rounded-2xl flex flex-col md:flex-row items-center gap-10 p-10 text-white shadow-2xl shadow-gray-200 dark:shadow-none border border-transparent dark:border-gray-800 transition-colors">
             <div class="flex-1 space-y-4 text-center md:text-left">
                 <p class="text-[11px] font-black uppercase tracking-[0.3em] opacity-40">Solde Disponible</p>
                 <h3 class="text-5xl font-black tracking-tighter text-orange-400">{{ number_format($vendeur->wallet_balance, 0) }} <small class="text-xl">FCFA</small></h3>
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-center space-y-6 transition-colors">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-center space-y-6 transition-colors">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Payout Requests History -->
-    <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
         <div class="flex items-center justify-between mb-10">
             <div>
                 <h3 class="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Historique des Retraits</h3>
@@ -112,7 +112,7 @@
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity bg-black/60 backdrop-blur-sm" onclick="document.getElementById('payoutModal').classList.add('hidden')"></div>
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-        <div class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 dark:border-gray-800">
+        <div class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 dark:border-gray-800">
             <div class="p-10">
                 <div class="flex items-center justify-between mb-10">
                     <div>
@@ -129,13 +129,13 @@
                     <div class="space-y-3">
                         <label class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Montant à retirer (FCFA)</label>
                         <input type="number" name="montant" min="5000" max="{{ $vendeur->wallet_balance }}" required
-                               class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-[1.5rem] text-sm font-black text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all">
+                               class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-2xl text-sm font-black text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all">
                     </div>
 
                     <div class="space-y-3">
                         <label class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Méthode de Paiement</label>
                         <select name="methode_paiement" required
-                                class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-[1.5rem] text-sm font-black text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all appearance-none">
+                                class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-2xl text-sm font-black text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all appearance-none">
                             <option value="momo">MTN Mobile Money</option>
                             <option value="flooz">Moov Money (Flooz)</option>
                             <option value="banque">Virement Bancaire</option>
@@ -146,7 +146,7 @@
                     <div class="space-y-3">
                         <label class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Informations de Paiement</label>
                         <textarea name="informations_paiement" rows="3" required placeholder="Ex: Numéro MoMo, Nom complet, Rib..."
-                                  class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-[1.5rem] text-sm font-bold text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all"></textarea>
+                                  class="w-full px-8 py-5 bg-gray-50 dark:bg-gray-800 border border-transparent dark:border-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-orange-500/10 transition-all"></textarea>
                     </div>
 
                     <div class="flex items-center gap-4 bg-orange-50 dark:bg-orange-900/10 p-6 rounded-2xl border border-orange-100 dark:border-orange-900/30">

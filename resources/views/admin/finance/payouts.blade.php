@@ -19,7 +19,7 @@
     </div>
 
     <!-- Payouts Table -->
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
@@ -91,7 +91,7 @@
 <!-- Approval Modal (Same as Index for Consistency) -->
 <div id="payoutModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePayoutModal()"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-4 overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl p-4 overflow-hidden">
         <div class="relative z-10">
             <h3 class="text-2xl font-black text-gray-900 tracking-tight mb-2">Traiter le Retrait</h3>
             <p id="modalVendeur" class="text-sm text-gray-500 mb-5 font-medium"></p>

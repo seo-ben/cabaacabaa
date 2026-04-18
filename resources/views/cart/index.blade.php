@@ -35,7 +35,7 @@
                     <div id="cart-item-{{ $id }}" class="py-8 first:pt-0 group">
                         <div class="flex gap-6">
                             <!-- Image -->
-                            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl overflow-hidden bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shrink-0">
+                            <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shrink-0">
                                 <img src="{{ isset($item['image']) && $item['image'] ? asset('storage/' . $item['image']) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200' }}" 
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
@@ -97,7 +97,7 @@
             <!-- Summary Sidebar -->
             <div class="lg:col-span-4">
                 <div class="sticky top-32 space-y-6">
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800 relative overflow-hidden">
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800 relative overflow-hidden">
                         
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-6">Détails de la commande</h3>
                         
@@ -130,7 +130,7 @@
                     </div>
 
                     <!-- Coupon Input -->
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800">
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800">
                         <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Code promo</h4>
                         @if(session()->has('coupon'))
                         <div class="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium">
@@ -152,7 +152,7 @@
         @else
         <!-- Empty State -->
         <div class="flex flex-col items-center justify-center py-16 text-center">
-            <div class="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-[2rem] flex items-center justify-center text-gray-200 dark:text-gray-700 mb-8 border border-gray-100 dark:border-gray-800">
+            <div class="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center text-gray-200 dark:text-gray-700 mb-8 border border-gray-100 dark:border-gray-800">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             </div>
             <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-4">Votre panier est vide</h2>

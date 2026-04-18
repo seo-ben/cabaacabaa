@@ -13,7 +13,7 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div class="px-10 py-5 border-b border-gray-50 bg-gray-50/20">
             <h1 class="text-2xl font-black text-gray-900 tracking-tight">Nouvelle Catégorie</h1>
             <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest mt-1">Définissez une spécialité globale</p>
@@ -38,13 +38,13 @@
             <div class="space-y-2">
                 <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Description (Optionnel)</label>
                 <textarea name="description" rows="3" placeholder="Brève description de ce type de cuisine..."
-                    class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-[2rem] font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none"></textarea>
+                    class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none"></textarea>
             </div>
 
             <!-- Image Upload Section -->
             <div class="space-y-4">
                 <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Image de la catégorie</label>
-                <div id="image-upload-zone" class="relative border-2 border-dashed border-gray-200 rounded-[2rem] p-5 text-center hover:border-red-400 transition-all cursor-pointer bg-gray-50/50">
+                <div id="image-upload-zone" class="relative border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center hover:border-red-400 transition-all cursor-pointer bg-gray-50/50">
                     <input type="file" name="image" id="image-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <div id="upload-placeholder" class="space-y-4">
                         <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center mx-auto">
@@ -80,11 +80,11 @@
             </div>
 
             <div class="flex gap-4 pt-6 border-t border-gray-50">
-                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
+                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Créer la Catégorie
                 </button>
-                <a href="{{ route('admin.categories.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-[2rem] font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center">
+                <a href="{{ route('admin.categories.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center">
                     Annuler
                 </a>
             </div>

@@ -45,7 +45,7 @@
             <div class="absolute bottom-8 right-8 w-20 h-20 bg-white/15 rounded-full"></div>
             {{-- Floating icon --}}
             <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 px-8 text-center">
-                <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
+                <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-2xl border border-white/30">
                     @if($siteLogo ?? false)
                         <img src="{{ $siteLogo }}" class="h-12 w-auto">
                     @else
@@ -60,7 +60,7 @@
         </div>
 
         {{-- ---- FORM CARD (appears as bottom-sheet on mobile) ---- --}}
-        <div class="lg:hidden flex-1 bg-white rounded-t-[2rem] -mt-6 relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
+        <div class="lg:hidden flex-1 bg-white rounded-t-2xl -mt-6 relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
             <div class="px-6 pt-6 pb-32">
                 {{-- Pull indicator --}}
                 <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
@@ -153,7 +153,7 @@
 
         {{-- ---- DESKTOP FORM CARD ---- --}}
         <div class="hidden lg:block w-full max-w-md">
-            <div class="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8">
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8">
                 <div class="mb-8">
                     <h2 class="text-3xl font-black text-gray-900 mb-2">Bon retour !</h2>
                     <p class="text-gray-500">Connectez-vous à votre compte</p>
@@ -202,7 +202,7 @@
          class="hidden lg:flex fixed inset-0 z-50 items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
          x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" @click.stop>
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" @click.stop>
             <div class="flex items-start gap-4">
                 <div class="shrink-0 w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center"><svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
                 <div class="flex-1">

@@ -8,7 +8,7 @@
     
     {{-- ── Statistics Summary ── --}}
     {{-- ── Filters, Stats & Search Bar ── --}}
-    <div class="bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-[2rem] sm:rounded-full border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
+    <div class="bg-white dark:bg-gray-900 p-2 sm:p-3 rounded-2xl sm:rounded-full border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
         {{-- Status Pills with Counts --}}
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full lg:w-auto px-1">
             <a href="{{ vendor_route('vendeur.slug.orders.index') }}" 
@@ -46,7 +46,7 @@
     </div>
 
     {{-- ── Desktop Table View ── --}}
-    <div class="hidden lg:block bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+    <div class="hidden lg:block bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -108,7 +108,7 @@
     {{-- ── Mobile/Tablet Card View ── --}}
     <div class="lg:hidden space-y-4">
         @forelse($orders as $order)
-            <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 sm:p-5 flex flex-col gap-4">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 sm:p-5 flex flex-col gap-4">
                 {{-- Header Card --}}
                 <div class="flex items-start justify-between">
                     <div class="flex items-center gap-3">
@@ -180,7 +180,7 @@
     </div>
 
     {{-- ── Pagination ── --}}
-    <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm">
+    <div class="flex justify-between items-center bg-white dark:bg-gray-900 p-4 sm:p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
         <p class="hidden sm:block text-[9px] font-black text-gray-400 uppercase tracking-widest">
             Affichage {{ $orders->firstItem() }}-{{ $orders->lastItem() }} sur {{ $orders->total() }}
         </p>

@@ -60,6 +60,12 @@ class PlatController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
 
+        // Vérification de la limite du plan d'abonnement
+        $platCount = $vendeur->plats()->count();
+        if ($platCount >= $vendeur->getPlatLimit()) {
+            return back()->with('error', 'Vous avez atteint la limite de ' . $vendeur->getPlatLimit() . ' articles pour votre plan actuel. Passez au niveau supérieur pour en ajouter plus !')->withInput();
+        }
+
         // Vérification de sécurité: la catégorie doit appartenir aux spécialités du vendeur
         if (!$vendeur->categories()->where('vendeur_categories.id_categorie', $validated['id_categorie'])->exists()) {
             return back()->withErrors(['id_categorie' => 'Cette catégorie ne fait pas partie de vos spécialités enregistrées.'])->withInput();
@@ -73,6 +79,31 @@ class PlatController extends Controller
         }
 
         $plat->save();
+
+        // Gestion de la galerie et vidéo (si le plan le permet)
+        if ($vendeur->canUseGallery()) {
+            // Galerie photos
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $image) {
+                    $path = ImageHelper::uploadAndConvert($image, 'plats_gallery', 80, 1200, true);
+                    $plat->medias()->create([
+                        'id_vendeur' => $vendeur->id_vendeur,
+                        'type' => 'image',
+                        'chemin' => $path
+                    ]);
+                }
+            }
+
+            // Vidéo (URL YouTube / MP4)
+            if ($request->filled('video_url')) {
+                $plat->medias()->create([
+                    'id_vendeur' => $vendeur->id_vendeur,
+                    'type' => 'video',
+                    'chemin' => $request->video_url,
+                    'titre' => 'Vidéo de présentation'
+                ]);
+            }
+        }
 
         // Ensure id_plat is available for relations
         if ($request->has('variants')) {
@@ -149,6 +180,36 @@ class PlatController extends Controller
         }
 
         $plat->save();
+
+        // Gestion de la galerie et vidéo (vendeur Premium/Standard)
+        if ($vendeur->canUseGallery()) {
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $image) {
+                    $path = ImageHelper::uploadAndConvert($image, 'plats_gallery', 80, 1200, true);
+                    $plat->medias()->create([
+                        'id_vendeur' => $vendeur->id_vendeur,
+                        'type' => 'image',
+                        'chemin' => $path
+                    ]);
+                }
+            }
+
+            if ($request->filled('video_url')) {
+                // Pour simplifier, on remplace la vidéo existante si une nouvelle URL est fournie
+                $plat->medias()->where('type', 'video')->delete();
+                $plat->medias()->create([
+                    'id_vendeur' => $vendeur->id_vendeur,
+                    'type' => 'video',
+                    'chemin' => $request->video_url,
+                    'titre' => 'Vidéo de présentation'
+                ]);
+            }
+
+            // Suppression de médias spécifiques (si demandé via AJAX/checkbox)
+            if ($request->has('remove_medias')) {
+                $plat->medias()->whereIn('id', $request->remove_medias)->delete();
+            }
+        }
 
         return redirect()->route('vendeur.slug.plats.index', ['vendor_slug' => $vendeur->slug])->with('success', 'Plat mis à jour !');
     }

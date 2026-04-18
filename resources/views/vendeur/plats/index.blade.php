@@ -23,8 +23,8 @@
 
     @if($plats->isEmpty())
         {{-- ── Empty State ── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-12 sm:p-24 text-center border-2 border-dashed border-gray-100 dark:border-gray-800">
-            <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6 text-gray-200 dark:text-gray-700">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl p-12 sm:p-24 text-center border-2 border-dashed border-gray-100 dark:border-gray-800">
+            <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6 text-gray-200 dark:text-gray-700">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
             </div>
             <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">Votre catalogue est vide</h3>
@@ -35,7 +35,7 @@
         {{-- ── List of Products ── --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             @foreach($plats as $plat)
-                <div class="group bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
+                <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
                     
                     {{-- Media --}}
                     <div class="relative aspect-[4/3] sm:aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">

@@ -175,9 +175,9 @@
 <div class="hidden lg:block max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 py-12">
     <div class="space-y-12">
         {{-- Header --}}
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-gray-900 rounded-[2.5rem] p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
             <div class="flex items-center gap-6">
-                <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-orange-500 rounded-[1.5rem] flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-red-200 dark:shadow-red-900/20">
+                <div class="w-20 h-20 bg-gradient-to-br from-red-600 to-orange-500 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-red-200 dark:shadow-red-900/20">
                     {{ substr($user->name, 0, 1) }}
                 </div>
                 <div>
@@ -196,7 +196,7 @@
 
         {{-- Stats Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors group">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors group">
                 <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">Mes Commandes</p>
                 <div class="flex items-center justify-between">
                     <h3 class="text-4xl font-black text-gray-900 dark:text-white">{{ $user->commandes()->count() }}</h3>
@@ -205,7 +205,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors group">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors group">
                 <p class="text-[11px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2">Mes Favoris</p>
                 <div class="flex items-center justify-between">
                     <h3 class="text-4xl font-black text-gray-900 dark:text-white">{{ $user->favoris()->count() }}</h3>
@@ -218,14 +218,14 @@
 
         {{-- Recent Orders --}}
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div class="bg-white dark:bg-gray-900 rounded-[3rem] p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
                 <div class="flex items-center justify-between mb-10">
                     <h2 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Dernières Commandes</h2>
                     <a href="{{ route('orders.index') }}" class="text-[11px] font-black uppercase tracking-widest text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors">Voir l'historique</a>
                 </div>
                 <div class="space-y-6">
                     @forelse($user->commandes->take(4) as $commande)
-                        <div class="flex items-center gap-6 p-6 rounded-3xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group">
+                        <div class="flex items-center gap-6 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group">
                             <div class="w-16 h-16 bg-white dark:bg-gray-700 rounded-2xl flex items-center justify-center text-red-600 dark:text-red-400 shadow-sm border border-gray-100 dark:border-gray-600 group-hover:scale-105 transition-transform">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2"/></svg>
                             </div>

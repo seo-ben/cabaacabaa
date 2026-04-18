@@ -21,7 +21,7 @@
 
         {{-- Hero content --}}
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8 gap-3">
-            <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
+            <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-2xl border border-white/30">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             </div>
             <div>
@@ -38,7 +38,7 @@
     </div>
 
     {{-- Bottom-sheet form --}}
-    <div class="bg-white dark:bg-slate-900 rounded-t-[2rem] -mt-6 relative z-10 shadow-2xl min-h-screen">
+    <div class="bg-white dark:bg-slate-900 rounded-t-2xl -mt-6 relative z-10 shadow-2xl min-h-screen">
         <div class="px-5 pt-5 pb-8">
             {{-- Pull indicator --}}
             <div class="w-10 h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
@@ -279,7 +279,7 @@
 {{-- ==================== DESKTOP VIEW (>= lg) ==================== --}}
 <div class="hidden lg:block">
 <div class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-[3rem] shadow-xl overflow-hidden border border-gray-100">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
         <div class="md:flex">
             {{-- Left Side --}}
             <div class="md:w-5/12 bg-gradient-to-br from-red-600 to-orange-500 p-12 text-white flex flex-col justify-center relative overflow-hidden">
@@ -355,7 +355,7 @@
                             <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-900 transition-colors">J'accepte les conditions d'utilisation vendeur</span>
                         </label>
                     </div>
-                    <button type="submit" class="w-full py-5 bg-gradient-to-r from-red-600 to-orange-500 text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] hover:shadow-2xl hover:shadow-red-200 transition-all transform hover:-translate-y-1 active:scale-95">Soumettre ma Candidature</button>
+                    <button type="submit" class="w-full py-5 bg-gradient-to-r from-red-600 to-orange-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:shadow-2xl hover:shadow-red-200 transition-all transform hover:-translate-y-1 active:scale-95">Soumettre ma Candidature</button>
                     <p class="text-[9px] text-center text-gray-300 font-bold uppercase tracking-widest leading-relaxed">Votre demande sera traitée sous 48h par nos administrateurs.</p>
                 </form>
             </div>

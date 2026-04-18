@@ -71,7 +71,7 @@
     
     <!-- 2. Bar (Stats & Opportunités - Style Wallet) -->
     <section class="px-4 mb-6">
-        <div class="bg-red-700 dark:bg-red-800 rounded-3xl p-4 flex items-center justify-between shadow-lg text-white relative overflow-hidden">
+        <div class="bg-red-700 dark:bg-red-800 rounded-2xl p-4 flex items-center justify-between shadow-lg text-white relative overflow-hidden">
             <!-- Deco overlay -->
             <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-xl -mr-6 -mt-6"></div>
             
@@ -175,7 +175,7 @@
     </section>
 
     <!-- 5. About CabaaCabaa (Mobile) -->
-    <section class="px-4 py-8 bg-white dark:bg-slate-900 rounded-3xl mx-2 my-8 shadow-sm">
+    <section class="px-4 py-8 bg-white dark:bg-slate-900 rounded-2xl mx-2 my-8 shadow-sm">
         <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4 text-center">À propos de {{ config('app.name') }}</h3>
         
         <div class="relative rounded-2xl overflow-hidden h-40 mb-6">
@@ -436,24 +436,57 @@
             
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
                 @foreach($plats as $plat)
-                <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm hover:shadow-md transition-all group">
-                    <div class="aspect-square rounded-xl overflow-hidden mb-3 relative">
-                        <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                @php
+                    $hasOptions = $plat->groupesVariantes->isNotEmpty();
+                    $hasMedia = ($plat->medias && $plat->medias->count() > 0) || !empty($plat->video_url);
+                    $canShowMedia = $plat->vendeur ? $plat->vendeur->canUseGallery() : false;
+                    $opensModal = $hasOptions || ($hasMedia && $canShowMedia);
+                @endphp
+                <div class="flex flex-col">
+                    <!-- Image Container -->
+                    <div class="relative aspect-square mb-4 group cursor-pointer" @click="{{ $opensModal ? 'openModal(' . Js::from($plat) . ')' : 'addCart(' . $plat->id_plat . ')' }}">
+                        <div class="w-full h-full rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-50 dark:border-slate-800 transition-transform duration-500 group-hover:scale-[1.03]">
+                            <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        
                         @if(!$plat->is_available)
-                            <div class="absolute inset-0 bg-white/20 dark:bg-slate-900/20 flex items-center justify-center pointer-events-none">
-                                <span class="px-2 py-1 bg-slate-900/90 text-white text-[8px] font-black uppercase tracking-widest rounded-lg shadow-xl backdrop-blur-md">ÉPUISÉ</span>
+                            <div class="absolute inset-0 bg-white/40 dark:bg-slate-900/40 flex items-center justify-center pointer-events-none rounded-2xl">
+                                <span class="px-3 py-1.5 bg-slate-900/90 text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-xl backdrop-blur-md">ÉPUISÉ</span>
                             </div>
+                        @else
+                            <!-- Floating '+' Button -->
+                            <button @click.stop="{{ $opensModal ? 'openModal(' . Js::from($plat) . ')' : 'addCart(' . $plat->id_plat . ')' }}"
+                                    class="absolute bottom-4 right-4 w-12 h-12 bg-[#EF5B2B] text-white rounded-2xl shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-10">
+                                <svg class="w-7 h-7 font-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12 6v12m6-6H6"/></svg>
+                            </button>
                         @endif
-                        <button @click="addCart({{ $plat->id_plat }})" 
-                                {{ !$plat->is_available ? 'disabled' : '' }}
-                                class="absolute bottom-2 right-2 w-8 h-8 {{ $plat->is_available ? 'bg-red-600' : 'bg-gray-300 cursor-not-allowed' }} text-white rounded-lg flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                        </button>
+
+                        <!-- Promo Badge -->
+                        @if($plat->en_promotion)
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-[#EF5B2B] text-white text-[9px] font-black rounded-lg shadow-lg shadow-orange-500/20">-20%</span>
+                        </div>
+                        @endif
                     </div>
-                    <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate mb-1">{{ $plat->nom_plat }}</h4>
-                    <p class="text-[10px] text-gray-500 mb-2 truncate">{{ $plat->vendeur->nom_commercial }}</p>
-                    <p class="text-sm font-black text-red-600">{{ number_format($plat->prix, 0, ',', ' ') }} <span class="text-[10px] font-normal">F</span></p>
+
+                    <!-- Metadata -->
+                    <div class="px-1 space-y-1.5">
+                        <span class="text-[9px] font-black text-[#EF5B2B] uppercase tracking-[0.2em]">{{ $plat->categorie ? $plat->categorie->nom_categorie : 'Produit' }}</span>
+                        <h4 class="text-[16px] font-black text-slate-900 dark:text-white leading-tight truncate">{{ $plat->nom_plat }}</h4>
+                        
+                        <a href="{{ route('vendor.show', ['id' => $plat->vendeur->id_vendeur, 'slug' => \Str::slug($plat->vendeur->nom_commercial)]) }}" 
+                           class="flex items-center gap-2 text-[10px] font-bold text-slate-400 hover:text-[#EF5B2B] transition-colors">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span class="uppercase tracking-widest">{{ $plat->vendeur->nom_commercial }}</span>
+                        </a>
+
+                        <div class="flex items-baseline gap-2 pt-0.5">
+                            <span class="text-[18px] font-black text-[#EF5B2B]">
+                                {{ number_format($plat->en_promotion ? $plat->prix_promotion : $plat->prix, 0, ',', ' ') }} F
+                            </span>
+                        </div>
+                    </div>
                 </div>
                 @endforeach
             </div>
@@ -508,7 +541,7 @@
         <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="relative">
-                    <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="rounded-[2.5rem] shadow-2xl relative z-10" alt="Delivery Guy">
+                    <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="rounded-2xl shadow-2xl relative z-10" alt="Delivery Guy">
                     <div class="absolute -top-6 -left-6 w-32 h-32 bg-red-600 rounded-full mix-blend-multiply filter blur-2xl opacity-20"></div>
                 </div>
                 
@@ -576,7 +609,7 @@
 
     <!-- 5. Minimalist CTA -->
     <section class="py-10 px-4 bg-white dark:bg-slate-950">
-        <div class="max-w-4xl mx-auto text-center px-8 py-16 bg-slate-900 dark:bg-white rounded-[1.5rem] relative overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center px-8 py-16 bg-slate-900 dark:bg-white rounded-2xl relative overflow-hidden">
             <div class="relative z-10">
                 <h2 class="text-2xl font-bold text-white dark:text-slate-900 mb-6">Vous êtes un professionnel ?</h2>
                 <p class="text-slate-400 dark:text-slate-500 mb-10 text-sm font-medium">Rejoignez la plateforme et boostez votre visibilité auprès des clients de votre région.</p>

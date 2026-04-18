@@ -31,7 +31,7 @@
                     </div>
 
                     <!-- Step 1: Identity -->
-                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center font-black text-sm">01</div>
                             <h2 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white">Informations de contact</h2>
@@ -56,7 +56,7 @@
                     </div>
 
                     <!-- Step 2: Recovery Mode -->
-                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-8">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-black text-sm">02</div>
                             <h2 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white">Mode de récupération</h2>
@@ -103,7 +103,7 @@
                                         <svg id="gps-spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         <span id="gps-text">Ma position GPS</span>
                                     </button>
-                                     <div class="relative rounded-3xl overflow-hidden border-2 border-slate-100 dark:border-slate-800 h-64 sm:h-72 group shadow-inner">
+                                     <div class="relative rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-slate-800 h-64 sm:h-72 group shadow-inner">
                                          <div id="delivery-map" class="w-full h-full z-0 bg-slate-100 dark:bg-slate-900"></div>
                                          <div id="map-overlay-info" class="absolute inset-x-0 bottom-0 p-3 bg-black/60 backdrop-blur-md text-center opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10">
                                              <span id="map-action-text" class="text-[10px] font-black text-white uppercase tracking-widest">Glissez le marqueur pour ajuster</span>
@@ -138,7 +138,7 @@
                     </div>
 
                     <!-- Step 3: Special Notes -->
-                    <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-10 border border-gray-100 dark:border-gray-800 shadow-sm space-y-4">
                         <label class="text-[9px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-2">Instructions Spéciales (Optionnel)</label>
                         <textarea name="notes" rows="2" 
                                   class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-red-500 focus:bg-white dark:focus:bg-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white transition-all outline-none resize-none"
@@ -149,7 +149,7 @@
                 <!-- Order Summary (Right) -->
                 <div class="lg:w-[400px] shrink-0">
                     <div class="sticky top-28 space-y-6">
-                        <div class="bg-gray-900 dark:bg-gray-900 rounded-[2.5rem] p-10 text-white shadow-2xl border border-white/5 space-y-8 overflow-hidden relative">
+                        <div class="bg-gray-900 dark:bg-gray-900 rounded-2xl p-10 text-white shadow-2xl border border-white/5 space-y-8 overflow-hidden relative">
                             <!-- Subtle Glow -->
                             <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-500/20 blur-3xl rounded-full"></div>
                             
@@ -206,7 +206,7 @@
                                 </p>
                             </div>
 
-                            <button type="submit" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-600/20 active:scale-95 flex items-center justify-center gap-3">
+                            <button type="submit" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-600/20 active:scale-95 flex items-center justify-center gap-3">
                                 Commander 
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                             </button>

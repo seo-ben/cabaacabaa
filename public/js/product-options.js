@@ -6,6 +6,8 @@ function productOptionsManager() {
         selectedPlat: null,
         selectedOptions: {}, // Format: { groupId: { variantId: quantity } }
         editingCartKey: null,
+        currentImageIndex: 0,
+        allImages: [], // {type: 'image'|'video', url: '...'}
 
         openModal(plat, cartKey = null, initialSelections = null) {
             this.selectedPlat = plat;
@@ -36,6 +38,34 @@ function productOptionsManager() {
             }
 
             this.modalOpen = true;
+            this.currentImageIndex = 0;
+            this.allImages = [];
+
+            // Image principale
+            if (plat.image_principale) {
+                this.allImages.push({ 
+                    type: 'image', 
+                    url: plat.image_principale.startsWith('http') ? plat.image_principale : `/storage/${plat.image_principale}` 
+                });
+            }
+
+            // Galerie (medias) - Only if vendor plan allows it
+            const canShowGallery = plat.vendeur && plat.vendeur.plan && plat.vendeur.plan.has_gallery;
+            
+            if (canShowGallery && plat.medias && plat.medias.length > 0) {
+                plat.medias.forEach(m => {
+                    this.allImages.push({
+                        type: m.type,
+                        url: m.type === 'video' ? m.chemin : (m.chemin.startsWith('http') ? m.chemin : `/storage/${m.chemin}`)
+                    });
+                });
+            }
+
+            // Fallback si rien
+            if (this.allImages.length === 0) {
+                this.allImages.push({ type: 'image', url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&fit=crop' });
+            }
+
             document.body.style.overflow = 'hidden';
         },
 
@@ -45,6 +75,18 @@ function productOptionsManager() {
             this.selectedOptions = {};
             this.editingCartKey = null;
             document.body.style.overflow = 'auto';
+            this.currentImageIndex = 0;
+            this.allImages = [];
+        },
+
+        nextImage() {
+            if (this.allImages.length <= 1) return;
+            this.currentImageIndex = (this.currentImageIndex + 1) % this.allImages.length;
+        },
+
+        prevImage() {
+            if (this.allImages.length <= 1) return;
+            this.currentImageIndex = (this.currentImageIndex - 1 + this.allImages.length) % this.allImages.length;
         },
 
         toggleOption(group, option) {

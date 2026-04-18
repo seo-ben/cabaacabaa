@@ -16,7 +16,7 @@
     </div>
 
     <form action="{{ route('vendeur.slug.team.update', ['vendor_slug' => $vendor->slug, 'id' => $staff->id]) }}" method="POST" 
-          class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 p-8 md:p-10 space-y-8">
+          class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 md:p-10 space-y-8">
         @csrf
         @method('PUT')
         
@@ -45,7 +45,7 @@
                 @error('email')<p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>@enderror
             </div>
 
-            <div class="p-6 bg-orange-50 dark:bg-orange-900/10 rounded-3xl border border-orange-100/50 dark:border-orange-900/20">
+            <div class="p-6 bg-orange-50 dark:bg-orange-900/10 rounded-2xl border border-orange-100/50 dark:border-orange-900/20">
                 <label class="block text-[10px] font-black uppercase tracking-widest text-orange-600 dark:text-orange-400 mb-2 ml-1">Nouveau mot de passe (Optionnel)</label>
                 <input type="password" name="password"
                        class="w-full bg-white dark:bg-gray-900 border-none rounded-2xl px-5 py-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff4d00] transition-all shadow-sm" placeholder="Laissez vide pour ne pas modifier">
@@ -94,7 +94,7 @@
     </form>
 
     {{-- Info Card --}}
-    <div class="mt-8 p-8 bg-blue-50 dark:bg-blue-900/10 rounded-[2rem] border border-blue-100 dark:border-blue-900/20 flex gap-6 items-center">
+    <div class="mt-8 p-8 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/20 flex gap-6 items-center">
         <div class="w-14 h-14 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-sm shrink-0 border border-blue-100 dark:border-blue-900/20">
             <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>

@@ -60,9 +60,9 @@
             <div class="absolute inset-0 flex flex-col items-center justify-center gap-6 px-8 text-center">
                 <div class="relative">
                     @if($vendor->image_principale)
-                        <img src="{{ asset('storage/' . $vendor->image_principale) }}" class="w-24 h-24 rounded-3xl object-cover shadow-2xl border-4 border-white/30">
+                        <img src="{{ asset('storage/' . $vendor->image_principale) }}" class="w-24 h-24 rounded-2xl object-cover shadow-2xl border-4 border-white/30">
                     @else
-                        <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-2xl">
+                        <div class="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
                             <span class="text-4xl font-black text-red-600 uppercase">{{ mb_substr($vendor->nom_commercial, 0, 1) }}</span>
                         </div>
                     @endif
@@ -78,7 +78,7 @@
         </div>
 
         {{-- ---- FORM CARD ---- --}}
-        <div class="flex-1 bg-white lg:bg-white lg:max-w-md lg:w-full lg:rounded-[2.5rem] lg:shadow-2xl lg:border lg:border-gray-100 lg:p-10 -mt-8 lg:mt-0 rounded-t-[2.5rem] relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
+        <div class="flex-1 bg-white lg:bg-white lg:max-w-md lg:w-full lg:rounded-2xl lg:shadow-2xl lg:border lg:border-gray-100 lg:p-10 -mt-8 lg:mt-0 rounded-t-2xl relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
             <div class="px-8 pt-8 pb-12 lg:p-0">
                 {{-- Desktop Header --}}
                 <div class="hidden lg:block mb-8">

@@ -10,7 +10,7 @@
     {{-- Closed Modal --}}
     @if(!$vendeur->actif || $vendeur->is_busy)
     <div class="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-end justify-center p-4">
-        <div class="w-full bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl text-center space-y-5">
+        <div class="w-full bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-2xl text-center space-y-5">
             <div class="w-14 h-14 {{ $vendeur->is_busy ? 'bg-orange-50' : 'bg-red-50' }} rounded-2xl flex items-center justify-center mx-auto">
                 <svg class="w-7 h-7 {{ $vendeur->is_busy ? 'text-orange-500 animate-pulse' : 'text-red-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
@@ -70,7 +70,7 @@
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                     </button>
                     <!-- Small mobile share menu -->
-                    <div x-show="showShare" x-transition @click.away="showShare = false" class="absolute right-full bottom-0 mr-3 bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl p-4 flex flex-col gap-3 border border-gray-100 dark:border-slate-800 z-50 min-w-[140px]">
+                    <div x-show="showShare" x-transition @click.away="showShare = false" class="absolute right-full bottom-0 mr-3 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-4 flex flex-col gap-3 border border-gray-100 dark:border-slate-800 z-50 min-w-[140px]">
                         @php $shareUrl = urlencode(url()->current()); $shareText = urlencode("Découvrez " . $vendeur->nom_commercial . " sur Cabaa !"); @endphp
                         
                         <a href="https://wa.me/?text={{ $shareText }}%20{{ $shareUrl }}" target="_blank" class="flex items-center gap-3 p-1 hover:opacity-80 transition-all">
@@ -131,55 +131,50 @@
         @if($vendeur->plats->count() > 0)
             @foreach($vendeur->plats->groupBy('id_categorie') as $catId => $plats)
                 @php $category = $vendeur->categories->firstWhere('id_categorie', $catId); @endphp
-                <div class="mb-6">
-                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{{ $category->nom_categorie ?? 'Autres' }}</h3>
-                    <div class="space-y-0.5">
+                <div class="mb-12">
+                    <h3 class="text-[12px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6 px-2">{{ $category->nom_categorie ?? 'Autres' }}</h3>
+                    <div class="grid grid-cols-2 gap-x-5 gap-y-10">
                         @foreach($plats as $plat)
-                        @if($plat->is_available)
+                        @if($plat->disponible)
                         @php
                             $hasOptions = $plat->groupesVariantes->isNotEmpty();
                             $platForModal = clone $plat;
                             $platForModal->setRelation('vendeur', $vendeur);
                         @endphp
-                        <div class="bg-white dark:bg-slate-900 flex items-center gap-4 p-3 border-b border-gray-50 dark:border-slate-800/50 group active:bg-gray-50 transition-colors">
-                            <!-- Left: Content Container -->
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-1.5 mb-0.5">
-                                    <span class="text-[7px] font-black text-red-600 uppercase tracking-widest">{{ $plat->categorie ? $plat->categorie->nom_categorie : 'Produit' }}</span>
-                                    @if($plat->stock_limite && $plat->quantite_disponible <= 4 && $plat->quantite_disponible > 0)
-                                        <span class="bg-orange-50 text-orange-600 text-[6px] font-black px-1 rounded-sm uppercase">Stock: {{ $plat->quantite_disponible }}</span>
-                                    @endif
+                        <div class="flex flex-col group">
+                            <!-- Image Container -->
+                            <div class="relative aspect-square mb-4 cursor-pointer" @click="openModal({{ Js::from($platForModal) }})">
+                                <div class="w-full h-full rounded-2xl overflow-hidden bg-[#F4F5F7] dark:bg-slate-900 shadow-sm border border-black/[0.03] dark:border-white/[0.05] relative group active:scale-95 transition-transform duration-300">
+                                    <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
+                                         class="w-full h-full object-cover">
                                 </div>
-                                <h4 class="text-[13px] font-black text-gray-900 dark:text-white truncate mb-1">{{ $plat->nom_plat }}</h4>
                                 
-                                <div class="flex items-center gap-3">
-                                    @if($plat->en_promotion)
-                                        <span class="text-sm font-black text-red-600">{{ number_format($plat->prix_promotion, 0) }} F</span>
-                                        <span class="text-[9px] text-gray-300 line-through">{{ number_format($plat->prix, 0) }} F</span>
-                                    @else
-                                        <span class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($plat->prix, 0) }} F</span>
-                                    @endif
-                                    
-                                    <button type="button"
-                                        @if($hasOptions) @click="openModal({{ Js::from($platForModal) }})" @else @click="addCart({{ $plat->id_plat }})" @endif
-                                        class="h-6 px-3 bg-red-600 text-white rounded-lg text-[8px] font-black uppercase tracking-widest active:scale-95 transition-all">
-                                        + Panier
-                                    </button>
+                                <!-- Promotion Badge -->
+                                @if($plat->en_promotion)
+                                <div class="absolute top-4 left-4">
+                                    <span class="px-2.5 py-1 bg-[#EF5B2B] text-white text-[9px] font-black rounded-lg shadow-lg">-20%</span>
                                 </div>
+                                @endif
+
+                                <!-- Floating '+' Button -->
+                                <button @click.stop="@if($hasOptions) openModal({{ Js::from($platForModal) }}) @else addCart({{ $plat->id_plat }}) @endif"
+                                        class="absolute bottom-2 right-2 w-11 h-11 bg-[#EF5B2B] text-white rounded-2xl shadow-xl flex items-center justify-center active:scale-90 transition-transform z-10">
+                                    <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
+                                </button>
                             </div>
 
-                            <!-- Right: Image -->
-                            <div class="relative w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-800">
-                                @if($plat->image_principale)
-                                    <img src="{{ asset('storage/' . $plat->image_principale) }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-gray-200">
-                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg>
-                                    </div>
-                                @endif
-                                @if($plat->en_promotion)
-                                    <div class="absolute top-1 left-1 px-1 bg-red-600 text-white text-[5px] font-black uppercase rounded shadow-sm">PROMO</div>
-                                @endif
+                            <!-- Metadata -->
+                            <div class="px-1.5 space-y-1">
+                                <span class="text-[9px] font-black text-[#EF5B2B] uppercase tracking-wider">{{ $category->nom_categorie ?? 'Produit' }}</span>
+                                <h4 class="text-[14px] font-black text-slate-900 dark:text-white leading-tight truncate">{{ $plat->nom_plat }}</h4>
+                                <div class="flex items-baseline gap-2 pt-0.5">
+                                    <span class="text-[16px] font-black text-slate-900 dark:text-white">
+                                        {{ number_format($plat->en_promotion ? $plat->prix_promotion : $plat->prix, 0, ',', ' ') }} F
+                                    </span>
+                                    @if($plat->en_promotion)
+                                    <span class="text-[10px] font-medium text-slate-300 line-through">{{ number_format($plat->prix, 0, ',', ' ') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         @endif
@@ -550,55 +545,52 @@
                                     {{ $category->nom_categorie ?? 'Autres' }}
                                 </h3>
                                 
-                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-0">
+                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
                                      @foreach($plats as $plat)
-                                     @if($plat->is_available)
-                                         <div class="group py-4 border-b border-gray-50 dark:border-gray-900/50 flex items-center gap-6 hover:bg-gray-50/30 dark:hover:bg-slate-900/20 px-3 -mx-3 transition-all">
-                                             
-                                             <!-- Compact Visual Info -->
-                                             <div class="relative w-28 h-28 shrink-0 overflow-hidden rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-                                                 <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" 
-                                                      class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                                     @if($plat->disponible)
+                                         @php
+                                             $hasOptions = $plat->groupesVariantes->isNotEmpty();
+                                              $hasMedia = ($plat->medias && $plat->medias->count() > 0) || !empty($plat->video_url);
+                                              $canShowMedia = $vendeur->canUseGallery(); 
+                                              $opensModal = $hasOptions || ($hasMedia && $canShowMedia);
+                                              
+                                             $platForModal = clone $plat;
+                                             $platForModal->setRelation('vendeur', $vendeur);
+                                         @endphp
+                                         <div class="flex flex-col group">
+                                             <!-- Image Container -->
+                                             <div class="relative aspect-square mb-6 group cursor-pointer"
+                                                  @click="{{ $opensModal ? 'openModal(' . Js::from($platForModal) . ')' : 'addCart(' . $plat->id_plat . ')' }}">
+                                                 <div class="w-full h-full rounded-2xl overflow-hidden bg-white shadow-2xl border border-slate-50 dark:border-slate-800 transition-transform duration-700 group-hover:scale-[1.03] relative">
+                                                     <img src="{{ $plat->image_principale ? asset('storage/' . $plat->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&fit=crop' }}" 
+                                                          class="w-full h-full object-cover">
+                                                     <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                 </div>
                                                  
+                                                 <!-- Floating '+' Button -->
+                                                 <button @click.stop="{{ $opensModal ? 'openModal(' . Js::from($platForModal) . ')' : 'addCart(' . $plat->id_plat . ')' }}"
+                                                         class="absolute bottom-8 right-8 w-14 h-14 bg-[#EF5B2B] text-white rounded-2xl shadow-2xl flex items-center justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:scale-110 active:scale-95 z-20">
+                                                     <svg class="w-8 h-8 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
+                                                 </button>
+
                                                  @if($plat->en_promotion)
-                                                     <div class="absolute top-2 left-2 px-2 py-0.5 bg-red-600 text-white text-[7px] font-black uppercase tracking-widest rounded-md shadow-lg shadow-red-500/20">PROMO</div>
+                                                 <div class="absolute top-8 left-8">
+                                                     <span class="px-3.5 py-1.5 bg-[#EF5B2B] text-white text-[11px] font-black rounded-xl shadow-xl shadow-orange-500/20">-20%</span>
+                                                 </div>
                                                  @endif
                                              </div>
 
-                                             <!-- Text Architecture -->
-                                             <div class="flex-1 min-w-0">
-                                                 <div class="flex items-center justify-between mb-1">
-                                                     <span class="text-[8px] font-black uppercase tracking-[0.2em] text-red-600">{{ $category->nom_categorie ?? 'Produit' }}</span>
-                                                     @if($plat->stock_limite && $plat->quantite_disponible <= 4 && $plat->quantite_disponible > 0)
-                                                         <span class="text-[7px] font-black text-orange-500 bg-orange-50 dark:bg-orange-950/30 px-2 py-0.5 rounded-md uppercase tracking-widest">Plus que {{ $plat->quantite_disponible }} !</span>
+                                             <!-- Metadata -->
+                                             <div class="px-4 space-y-2">
+                                                 <span class="text-[11px] font-black text-[#EF5B2B] uppercase tracking-[0.2em]">{{ $category->nom_categorie ?? 'Produit' }}</span>
+                                                 <h4 class="text-xl font-black text-slate-900 dark:text-white group-hover:text-[#EF5B2B] transition-colors leading-tight truncate">{{ $plat->nom_plat }}</h4>
+                                                 <div class="flex items-baseline gap-3 pt-2">
+                                                     <span class="text-2xl font-black text-[#EF5B2B]">
+                                                         {{ number_format($plat->en_promotion ? $plat->prix_promotion : $plat->prix, 0, ',', ' ') }} F
+                                                     </span>
+                                                     @if($plat->en_promotion)
+                                                     <span class="text-sm font-medium text-slate-300 line-through">{{ number_format($plat->prix, 0, ',', ' ') }}</span>
                                                      @endif
-                                                 </div>
-
-                                                 <h3 class="text-base font-black text-gray-900 dark:text-white leading-tight group-hover:text-red-600 transition-colors truncate mb-2">
-                                                     {{ $plat->nom_plat }}
-                                                 </h3>
-
-                                                 <div class="flex items-center gap-6">
-                                                     <div class="flex flex-col">
-                                                         @if($plat->en_promotion)
-                                                             <div class="flex items-center gap-2">
-                                                                 <span class="text-sm font-black text-red-600">{{ number_format($plat->prix_promotion, 0, ',', ' ') }} F</span>
-                                                                 <span class="text-[9px] font-bold text-gray-300 line-through">{{ number_format($plat->prix, 0, ',', ' ') }}</span>
-                                                             </div>
-                                                         @else
-                                                             <span class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($plat->prix, 0, ',', ' ') }} F</span>
-                                                         @endif
-                                                     </div>
-
-                                                     @php
-                                                         $hasOptions = $plat->groupesVariantes->isNotEmpty();
-                                                         $platForModal = clone $plat;
-                                                         $platForModal->setRelation('vendeur', $vendeur);
-                                                     @endphp
-                                                     <button @click="@if($hasOptions) openModal({{ Js::from($platForModal) }}) @else addCart({{ $plat->id_plat }}) @endif"
-                                                             class="h-7 px-5 bg-red-600 text-white rounded-xl text-[8px] font-black uppercase tracking-widest hover:bg-red-700 transition-all shadow-md shadow-red-500/5 active:scale-95">
-                                                         + Ajouter
-                                                     </button>
                                                  </div>
                                              </div>
                                          </div>
@@ -708,7 +700,7 @@
 
                                     <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
-                                    <div x-show="reviewModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block align-bottom bg-white dark:bg-slate-900 rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full p-8 border border-white/5">
+                                    <div x-show="reviewModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" class="relative inline-block align-bottom bg-white dark:bg-slate-900 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full p-8 border border-white/5">
                                         <div class="absolute top-6 right-6">
                                             <button @click="reviewModal = false" class="p-2 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                                                 <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -778,7 +770,7 @@
                         @endforeach
                         
                         @if($avis->isEmpty())
-                            <div class="col-span-full py-12 text-center bg-slate-50 dark:bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                            <div class="col-span-full py-12 text-center bg-slate-50 dark:bg-slate-800/50 rounded-2xl border-2 border-dashed border-slate-100 dark:border-slate-800">
                                 <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Aucun avis pour le moment. Soyez le premier !</p>
                             </div>
                         @endif
@@ -979,7 +971,7 @@
 
             <!-- Modal Panel -->
             <div x-show="modalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-                 class="relative inline-block align-bottom bg-white dark:bg-gray-800 rounded-[2.5rem] text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-gray-100 dark:border-gray-700">
+                 class="relative inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full border border-gray-100 dark:border-gray-700">
                 
                 <template x-if="selectedPlat">
                     <div class="flex flex-col max-h-[85vh]">

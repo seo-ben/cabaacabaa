@@ -26,8 +26,8 @@
     @endif
 
     @if($staffMembers->isEmpty())
-        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
-            <div class="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 text-[#ff4d00] rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-orange-500/10">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-12 text-center">
+            <div class="w-20 h-20 bg-orange-50 dark:bg-orange-900/20 text-[#ff4d00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-orange-500/10">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
             <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-3">Aucun membre dans l'équipe</h3>
@@ -40,7 +40,7 @@
         </div>
     @else
         {{-- Desktop Table View --}}
-        <div class="hidden md:block bg-white dark:bg-gray-900 rounded-[2rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <div class="hidden md:block bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
                     <tr>
@@ -127,7 +127,7 @@
         {{-- Mobile Card View --}}
         <div class="md:hidden space-y-4">
             @foreach($staffMembers as $staff)
-                <div class="bg-white dark:bg-gray-900 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-800 shadow-sm space-y-5">
+                <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm space-y-5">
                     <div class="flex items-center gap-4">
                         <div class="w-14 h-14 rounded-2xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 dark:text-orange-400 font-display font-black text-xl border border-orange-100 dark:border-orange-900/30">
                             {{ mb_substr($staff->user->name, 0, 1) }}

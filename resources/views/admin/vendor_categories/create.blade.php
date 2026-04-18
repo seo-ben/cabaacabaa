@@ -15,19 +15,19 @@
     <form action="{{ route('admin.vendor-categories.store') }}" method="POST" class="space-y-8">
         @csrf
         
-        <div class="bg-white p-4 rounded-[3rem] border border-gray-100 shadow-sm space-y-8">
+        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="space-y-2">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 pl-4">Nom de la Catégorie</label>
                     <input type="text" name="name" value="{{ old('name') }}" required placeholder="Ex: Supermarché"
-                           class="w-full px-5 py-5 bg-gray-50 border-0 rounded-[2rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900">
+                           class="w-full px-5 py-5 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900">
                     @error('name') <p class="text-red-500 text-[10px] font-bold mt-1 pl-4">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="space-y-2">
                     <label class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 pl-4">Icône (Emoji)</label>
                     <input type="text" name="icon" value="{{ old('icon', '🏪') }}" placeholder="Ex: 🛒"
-                           class="w-full px-5 py-5 bg-gray-50 border-0 rounded-[2rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900">
+                           class="w-full px-5 py-5 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900">
                     @error('icon') <p class="text-red-500 text-[10px] font-bold mt-1 pl-4">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="space-y-2">
                 <label class="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 pl-4">Description</label>
                 <textarea name="description" rows="4" placeholder="Décrivez brièvement ce type de boutique..."
-                          class="w-full px-5 py-5 bg-gray-50 border-0 rounded-[2rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900 resize-none">{{ old('description') }}</textarea>
+                          class="w-full px-5 py-5 bg-gray-50 border-0 rounded-2xl focus:bg-white focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-sm font-bold text-gray-900 resize-none">{{ old('description') }}</textarea>
                 @error('description') <p class="text-red-500 text-[10px] font-bold mt-1 pl-4">{{ $message }}</p> @enderror
             </div>
 
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <button type="submit" class="w-full py-4 bg-black text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] hover:bg-orange-600 hover:shadow-2xl hover:shadow-orange-200 transition-all transform hover:-translate-y-1 active:scale-95">
+        <button type="submit" class="w-full py-4 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-orange-600 hover:shadow-2xl hover:shadow-orange-200 transition-all transform hover:-translate-y-1 active:scale-95">
             Créer la Catégorie
         </button>
     </form>

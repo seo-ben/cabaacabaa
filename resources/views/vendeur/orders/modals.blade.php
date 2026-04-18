@@ -9,7 +9,7 @@
         <div class="fixed inset-0 bg-gray-900/60 dark:bg-black/80 backdrop-blur-sm transition-opacity" @click="open = false"></div>
         
         {{-- Modal Content --}}
-        <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 dark:border-gray-800 animate-in zoom-in-95 duration-200">
+        <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-100 dark:border-gray-800 animate-in zoom-in-95 duration-200">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-8">
                     <div>
@@ -23,7 +23,7 @@
 
                 <div class="space-y-6">
                     {{-- Client Info --}}
-                    <div class="flex items-center gap-4 p-5 bg-gray-50 dark:bg-gray-800/40 rounded-3xl">
+                    <div class="flex items-center gap-4 p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl">
                         <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center text-sm font-black text-gray-400 shadow-sm" x-text="order?.client?.charAt(0)"></div>
                         <div>
                             <p class="text-xs font-black text-gray-900 dark:text-white" x-text="order?.client"></p>
@@ -34,7 +34,7 @@
                     {{-- Localisation --}}
                     <div class="space-y-2">
                         <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block px-1">Adresse de livraison</label>
-                        <div class="p-5 bg-gray-50 dark:bg-gray-800/40 rounded-3xl flex items-start gap-3">
+                        <div class="p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl flex items-start gap-3">
                             <svg class="w-4 h-4 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             <span class="text-xs font-bold text-gray-700 dark:text-gray-300 leading-relaxed" x-text="order?.adresse"></span>
                         </div>
@@ -83,7 +83,7 @@
      class="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300"
      style="display: none;">
     <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" @click="open = false"></div>
-    <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-lg overflow-hidden h-[600px] shadow-2xl animate-in zoom-in-95">
+    <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg overflow-hidden h-[600px] shadow-2xl animate-in zoom-in-95">
          {{-- Close Button --}}
          <button @click="open = false" class="absolute top-6 right-6 z-50 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/40 backdrop-blur text-gray-900 rounded-lg transition-all">
              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -101,7 +101,7 @@
      class="fixed inset-0 z-[60] flex items-center justify-center p-4"
      style="display: none;">
     <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" @click="open = false"></div>
-    <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-md p-8 animate-in slide-in-from-bottom-5">
+    <div class="relative bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md p-8 animate-in slide-in-from-bottom-5">
          <h3 class="text-xl font-black text-gray-900 dark:text-white mb-6">Assigner un livreur</h3>
          <form :action="'/vendeur/orders/' + orderId + '/assign'" method="POST" class="space-y-4">
              @csrf

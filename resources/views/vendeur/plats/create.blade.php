@@ -24,7 +24,7 @@
         {{-- ───────────────────────────────────────
              Section 1 : IMAGE (en premier sur mobile)
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 text-[10px] font-black">1</span>
@@ -64,10 +64,46 @@
             </div>
         </div>
 
+        {{-- Galerie Photos & Vidéo (Premium) --}}
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4 {{ !Auth::user()->vendeur->canUseGallery() ? 'opacity-60 cursor-not-allowed grayscale' : '' }}">
+            <div class="p-5 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
+                <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
+                    <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.53 4.47a1 1 0 10-1.42 1.44 6 6 0 008.38 0 1 1 0 00-1.42-1.44 4 4 0 01-5.54 0z" clip-rule="evenodd"/></svg>
+                    Galerie & Vidéo
+                </h2>
+                @if(!Auth::user()->vendeur->canUseGallery())
+                    <span class="px-2 py-0.5 bg-gray-900 text-white text-[8px] font-black uppercase rounded-lg">Premium</span>
+                @endif
+            </div>
+            
+            <div class="p-5 space-y-4">
+                @if(Auth::user()->vendeur->canUseGallery())
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Photos additionnelles</label>
+                        <input type="file" name="gallery[]" multiple accept="image/*"
+                               class="w-full text-[10px] text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:uppercase file:bg-red-50 file:text-red-600 hover:file:bg-red-100">
+                        <p class="text-[8px] text-gray-400 mt-2 font-bold uppercase italic">Vous pouvez sélectionner jusqu'à 5 photos supplémentaires.</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Vidéo de présentation (URL)</label>
+                        <input type="url" name="video_url" placeholder="Lien YouTube, TikTok ou MP4..."
+                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-[11px] font-bold">
+                    </div>
+                @else
+                    <div class="py-4 text-center">
+                        <p class="text-[10px] font-black text-gray-400 uppercase leading-relaxed">
+                            Passez à l'abonnement <span class="text-orange-500">Standard</span> ou <span class="text-orange-500">Premium</span><br>
+                            pour ajouter plusieurs photos et des vidéos à vos produits.
+                        </p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
         {{-- ─────────────────────────────────────────
              Section 2 : INFOS PRINCIPALES
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 text-[10px] font-black">2</span>
@@ -124,7 +160,7 @@
         {{-- ─────────────────────────────────────────
              Section 3 : OPTIONS & SUPPLÉMENTS
         ──────────────────────────────────────────── --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mb-4">
             <div class="p-5 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
                 <h2 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest flex items-center gap-2">
                     <span class="w-5 h-5 bg-red-50 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 text-[10px] font-black">3</span>
@@ -224,7 +260,7 @@
              Bouton SUBMIT fixe en bas sur mobile
         ──────────────────────────────────────────── --}}
         <div class="sticky bottom-20 lg:bottom-0 lg:static mt-4 mb-2">
-            <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md rounded-3xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-black/10 p-4 flex gap-3">
+            <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-md rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-black/10 p-4 flex gap-3">
                 <a href="{{ vendor_route('vendeur.slug.plats.index') }}"
                    class="flex-shrink-0 px-5 py-3.5 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-gray-100 dark:hover:bg-gray-800 transition-all active:scale-95">
                     Annuler

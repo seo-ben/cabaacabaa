@@ -33,6 +33,15 @@ class CouponController extends Controller
             'expire_at' => 'nullable|date|after:today',
         ]);
 
+        // Vérification de la limite de coupons selon le plan
+        $activeCouponsCount = Coupon::where('id_vendeur', $vendeur->id_vendeur)->where('actif', true)->count();
+        if ($activeCouponsCount >= $vendeur->getCouponLimit()) {
+            $msg = $vendeur->getCouponLimit() == 0 
+                ? 'Les coupons de réduction ne sont pas disponibles dans votre plan actuel. Passez au niveau Standard ou Premium !'
+                : 'Vous avez atteint la limite de ' . $vendeur->getCouponLimit() . ' coupons actifs. Désactivez-en un pour en créer un nouveau.';
+            return back()->with('error', $msg)->withInput();
+        }
+
         Coupon::create([
             'id_vendeur' => $vendeur->id_vendeur,
             'code' => strtoupper($request->code),

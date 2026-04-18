@@ -13,7 +13,7 @@
         </div>
 
         <div class="grid md:grid-cols-2 gap-12 items-center mb-24">
-            <div class="rounded-[2.5rem] overflow-hidden shadow-2xl transform rotate-1">
+            <div class="rounded-2xl overflow-hidden shadow-2xl transform rotate-1">
                 <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="w-full h-full object-cover">
             </div>
             <div>

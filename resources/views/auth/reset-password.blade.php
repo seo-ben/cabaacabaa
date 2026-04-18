@@ -55,7 +55,7 @@
         </div>
 
         {{-- Mobile Form --}}
-        <div class="lg:hidden flex-1 bg-white rounded-t-[2rem] -mt-6 relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
+        <div class="lg:hidden flex-1 bg-white rounded-t-2xl -mt-6 relative z-10 shadow-2xl shadow-black/10 overflow-y-auto">
             <div class="px-6 pt-6 pb-32">
                 <div class="w-10 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
 

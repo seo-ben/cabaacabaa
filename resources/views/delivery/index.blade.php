@@ -202,7 +202,7 @@
 
         {{-- Search & Filter Bar (Floating) --}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
-            <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl p-4 md:p-6 border border-gray-100 dark:border-gray-800">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-4 md:p-6 border border-gray-100 dark:border-gray-800">
                 <form action="{{ route('delivery.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <div class="relative flex items-center">
                         <svg class="absolute left-5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -241,8 +241,8 @@
                     </div>
 
                     @if($requests->isEmpty())
-                        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-16 text-center border-2 border-dashed border-gray-100 dark:border-gray-800">
-                            <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <div class="bg-white dark:bg-gray-900 rounded-2xl p-16 text-center border-2 border-dashed border-gray-100 dark:border-gray-800">
+                            <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                 <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
                             <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">Aucun poste pour le moment</h3>
@@ -251,7 +251,7 @@
                     @else
                         <div class="space-y-6">
                             @foreach($requests as $request)
-                                <div class="group bg-white dark:bg-gray-900 p-6 md:p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center gap-8 hover:shadow-2xl hover:border-red-100 dark:hover:border-red-900/30 transition-all duration-300">
+                                <div class="group bg-white dark:bg-gray-900 p-6 md:p-8 rounded-2xl border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center gap-8 hover:shadow-2xl hover:border-red-100 dark:hover:border-red-900/30 transition-all duration-300">
                                     <div class="shrink-0">
                                         @if($request->vendeur->image_principale)
                                             <img src="{{ asset('storage/'.$request->vendeur->image_principale) }}"
@@ -304,7 +304,7 @@
 
                 {{-- Sidebar --}}
                 <div class="lg:w-96 space-y-8">
-                    <div class="bg-gradient-to-br from-red-600 to-orange-600 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden group">
+                    <div class="bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden group">
                         <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
                         <h3 class="text-xl font-black mb-6 flex items-center gap-3 italic">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -317,7 +317,7 @@
                         </ul>
                     </div>
 
-                    <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-xl">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-xl">
                         <h3 class="text-xl font-black text-gray-900 dark:text-white mb-6">Comment postuler ?</h3>
                         <div class="space-y-8">
                             <div class="flex items-center gap-4"><div class="w-10 h-10 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center text-red-600 font-bold">1</div><p class="text-sm font-bold text-gray-600 dark:text-gray-400 italic">Créez votre compte profil livreur.</p></div>
@@ -342,8 +342,8 @@
                         </div>
                     </div>
                     <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-br from-red-600/20 to-orange-600/20 rounded-[3rem] blur-2xl"></div>
-                        <div class="relative bg-gray-900 rounded-[3rem] p-12 overflow-hidden shadow-2xl">
+                        <div class="absolute -inset-4 bg-gradient-to-br from-red-600/20 to-orange-600/20 rounded-2xl blur-2xl"></div>
+                        <div class="relative bg-gray-900 rounded-2xl p-12 overflow-hidden shadow-2xl">
                             <div class="absolute top-0 right-0 p-8"><svg class="w-24 h-24 text-white/5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.82v-1.91c-1.41-.31-2.61-1.12-2.61-2.61h1.56c0 .76.62 1.34 1.56 1.34s1.56-.58 1.56-1.34c0-.62-.43-1.04-1.56-1.44-1.78-.63-3.13-1.22-3.13-3 0-1.39 1.11-2.4 2.61-2.73V6.5h2.82v1.85c1.19.28 2.3 1 2.3 2.45h-1.56c0-.94-.78-1.34-1.51-1.34s-1.51.3-1.51 1.04c0 .66.6 1 1.51 1.31 1.78.59 3.13 1.25 3.13 3.13 0 1.52-1.24 2.5-2.65 2.81z"/></svg></div>
                             <div class="relative z-10 space-y-6">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-600 rounded-full text-[10px] font-black uppercase tracking-widest text-white">Estimation Mensuelle</div>
@@ -367,10 +367,10 @@
                 <p class="text-lg text-gray-600 dark:text-gray-400 mb-12 font-medium">Rejoignez-nous aujourd'hui et commencez à gagner demain. Pas de CV requis, juste votre motivation !</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-6">
                     @auth
-                        <a href="#open-positions" class="px-12 py-6 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all shadow-2xl shadow-red-500/25">Voir les offres</a>
+                        <a href="#open-positions" class="px-12 py-6 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all shadow-2xl shadow-red-500/25">Voir les offres</a>
                     @else
-                        <a href="{{ route('register') }}" class="px-12 py-6 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all shadow-2xl shadow-red-500/25">Créer mon compte</a>
-                        <a href="{{ route('login') }}" class="px-12 py-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-[2rem] font-black text-xs uppercase tracking-widest hover:bg-black dark:hover:bg-gray-100 transition-all border border-gray-800 dark:border-white shadow-xl">Me connecter</a>
+                        <a href="{{ route('register') }}" class="px-12 py-6 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-all shadow-2xl shadow-red-500/25">Créer mon compte</a>
+                        <a href="{{ route('login') }}" class="px-12 py-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black dark:hover:bg-gray-100 transition-all border border-gray-800 dark:border-white shadow-xl">Me connecter</a>
                     @endauth
                 </div>
             </div>

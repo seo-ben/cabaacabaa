@@ -14,7 +14,7 @@
     @if($commandes->isEmpty())
     {{-- Empty State --}}
     <div class="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
-        <div class="w-24 h-24 bg-orange-50 dark:bg-orange-900/20 text-orange-400 rounded-3xl flex items-center justify-center mb-6">
+        <div class="w-24 h-24 bg-orange-50 dark:bg-orange-900/20 text-orange-400 rounded-2xl flex items-center justify-center mb-6">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
         </div>
         <h2 class="text-xl font-black text-gray-900 dark:text-white mb-2">Aucune commande</h2>
@@ -123,18 +123,18 @@
         </div>
 
         @if($commandes->isEmpty())
-            <div class="bg-white dark:bg-gray-900 rounded-[4rem] p-20 text-center border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none">
-                <div class="w-24 h-24 bg-orange-50 dark:bg-orange-900/20 rounded-[2rem] flex items-center justify-center text-orange-500 mx-auto mb-8">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-20 text-center border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none">
+                <div class="w-24 h-24 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center text-orange-500 mx-auto mb-8">
                     <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 </div>
                 <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Vous n'avez pas encore commandé</h3>
                 <p class="text-gray-500 dark:text-gray-400 mb-10 max-w-sm mx-auto font-medium">Nos articles n'attendent que vous. Découvrez les meilleures boutiques autour de vous.</p>
-                <a href="{{ route('home') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-[2rem] font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le catalogue</a>
+                <a href="{{ route('home') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le catalogue</a>
             </div>
         @else
             <div class="space-y-8">
                 @foreach($commandes as $commande)
-                    <div class="group bg-white dark:bg-gray-900 rounded-[3.5rem] border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-black/20 transition-all duration-500 overflow-hidden">
+                    <div class="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-black/20 transition-all duration-500 overflow-hidden">
                         <div class="flex flex-col lg:flex-row">
                             <div class="flex-1 p-10 lg:p-12 space-y-8">
                                 <div class="flex flex-wrap items-center justify-between gap-6">

@@ -421,6 +421,28 @@
                 </div>
                 @endcan
 
+                @can('manage_settings')
+                <!-- Abonnements -->
+                <div class="px-1.5">
+                    <a href="{{ route('admin.subscriptions.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       :class="{{ request()->routeIs('admin.subscriptions*') ? 'true' : 'false' }} ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
+                        
+                        @if(request()->routeIs('admin.subscriptions*'))
+                            <div class="absolute inset-0 bg-linear-to-r from-orange-600 to-amber-500 opacity-100"></div>
+                        @endif
+
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
+                             :class="{{ request()->routeIs('admin.subscriptions*') ? 'true' : 'false' }} ? 'bg-white/20' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-orange-600'">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+                            </svg>
+                        </div>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Abonnements</span>
+                    </a>
+                </div>
+                @endcan
+
                 @can('view_dashboard')
                 <!-- Statistiques -->
                 <div class="px-1.5">

@@ -91,19 +91,19 @@ class HomeController extends Controller
             $data['vendeurs'] = $query->paginate(8, ['*'], 'vendeurs_page');
         } catch (\Throwable $e) {
             $data['vendeurs'] = Vendeur::whereRaw('1 = 0')->paginate(8, ['*'], 'vendeurs_page');
-            \Log::error("Erreur Home Vendeurs: " . $e->getMessage());
+            Log::error("Erreur Home Vendeurs: " . $e->getMessage());
         }
 
         // Plats du moment (ceux en promotion ou les plus récents)
         try {
             $data['plats'] = Plat::where('disponible', 1)
-                ->with('categorie')
+                ->with(['categorie', 'medias', 'groupesVariantes.variantes', 'vendeur.plan'])
                 ->orderBy('en_promotion', 'desc')
                 ->orderBy('date_creation', 'desc')
                 ->paginate(10, ['*'], 'plats_page');
         } catch (\Throwable $e) {
             $data['plats'] = Plat::whereRaw('1 = 0')->paginate(10, ['*'], 'plats_page');
-            \Log::error("Erreur Home Plats: " . $e->getMessage());
+            Log::error("Erreur Home Plats: " . $e->getMessage());
         }
 
         // Catégories actives
@@ -129,7 +129,7 @@ class HomeController extends Controller
             $data['stats'] = [
                 'total_vendeurs' => Vendeur::where('actif', 1)->count(),
                 'total_plats' => Plat::where('disponible', 1)->count(),
-                'total_commandes' => \DB::table('commandes')->count(),
+                'total_commandes' => DB::table('commandes')->count(),
             ];
         } catch (\Throwable $e) {
             $data['stats'] = ['total_vendeurs' => 0, 'total_plats' => 0, 'total_commandes' => 0];
@@ -232,7 +232,7 @@ class HomeController extends Controller
     public function explorePlats(Request $request)
     {
         $query = Plat::where('disponible', 1)
-            ->with(['categorie', 'vendeur.zone', 'groupesVariantes.variantes'])
+            ->with(['categorie', 'vendeur.zone', 'vendeur.plan', 'groupesVariantes.variantes', 'medias'])
             ->join('vendeurs', 'plats.id_vendeur', '=', 'vendeurs.id_vendeur')
             ->select('plats.*');
 
@@ -245,6 +245,7 @@ class HomeController extends Controller
                 'plats.*, ( 6371 * acos( cos( radians(?) ) * cos( radians( vendeurs.latitude ) ) * cos( radians( vendeurs.longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( vendeurs.latitude ) ) ) ) AS distance',
                 [$lat, $lng, $lat]
             );
+            $query->orderBy('vendeurs.is_boosted', 'desc'); // Priorité aux abonnements/boosts
             $query->orderBy('distance', 'asc');
         }
 
@@ -256,7 +257,8 @@ class HomeController extends Controller
         } elseif ($sort === 'top_sales') {
             $query->orderBy('plats.nombre_commandes', 'desc');
         } else {
-            $query->orderBy('plats.en_promotion', 'desc')
+            $query->orderBy('vendeurs.is_boosted', 'desc') // Toujours booster les abonnements par défaut
+                ->orderBy('plats.en_promotion', 'desc')
                 ->orderBy('plats.nombre_commandes', 'desc')
                 ->orderBy('vendeurs.note_moyenne', 'desc')
                 ->orderBy('plats.date_creation', 'desc');
@@ -273,7 +275,7 @@ class HomeController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('plats.nom_plat', 'like', '%' . $search . '%')
                     ->orWhere('plats.description', 'like', '%' . $search . '%')
-                    ->orWhere('vendeurs.nom_boutique', 'like', '%' . $search . '%');
+                    ->orWhere('vendeurs.nom_commercial', 'like', '%' . $search . '%');
             });
         }
 
@@ -285,7 +287,8 @@ class HomeController extends Controller
             $query->where('plats.prix', '<=', $request->max_price);
         }
 
-        $plats = $query->paginate(12);
+        // On affiche par page de 10 résultats pour prioriser les 10 premiers abonnements
+        $plats = $query->paginate(10);
 
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
         $zones = ZoneGeographique::where('actif', true)->orderBy('nom_zone')->get();
@@ -300,7 +303,7 @@ class HomeController extends Controller
     {
         $vendeur = Vendeur::with([
             'plats' => function ($query) {
-                $query->where('disponible', 1)->with(['categorie', 'groupesVariantes.variantes'])->orderBy('nom_plat');
+                $query->where('disponible', 1)->with(['categorie', 'groupesVariantes.variantes', 'medias'])->orderBy('nom_plat');
             },
             'contacts',
             'horaires' => function ($query) {
@@ -317,7 +320,7 @@ class HomeController extends Controller
         ])->findOrFail($id);
 
         // SEO: Rediriger vers l'URL avec le bon slug si nécessaire
-        $expectedSlug = \Str::slug($vendeur->nom_commercial);
+        $expectedSlug = Str::slug($vendeur->nom_commercial);
         if ($slug !== $expectedSlug) {
             return redirect()->route('vendor.show', ['id' => $id, 'slug' => $expectedSlug]);
         }

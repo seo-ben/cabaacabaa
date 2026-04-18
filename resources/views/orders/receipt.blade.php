@@ -19,7 +19,7 @@
     </style>
 </head>
 <body class="bg-gray-100 p-4 sm:p-10">
-    <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden receipt-container border border-gray-100">
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden receipt-container border border-gray-100">
         <!-- Receipt Header -->
         <div class="bg-gray-900 px-8 py-10 text-white text-center">
             <div class="mb-4">

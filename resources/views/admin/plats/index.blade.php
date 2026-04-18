@@ -80,11 +80,11 @@
 
             <div class="flex items-center gap-1.5 p-1.5 ml-auto">
                 <button type="submit" class="px-5 py-2.5 bg-gray-900 text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-gray-900/10">Appliquer</button>
-                @if($searchQuery || $categoryFilter || $vendorFilter)
+                <template x-if="searchQuery || categoryFilter || vendorFilter">
                     <a href="{{ route('admin.plats.index') }}" class="p-2.5 bg-gray-50 text-gray-400 hover:text-red-600 rounded-xl transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                     </a>
-                @endif
+                </template>
             </div>
         </form>
     </div>

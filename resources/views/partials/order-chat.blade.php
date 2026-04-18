@@ -1,6 +1,6 @@
 <div x-data="orderChat({{ $orderId === 'dynamic' ? 'orderId' : $orderId }})" 
      x-init="init()" 
-     class="flex flex-col bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden h-full max-h-[600px] border-b-8 border-b-orange-600"
+     class="flex flex-col bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden h-full max-h-[600px] border-b-8 border-b-orange-600"
      @new-message.window="if($event.detail.orderId == orderId) loadMessages()"
      x-cloak>
     
@@ -41,7 +41,7 @@
 
         <template x-if="!loading && messages.length === 0">
             <div class="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-60">
-                <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-3xl flex items-center justify-center">
+                <div class="w-20 h-20 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center">
                     <svg class="w-10 h-10 text-gray-200 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>

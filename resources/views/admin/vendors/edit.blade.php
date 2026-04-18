@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div class="px-10 py-5 border-b border-gray-50 flex items-center justify-between bg-gray-50/20">
             <div>
                 <h1 class="text-2xl font-black text-gray-900 tracking-tight">Profil de {{ $vendeur->nom_commercial }}</h1>
@@ -125,13 +125,13 @@
 
                 <div class="space-y-2">
                     <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Description Boutique</label>
-                    <textarea name="description" rows="4" class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-[2rem] font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none @error('description') border-red-500 @enderror">{{ $vendeur->description ?? old('description') }}</textarea>
+                    <textarea name="description" rows="4" class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none @error('description') border-red-500 @enderror">{{ $vendeur->description ?? old('description') }}</textarea>
                     @error('description')<span class="text-red-600 text-[10px] font-bold ml-2">{{ $message }}</span>@enderror
                 </div>
             </div>
 
             <!-- Section: Statut -->
-            <div class="bg-gray-50 rounded-[2rem] p-5 space-y-6 border border-gray-100">
+            <div class="bg-gray-50 rounded-2xl p-5 space-y-6 border border-gray-100">
                 <div class="flex items-center gap-4 mb-2">
                     <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -161,11 +161,11 @@
             </div>
 
             <div class="flex gap-4 pt-4 border-t border-gray-50 pb-10">
-                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
+                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     Enregistrer les changements
                 </button>
-                <a href="{{ route('admin.vendors.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-[2rem] font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all">
+                <a href="{{ route('admin.vendors.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all">
                     Annuler
                 </a>
             </div>
@@ -173,10 +173,10 @@
     </div>
 
     <!-- Payout Information (Coming Soon or Wallet Info) -->
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-4 flex items-center justify-between group overflow-hidden relative">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center justify-between group overflow-hidden relative">
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-gray-50 rounded-full scale-0 group-hover:scale-100 transition duration-700"></div>
         <div class="relative z-10 flex items-center gap-4">
-            <div class="w-12 h-12 bg-red-50 rounded-[1.5rem] flex items-center justify-center text-red-600">
+            <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
@@ -185,7 +185,7 @@
             </div>
         </div>
         <div class="relative z-10">
-            <a href="{{ route('admin.finance.index', ['search' => $vendeur->nom_commercial]) }}" class="px-5 py-4 bg-gray-900 text-white rounded-[1.5rem] font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl active:scale-95">
+            <a href="{{ route('admin.finance.index', ['search' => $vendeur->nom_commercial]) }}" class="px-5 py-4 bg-gray-900 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all shadow-xl active:scale-95">
                 Voir les transactions
             </a>
         </div>

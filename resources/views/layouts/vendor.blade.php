@@ -255,6 +255,7 @@
                     <span x-show="sidebarOpen" class="truncate transition-opacity duration-300">Produits & Menu</span>
                  </a>
 
+                 @if(Auth::user()->vendeur && Auth::user()->vendeur->canRecruitDrivers())
                  <a href="{{ vendor_route('vendeur.slug.delivery.index') }}" 
                    class="flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold text-gray-500 dark:text-gray-400 transition-all hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white {{ request()->routeIs('vendeur.slug.delivery.*') ? 'sidebar-active' : '' }}"
                    :class="!sidebarOpen ? 'justify-center px-0' : ''"
@@ -262,6 +263,7 @@
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span x-show="sidebarOpen" class="truncate transition-opacity duration-300">Livreurs</span>
                  </a>
+                 @endif
 
                 <p x-show="sidebarOpen" class="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mt-10 mb-4 transition-opacity duration-300">Configuration</p>
 
@@ -291,7 +293,7 @@
 
             <!-- User Footer -->
             <div class="p-6 border-t border-gray-100 dark:border-gray-800">
-                <div class="flex items-center gap-4 p-4 rounded-3xl bg-gray-50 dark:bg-gray-800/50" :class="!sidebarOpen ? 'justify-center p-2' : ''">
+                <div class="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50" :class="!sidebarOpen ? 'justify-center p-2' : ''">
                     <div class="w-10 h-10 shrink-0 rounded-2xl bg-white dark:bg-gray-700 flex items-center justify-center font-black text-xs text-red-600 shadow-sm border border-gray-100 dark:border-gray-600">
                         {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
@@ -373,7 +375,7 @@
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 translate-y-2 scale-95"
                              x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                             class="absolute right-0 mt-4 w-80 bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"
+                             class="absolute right-0 mt-4 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"
                              x-cloak>
                             
                             <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/30">

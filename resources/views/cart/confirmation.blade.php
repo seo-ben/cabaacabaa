@@ -31,7 +31,7 @@
         <!-- Tracking Map -->
         @if($commande->type_recuperation == 'livraison')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-700">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-700">
             <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-800/20">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white dark:bg-gray-800 text-orange-600 rounded-xl flex items-center justify-center border border-gray-100 dark:border-gray-700">

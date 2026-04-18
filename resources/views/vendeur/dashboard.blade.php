@@ -165,7 +165,7 @@
                 <div class="flex items-center gap-6 mb-8">
                     @php $isOpen = $vendeur->actif; @endphp
                     <div class="relative">
-                        <div class="w-16 h-16 rounded-[1.5rem] {{ $isOpen ? 'bg-green-500' : 'bg-red-500' }} flex items-center justify-center shadow-lg {{ $isOpen ? 'shadow-green-500/20' : 'shadow-red-500/20' }}">
+                        <div class="w-16 h-16 rounded-2xl {{ $isOpen ? 'bg-green-500' : 'bg-red-500' }} flex items-center justify-center shadow-lg {{ $isOpen ? 'shadow-green-500/20' : 'shadow-red-500/20' }}">
                             @if($isOpen)
                                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                             @else
@@ -209,14 +209,54 @@
                 </form>
             </div>
 
-            <!-- Ad Card -->
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/10 dark:to-orange-950/20 rounded-2xl p-10 border border-orange-200 dark:border-orange-900/30">
-                <p class="text-xs font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-4">Conseil Pro</p>
-                <h4 class="text-xl font-black text-gray-900 dark:text-white leading-tight mb-4">Boostez votre visibilité !</h4>
-                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-medium mb-8">Ajoutez des photos de haute qualité à vos articles pour augmenter vos ventes de <strong>30%</strong>.</p>
-                <a href="{{ vendor_route('vendeur.slug.plats.index') }}" class="px-6 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-xl shadow-orange-950/5 dark:shadow-none hover:bg-orange-600 hover:text-white dark:hover:bg-orange-600 transition-all">
-                    Mettre à jour mes articles
-                </a>
+            <!-- Subscription Status -->
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-10 border border-gray-100 dark:border-gray-800 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-xs font-black uppercase tracking-widest text-gray-400">Votre Plan</h3>
+                    <span class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[9px] font-black uppercase tracking-widest">{{ $vendeur->plan->name ?? 'Gratuit' }}</span>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Products Limit -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                            <span class="text-gray-400">Articles ({{ $usage['plats']['used'] }}/{{ $usage['plats']['limit'] }})</span>
+                            <span class="{{ $usage['plats']['percent'] >= 90 ? 'text-red-600' : 'text-gray-900 dark:text-white' }}">{{ round($usage['plats']['percent']) }}%</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full {{ $usage['plats']['percent'] >= 90 ? 'bg-red-600' : 'bg-gray-900 dark:bg-red-500' }} transition-all duration-700" style="width: {{ $usage['plats']['percent'] }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Staff Limit -->
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                            <span class="text-gray-400">Staff ({{ $usage['staff']['used'] }}/{{ $usage['staff']['limit'] }})</span>
+                            <span class="{{ $usage['staff']['percent'] >= 90 ? 'text-red-600' : 'text-gray-900 dark:text-white' }}">{{ round($usage['staff']['percent']) }}%</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full {{ $usage['staff']['percent'] >= 90 ? 'bg-red-600' : 'bg-gray-900 dark:bg-red-500' }} transition-all duration-700" style="width: {{ $usage['staff']['percent'] }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-gray-50 dark:border-gray-800 space-y-4">
+                    @if($vendeur->subscription_expires_at)
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">Expire le</p>
+                        <p class="text-xs font-black text-gray-900 dark:text-white">{{ $vendeur->subscription_expires_at->format('d M Y') }}</p>
+                    </div>
+                    @elseif($vendeur->trial_ends_at && $vendeur->trial_ends_at->isFuture())
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-orange-500">Essai gratuit finit le</p>
+                        <p class="text-xs font-black text-gray-900 dark:text-white">{{ $vendeur->trial_ends_at->format('d M Y') }}</p>
+                    </div>
+                    @endif
+                    
+                    <a href="#" class="w-full inline-block py-3.5 border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all text-center">
+                        Mise à niveau
+                    </a>
+                </div>
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div class="px-10 py-5 border-b border-gray-50 bg-gray-50/20 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-black text-gray-900 tracking-tight">Modifier: {{ $category->nom_categorie }}</h1>
@@ -47,7 +47,7 @@
 
             <div class="space-y-2">
                 <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Description (Optionnel)</label>
-                <textarea name="description" rows="3" class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-[2rem] font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none">{{ $category->description }}</textarea>
+                <textarea name="description" rows="3" class="w-full px-4 py-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-gray-900 focus:bg-white focus:border-red-500 outline-none transition-all resize-none">{{ $category->description }}</textarea>
             </div>
 
             <!-- Image Upload Section -->
@@ -55,7 +55,7 @@
                 <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Image de la catégorie</label>
                 
                 @if($category->image)
-                <div id="current-image" class="bg-gray-50 rounded-[2rem] p-4">
+                <div id="current-image" class="bg-gray-50 rounded-2xl p-4">
                     <div class="flex items-center gap-4">
                         <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->nom_categorie }}" class="w-32 h-32 object-cover rounded-lg shadow-lg">
                         <div class="flex-1">
@@ -70,7 +70,7 @@
                 </div>
                 @endif
                 
-                <div id="image-upload-zone" class="relative border-2 border-dashed border-gray-200 rounded-[2rem] p-5 text-center hover:border-red-400 transition-all cursor-pointer bg-gray-50/50">
+                <div id="image-upload-zone" class="relative border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center hover:border-red-400 transition-all cursor-pointer bg-gray-50/50">
                     <input type="file" name="image" id="image-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <div id="upload-placeholder" class="space-y-4">
                         <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center mx-auto">
@@ -106,11 +106,11 @@
             </div>
 
             <div class="flex gap-4 pt-6 border-t border-gray-50">
-                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
+                <button type="submit" class="flex-1 px-10 py-5 bg-red-600 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl shadow-red-200 hover:bg-black hover:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                     Sauvegarder les modifications
                 </button>
-                <a href="{{ route('admin.categories.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-[2rem] font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center">
+                <a href="{{ route('admin.categories.index') }}" class="px-10 py-5 bg-gray-100 text-gray-600 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-all flex items-center justify-center">
                     Annuler
                 </a>
             </div>
