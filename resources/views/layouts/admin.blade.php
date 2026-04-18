@@ -157,20 +157,20 @@
                 <!-- Tableau de bord -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.dashboard') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.dashboard') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         @if(request()->routeIs('admin.dashboard'))
                             <div class="absolute inset-0 bg-linear-to-r from-red-600 to-orange-500 opacity-100"></div>
                         @endif
 
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.dashboard') ? 'true' : 'false' }} ? 'bg-white/20' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100" x-transition:enter-start="opacity-0 translate-x-2" x-transition:enter-end="opacity-100 translate-x-0">Dashboard</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100" x-transition:enter-start="opacity-0 translate-x-2" x-transition:enter-end="opacity-100 translate-x-0">Dashboard</span>
                     </a>
                 </div>
                 @endcan
@@ -180,17 +180,17 @@
                 <!-- Gestion Vendeurs -->
                 <div class="px-1.5">
                     <button @click="activeDropdown = activeDropdown === 'vendors' ? null : 'vendors'" 
-                            class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                            class="w-full flex items-center justify-between px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                             :class="activeDropdown === 'vendors' ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         <div class="flex items-center gap-3 relative z-10">
-                            <div class="w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                            <div class="w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                                  :class="activeDropdown === 'vendors' ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-600'">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                 </svg>
                             </div>
-                            <span x-show="sidebarOpen" class="font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100" x-transition:enter-start="opacity-0 translate-x-2" x-transition:enter-end="opacity-100 translate-x-0">Vendeurs</span>
+                            <span x-show="sidebarOpen" class="font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100" x-transition:enter-start="opacity-0 translate-x-2" x-transition:enter-end="opacity-100 translate-x-0">Vendeurs</span>
                         </div>
                         
                         <svg x-show="sidebarOpen" :class="activeDropdown === 'vendors' ? 'rotate-180' : ''" class="w-3 h-3 transition-transform duration-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,12 +200,12 @@
                     
                     <div x-show="activeDropdown === 'vendors' && sidebarOpen" x-collapse class="space-y-0.5 my-1 pr-1.5">
                         <a href="{{ route('admin.vendors.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.vendors.index') && !request('status') ? 'text-red-600 border-red-600 bg-red-50/30' : 'text-gray-400 border-transparent hover:text-red-500 hover:bg-red-50/20 hover:border-red-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.vendors.index') && !request('status') ? 'text-red-600 border-red-600 bg-red-50/30' : 'text-gray-400 border-transparent hover:text-red-500 hover:bg-red-50/20 hover:border-red-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Liste complète
                         </a>
                         <a href="{{ route('admin.vendors.index') }}?status=en_cours" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request('status') == 'en_cours' ? 'text-orange-600 border-orange-600 bg-orange-50/30' : 'text-gray-400 border-transparent hover:text-orange-500 hover:bg-orange-50/20 hover:border-orange-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request('status') == 'en_cours' ? 'text-orange-600 border-orange-600 bg-orange-50/30' : 'text-gray-400 border-transparent hover:text-orange-500 hover:bg-orange-50/20 hover:border-orange-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             En attente
                             @if($pendingCount > 0)
@@ -220,17 +220,17 @@
                 <!-- Gestion Commandes -->
                 <div class="px-1.5">
                     <button @click="activeDropdown = activeDropdown === 'orders' ? null : 'orders'" 
-                            class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                            class="w-full flex items-center justify-between px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                             :class="activeDropdown === 'orders' ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         <div class="flex items-center gap-3 relative z-10">
-                            <div class="w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                            <div class="w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                                  :class="activeDropdown === 'orders' ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-600'">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2-2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                 </svg>
                             </div>
-                            <span x-show="sidebarOpen" class="font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Commandes</span>
+                            <span x-show="sidebarOpen" class="font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Commandes</span>
                         </div>
                         
                         <svg x-show="sidebarOpen" :class="activeDropdown === 'orders' ? 'rotate-180' : ''" class="w-3 h-3 transition-transform duration-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,12 +240,12 @@
                     
                     <div x-show="activeDropdown === 'orders' && sidebarOpen" x-collapse class="space-y-0.5 my-1 pr-1.5">
                         <a href="{{ route('admin.orders.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.orders.index') && !request('status') ? 'text-red-600 border-red-600 bg-red-50/30' : 'text-gray-400 border-transparent hover:text-red-500 hover:bg-red-50/20 hover:border-red-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.orders.index') && !request('status') ? 'text-red-600 border-red-600 bg-red-50/30' : 'text-gray-400 border-transparent hover:text-red-500 hover:bg-red-50/20 hover:border-red-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Toutes
                         </a>
                         <a href="{{ route('admin.orders.index', ['status' => 'en_attente']) }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request('status') == 'en_attente' ? 'text-orange-600 border-orange-600 bg-orange-50/30' : 'text-gray-400 border-transparent hover:text-orange-500 hover:bg-orange-50/20 hover:border-orange-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request('status') == 'en_attente' ? 'text-orange-600 border-orange-600 bg-orange-50/30' : 'text-gray-400 border-transparent hover:text-orange-500 hover:bg-orange-50/20 hover:border-orange-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             En cours
                         </a>
@@ -257,17 +257,17 @@
                 <!-- Gestion Utilisateurs -->
                 <div class="px-1.5">
                     <button @click="activeDropdown = activeDropdown === 'users' ? null : 'users'" 
-                            class="w-full flex items-center justify-between px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                            class="w-full flex items-center justify-between px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                             :class="activeDropdown === 'users' ? 'bg-indigo-50/50 text-indigo-600 shadow-sm border border-indigo-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         <div class="flex items-center gap-3 relative z-10">
-                            <div class="w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                            <div class="w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                                  :class="activeDropdown === 'users' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-indigo-600'">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
                             </div>
-                            <span x-show="sidebarOpen" class="font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Utilisateurs</span>
+                            <span x-show="sidebarOpen" class="font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Utilisateurs</span>
                         </div>
                         
                         <svg x-show="sidebarOpen" :class="activeDropdown === 'users' ? 'rotate-180' : ''" class="w-3 h-3 transition-transform duration-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -276,13 +276,13 @@
                     </button>
                     <div x-show="activeDropdown === 'users' && sidebarOpen" x-collapse class="space-y-0.5 my-1 pr-1.5">
                         <a href="{{ route('admin.users.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.users.index') ? 'text-indigo-600 border-indigo-600 bg-indigo-50/30' : 'text-gray-400 border-transparent hover:text-indigo-500 hover:bg-indigo-50/20 hover:border-indigo-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.users.index') ? 'text-indigo-600 border-indigo-600 bg-indigo-50/30' : 'text-gray-400 border-transparent hover:text-indigo-500 hover:bg-indigo-50/20 hover:border-indigo-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Clients
                         </a>
                         @can('manage_admins')
                         <a href="{{ route('admin.admins.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.admins*') ? 'text-purple-600 border-purple-600 bg-purple-50/30' : 'text-gray-400 border-transparent hover:text-purple-500 hover:bg-purple-50/20 hover:border-purple-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.admins*') ? 'text-purple-600 border-purple-600 bg-purple-50/30' : 'text-gray-400 border-transparent hover:text-purple-500 hover:bg-purple-50/20 hover:border-purple-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Admins
                         </a>
@@ -295,16 +295,16 @@
                 <!-- Gestion Articles -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.plats.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.plats*') ? 'true' : 'false' }} ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.plats*') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-red-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Articles</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Articles</span>
                     </a>
                 </div>
                 @endcan
@@ -313,16 +313,16 @@
                 <!-- Catégories Articles -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.categories.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.categories*') ? 'true' : 'false' }} ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.categories*') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-red-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Catégories</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Catégories</span>
                     </a>
                 </div>
                 @endcan
@@ -331,16 +331,16 @@
                 <!-- Avis & Évaluations -->
                 <div class="px-1.5">
                     <a href="{{-- route('admin.reviews.index') --}}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.reviews*') ? 'true' : 'false' }} ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.reviews*') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-red-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Avis Clients</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Avis Clients</span>
                     </a>
                 </div>
                 @endcan
@@ -349,16 +349,16 @@
                 <!-- Zones -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.zones.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.zones*') ? 'true' : 'false' }} ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.zones*') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-red-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Zones</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Zones</span>
                     </a>
                 </div>
                 @endcan
@@ -367,16 +367,16 @@
                 <!-- Catégories Boutiques -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.vendor-categories.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.vendor-categories*') ? 'true' : 'false' }} ? 'bg-orange-50/50 text-orange-600 shadow-sm border border-orange-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.vendor-categories*') ? 'true' : 'false' }} ? 'bg-orange-600 text-white shadow-md shadow-orange-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-orange-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Boutiques</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Boutiques</span>
                     </a>
                 </div>
                 @endcan
@@ -385,16 +385,16 @@
                 <!-- Promotions -->
                 <div class="px-1.5">
                     <a href="{{-- route('admin.promotions.index') --}}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.promotions*') ? 'true' : 'false' }} ? 'bg-red-50/50 text-red-600 shadow-sm border border-red-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.promotions*') ? 'true' : 'false' }} ? 'bg-red-600 text-white shadow-md shadow-red-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-red-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Promotions</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Promotions</span>
                     </a>
                 </div>
                 @endcan
@@ -403,20 +403,20 @@
                 <!-- Finance -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.finance.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.finance*') ? 'true' : 'false' }} ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         @if(request()->routeIs('admin.finance*'))
                             <div class="absolute inset-0 bg-linear-to-r from-emerald-600 to-teal-500 opacity-100"></div>
                         @endif
 
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.finance*') ? 'true' : 'false' }} ? 'bg-white/20' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-emerald-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Finance</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Finance</span>
                     </a>
                 </div>
                 @endcan
@@ -425,20 +425,20 @@
                 <!-- Statistiques -->
                 <div class="px-1.5">
                     <a href="{{-- route('admin.analytics.index') --}}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.analytics*') ? 'true' : 'false' }} ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         @if(request()->routeIs('admin.analytics*'))
                             <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-500 opacity-100"></div>
                         @endif
 
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.analytics*') ? 'true' : 'false' }} ? 'bg-white/20' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-blue-600'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Analytics</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Analytics</span>
                     </a>
                 </div>
                 @endcan
@@ -448,14 +448,14 @@
                 <div class="px-1.5">
                     <a href="{{ url(config('pulse.path')) }}"
                        target="_blank"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95 text-gray-500 hover:bg-gray-50 hover:text-purple-600 border border-transparent">
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95 text-gray-500 hover:bg-gray-50 hover:text-purple-600 border border-transparent">
                         
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300 bg-gray-50 text-gray-400 group-hover:bg-purple-100 group-hover:text-purple-600">
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300 bg-gray-50 text-gray-400 group-hover:bg-purple-100 group-hover:text-purple-600">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Monitoring</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Monitoring</span>
                     </a>
                 </div>
                 @endcan
@@ -466,20 +466,20 @@
                 <!-- Sécurité -->
                 <div class="px-1.5">
                     <a href="{{ route('admin.security.index') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                       class="flex items-center gap-3 px-3 py-2 mb-1 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                        :class="{{ request()->routeIs('admin.security*') ? 'true' : 'false' }} ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         @if(request()->routeIs('admin.security*'))
                             <div class="absolute inset-0 bg-slate-900 opacity-100"></div>
                         @endif
 
-                        <div class="relative z-10 w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                        <div class="relative z-10 w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                              :class="{{ request()->routeIs('admin.security*') ? 'true' : 'false' }} ? 'bg-white/20' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-slate-900'">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                             </svg>
                         </div>
-                        <span x-show="sidebarOpen" class="relative z-10 font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Sécurité</span>
+                        <span x-show="sidebarOpen" class="relative z-10 font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Sécurité</span>
                     </a>
                 </div>
                 @endcan
@@ -488,17 +488,17 @@
                 <!-- Paramètres -->
                 <div class="px-1.5 mb-1">
                     <button @click="activeDropdown = activeDropdown === 'settings' ? null : 'settings'" 
-                            class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-300 group relative overflow-hidden active:scale-95"
+                            class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-300 group relative overflow-hidden active:scale-95"
                             :class="activeDropdown === 'settings' ? 'bg-gray-50/50 text-gray-900 shadow-sm border border-gray-100/50' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 border border-transparent'">
                         
                         <div class="flex items-center gap-3 relative z-10">
-                            <div class="w-7 h-7 flex items-center justify-center rounded-lg transition-all duration-300"
+                            <div class="w-6 h-6 flex items-center justify-center rounded-md transition-all duration-300"
                                  :class="activeDropdown === 'settings' ? 'bg-gray-900 text-white shadow-md shadow-gray-200' : 'bg-gray-50 text-gray-400 group-hover:bg-gray-100 group-hover:text-gray-900'">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                             </div>
-                            <span x-show="sidebarOpen" class="font-black text-[10px] uppercase tracking-widest" x-transition:enter="transition ease-out duration-300 delay-100">Système</span>
+                            <span x-show="sidebarOpen" class="font-medium text-sm tracking-tight" x-transition:enter="transition ease-out duration-300 delay-100">Système</span>
                         </div>
                         <svg x-show="sidebarOpen" class="w-3 h-3 transition-transform duration-300 relative z-10" :class="activeDropdown === 'settings' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -507,12 +507,12 @@
                     
                     <div x-show="activeDropdown === 'settings' && sidebarOpen" x-cloak class="space-y-0.5 my-1 pr-1.5">
                         <a href="{{ route('admin.settings.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.settings*') ? 'text-gray-900 border-gray-900 bg-gray-50' : 'text-gray-400 border-transparent hover:text-gray-600 hover:bg-gray-50/50 hover:border-gray-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.settings*') ? 'text-gray-900 border-gray-900 bg-gray-50' : 'text-gray-400 border-transparent hover:text-gray-600 hover:bg-gray-50/50 hover:border-gray-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Configuration
                         </a>
                         <a href="{{ route('admin.countries.index') }}" 
-                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.countries*') ? 'text-gray-900 border-gray-900 bg-gray-50' : 'text-gray-400 border-transparent hover:text-gray-600 hover:bg-gray-50/50 hover:border-gray-200' }}">
+                           class="flex items-center gap-2.5 ml-10 px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 border-l-2 {{ request()->routeIs('admin.countries*') ? 'text-gray-900 border-gray-900 bg-gray-50' : 'text-gray-400 border-transparent hover:text-gray-600 hover:bg-gray-50/50 hover:border-gray-200' }}">
                             <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                             Pays & Localisation
                         </a>
@@ -531,17 +531,17 @@
                         <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>
                     <div class="flex-1 min-w-0 transition-opacity duration-300">
-                        <p class="text-[11px] font-black text-gray-900 truncate tracking-tight">{{ auth()->user()->name }}</p>
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Master Admin</p>
+                        <p class="text-sm font-medium text-gray-900 truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-gray-500 truncate">Master Admin</p>
                     </div>
                 </div>
                 <form method="POST" action="{{ route('logout') }}" class="mt-4" x-show="sidebarOpen">
                     @csrf
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-300 font-black text-[9px] uppercase tracking-widest shadow-sm hover:shadow-lg hover:shadow-red-200 active:scale-95 group">
-                        <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md hover:shadow-red-200 active:scale-95 group">
+                        <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
-                        Quitter
+                        Déconnexion
                     </button>
                 </form>
             </div>
@@ -765,7 +765,7 @@
         <main class="flex-1 transition-all duration-500 ease-in-out" :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'">
             <!-- Top Header -->
             <header class="bg-white border-b border-gray-200 sticky top-0 z-20">
-                <div class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="px-3 sm:px-5 lg:px-6 h-14 flex items-center justify-between">
                     <button @click="mobileMenuOpen = true" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -851,7 +851,7 @@
             </header>
 
             <!-- Page Content -->
-            <div class="p-4 sm:p-6 lg:p-8">
+            <div class="p-3 sm:p-4 lg:p-5">
                 <!-- Alerts are now handled by the Global Modal -->
 
                 @yield('content')

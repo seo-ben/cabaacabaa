@@ -24,33 +24,33 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-gray-50/50">
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Vendeur</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Montant</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Méthode</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Date Demande</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Statut</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Actions</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Vendeur</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Montant</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Méthode</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Date Demande</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Statut</th>
+                        <th class="px-5 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
                     @forelse($payouts as $payout)
                     <tr class="hover:bg-gray-50/30 transition">
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             <p class="text-sm font-black text-gray-900">{{ $payout->vendeur->nom_commercial }}</p>
                             <p class="text-[10px] text-gray-400 font-bold uppercase">{{ $payout->vendeur->telephone_commercial }}</p>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             <p class="text-lg font-black text-red-600">{{ number_format($payout->montant, 0, ',', ' ') }} F</p>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             <p class="text-xs font-bold text-gray-900">{{ $payout->methode_paiement }}</p>
                             <p class="text-[10px] text-gray-500 font-medium truncate max-w-[150px]">{{ $payout->informations_paiement }}</p>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             <p class="text-xs font-bold text-gray-900">{{ $payout->created_at->format('d/m/Y') }}</p>
                             <p class="text-[10px] text-gray-400 font-bold uppercase">{{ $payout->created_at->diffForHumans() }}</p>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             @php
                                 $statusClasses = [
                                     'en_attente' => 'bg-orange-50 text-orange-600 border-orange-100',
@@ -62,7 +62,7 @@
                                 {{ $payout->statut }}
                             </span>
                         </td>
-                        <td class="px-8 py-6">
+                        <td class="px-5 py-4">
                             @if($payout->statut == 'en_attente')
                             <button onclick="openPayoutModal('{{ $payout->id_payout }}', '{{ $payout->montant }}', '{{ $payout->vendeur->nom_commercial }}')" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-[9px] font-black uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all">
                                 Traiter
@@ -74,7 +74,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-8 py-20 text-center">
+                        <td colspan="6" class="px-5 py-20 text-center">
                             <p class="text-gray-400 font-medium italic">Aucune demande de retrait.</p>
                         </td>
                     </tr>
@@ -82,7 +82,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="px-8 py-6 border-t border-gray-50">
+        <div class="px-5 py-4 border-t border-gray-50">
             {{ $payouts->appends(request()->query())->links() }}
         </div>
     </div>
@@ -91,16 +91,16 @@
 <!-- Approval Modal (Same as Index for Consistency) -->
 <div id="payoutModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePayoutModal()"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-10 overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl p-4 overflow-hidden">
         <div class="relative z-10">
             <h3 class="text-2xl font-black text-gray-900 tracking-tight mb-2">Traiter le Retrait</h3>
-            <p id="modalVendeur" class="text-sm text-gray-500 mb-8 font-medium"></p>
+            <p id="modalVendeur" class="text-sm text-gray-500 mb-5 font-medium"></p>
             
             <form id="payoutForm" method="POST" action="">
                 @csrf @method('PATCH')
-                <div class="bg-gray-50 rounded-2xl p-6 mb-8 text-center italic">
+                <div class="bg-gray-50 rounded-lg p-4 mb-5 text-center italic">
                     <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px] mb-2">Montant du virement</p>
-                    <p id="modalAmount" class="text-4xl font-black text-red-600 tracking-tighter"></p>
+                    <p id="modalAmount" class="text-2xl font-black text-red-600 tracking-tighter"></p>
                 </div>
 
                 <div class="space-y-4">

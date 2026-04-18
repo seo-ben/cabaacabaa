@@ -13,13 +13,17 @@ class NewsletterController extends Controller
             'email' => 'required|email|max:255',
         ]);
 
-        // Try to persist subscription to a simple file (non-blocking)
         try {
             Storage::append('newsletter_subscriptions.txt', $data['email']);
-        } catch (\Throwable $e) {
-            // ignore storage errors in minimal implementation
+        } catch (\Throwable $e) {}
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Merci de faire confiance à CabaaCabaa'
+            ]);
         }
 
-        return back()->with('success', 'Merci ! Vous êtes inscrit(e) à la newsletter.');
+        return back()->with('success', 'Merci de faire confiance à CabaaCabaa');
     }
 }

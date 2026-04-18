@@ -28,7 +28,7 @@ class CartController extends Controller
     {
         $plat = Plat::with(['vendeur', 'groupesVariantes.variantes'])->findOrFail($id);
 
-        if (!$plat->is_available) {
+        if (!$plat->disponible) {
             return response()->json([
                 'error' => 'Désolé, cet article est actuellement en rupture de stock.'
             ], 400);

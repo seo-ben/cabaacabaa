@@ -12,10 +12,10 @@ class AdminController extends Controller
         // summary dashboard for admin
         $totalVendeurs = Vendeur::count('*');
         $pendingVendeursCount = Vendeur::where('statut_verification', '=', 'en_cours')->count('*');
-        $vendeursRecent = Vendeur::latest('date_inscription')->limit(6)->get();
+        $latestVendeurs = Vendeur::latest('date_inscription')->limit(6)->get();
         $totalRevenue = \App\Models\Commande::where('statut', '=', 'termine')->sum('montant_total');
 
-        return view('admin.dashboard', compact('totalVendeurs', 'pendingVendeursCount', 'vendeursRecent', 'totalRevenue'));
+        return view('admin.dashboard', compact('totalVendeurs', 'pendingVendeursCount', 'latestVendeurs', 'totalRevenue'));
     }
 
     public function vendeurs()

@@ -14,16 +14,16 @@
     <table class="w-full text-left">
         <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
-                <th class="px-6 py-4 font-semibold text-gray-700">Nom</th>
-                <th class="px-6 py-4 font-semibold text-gray-700">Email</th>
-                <th class="px-6 py-4 font-semibold text-gray-700">Rôle</th>
-                <th class="px-6 py-4 font-semibold text-gray-700 text-right">Actions</th>
+                <th class="px-4 py-4 font-semibold text-gray-700">Nom</th>
+                <th class="px-4 py-4 font-semibold text-gray-700">Email</th>
+                <th class="px-4 py-4 font-semibold text-gray-700">Rôle</th>
+                <th class="px-4 py-4 font-semibold text-gray-700 text-right">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
             @forelse($admins as $admin)
             <tr class="hover:bg-gray-50 transition">
-                <td class="px-6 py-4">
+                <td class="px-4 py-4">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
                             {{ substr($admin->name, 0, 1) }}
@@ -31,15 +31,15 @@
                         <span class="font-medium text-gray-900">{{ $admin->name }}</span>
                     </div>
                 </td>
-                <td class="px-6 py-4 text-gray-600">{{ $admin->email }}</td>
-                <td class="px-6 py-4">
+                <td class="px-4 py-4 text-gray-600">{{ $admin->email }}</td>
+                <td class="px-4 py-4">
                     @if($admin->id_user === 1)
                         <span class="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold">Super Admin</span>
                     @else
                         <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-bold">Admin</span>
                     @endif
                 </td>
-                <td class="px-6 py-4 text-right">
+                <td class="px-4 py-4 text-right">
                     @if($admin->id_user !== 1 || auth()->id() === 1)
                         <div class="flex items-center justify-end gap-2">
                             <a href="{{ route('admin.admins.edit', $admin->id_user) }}" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
@@ -63,12 +63,12 @@
             </tr>
             @empty
             <tr>
-                <td colspan="4" class="px-6 py-8 text-center text-gray-500">Aucun administrateur trouvé.</td>
+                <td colspan="4" class="px-4 py-5 text-center text-gray-500">Aucun administrateur trouvé.</td>
             </tr>
             @endforelse
         </tbody>
     </table>
-    <div class="px-6 py-4 border-t border-gray-100">
+    <div class="px-4 py-4 border-t border-gray-100">
         {{ $admins->links() }}
     </div>
 </div>

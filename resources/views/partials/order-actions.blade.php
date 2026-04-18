@@ -1,6 +1,6 @@
 <div class="inline-flex gap-2">
     <!-- Chat Button -->
-    <button @click="$dispatch('open-chat-modal', { orderId: {{ $order->id_commande }} })" 
+    <button @click="$dispatch('open-chat-modal', { orderId: {{ $order->id_commande }}, orderCode: '{{ $order->numero_commande }}' })" 
             class="p-2 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-600 hover:text-white transition-all border border-orange-100 dark:border-orange-900/30 relative" 
             title="Discuter avec le client">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>

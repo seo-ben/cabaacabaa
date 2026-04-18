@@ -174,10 +174,10 @@ class PlatController extends Controller
         $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
         $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
 
-        $plat->is_available = !$plat->is_available;
+        $plat->disponible = !$plat->disponible;
         $plat->save();
 
-        $msg = $plat->is_available ? 'Article à nouveau disponible !' : 'Article marqué comme épuisé.';
+        $msg = $plat->disponible ? 'Article à nouveau disponible !' : 'Article marqué comme épuisé.';
         return back()->with('success', $msg);
     }
 }

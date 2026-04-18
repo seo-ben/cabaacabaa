@@ -25,7 +25,9 @@ class ImageHelper
             $extension = $isFilePath ? pathinfo($file, PATHINFO_EXTENSION) : strtolower($file->getClientOriginalExtension());
             $realPath = $isFilePath ? $file : $file->getRealPath();
             
-            $imageName = Str::random(40) . '.jpg';
+            // Keep PNG extension to preserve transparency (especially for logos and favicons)
+            $outExtension = ($extension === 'png') ? 'png' : 'jpg';
+            $imageName = Str::random(40) . '.' . $outExtension;
             $filePath = $directory . '/' . $imageName;
 
             // Load the image based on its type
@@ -70,9 +72,14 @@ class ImageHelper
                 $image = $tmpImage;
             }
 
-            // Save Main Image as JPG (Avoid WebP on server)
+            // Save Main Image (Avoid WebP on server, but keep PNG if it was PNG)
             $tempPath = tempnam(sys_get_temp_dir(), 'img');
-            imagejpeg($image, $tempPath, $quality);
+            if ($outExtension === 'png') {
+                imagesavealpha($image, true);
+                imagepng($image, $tempPath, (int)round((100 - $quality) / 10 > 9 ? 9 : (100 - $quality) / 10)); // Compression PNG (0-9)
+            } else {
+                imagejpeg($image, $tempPath, $quality);
+            }
             Storage::disk('public')->putFileAs($directory, new \Illuminate\Http\File($tempPath), $imageName);
             
             // Thumbnail Logic
@@ -85,7 +92,12 @@ class ImageHelper
                 imagecopyresampled($thumbImage, $image, 0, 0, 0, 0, $thumbWidth, $thumbHeight, imagesx($image), imagesy($image));
                 
                 $thumbTempPath = tempnam(sys_get_temp_dir(), 'thumb');
-                imagejpeg($thumbImage, $thumbTempPath, 60); 
+                if ($outExtension === 'png') {
+                    imagesavealpha($thumbImage, true);
+                    imagepng($thumbImage, $thumbTempPath, 6); 
+                } else {
+                    imagejpeg($thumbImage, $thumbTempPath, 60); 
+                }
                 Storage::disk('public')->putFileAs($directory . '/thumbnails', new \Illuminate\Http\File($thumbTempPath), $imageName);
                 
                 imagedestroy($thumbImage);

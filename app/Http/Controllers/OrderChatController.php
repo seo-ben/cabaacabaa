@@ -102,6 +102,9 @@ class OrderChatController extends Controller
         // Notify participants
         $this->notifyParticipants($order, $message);
 
+        // Real-time broadcast
+        event(new \App\Events\NewChatMessage($message));
+
         $message->load('user:id_user,name,photo_profil');
 
         return response()->json($message, 201);
@@ -132,8 +135,9 @@ class OrderChatController extends Controller
             
             // Notify Vendor Staff
             $staffIds = \App\Models\VendorStaff::where('id_vendeur', $order->id_vendeur)->pluck('id_user');
+            $notifications = [];
             foreach($staffIds as $staffId) {
-                Notification::create([
+                $notifications[] = [
                     'id_utilisateur' => $staffId,
                     'type_notification' => 'nouveau_message',
                     'titre' => 'Nouveau message client',
@@ -141,7 +145,10 @@ class OrderChatController extends Controller
                     'id_commande' => $order->id_commande,
                     'lue' => false,
                     'date_creation' => now(),
-                ]);
+                ];
+            }
+            if (!empty($notifications)) {
+                \App\Models\Notification::insert($notifications);
             }
         }
         

@@ -12,15 +12,15 @@
             </svg>
         </a>
         <div>
-            <h1 class="text-3xl font-black text-gray-900">Détails de Sécurité</h1>
+            <h1 class="text-xl font-black text-gray-900">Détails de Sécurité</h1>
             <p class="text-gray-500 font-medium">Historique pour <strong>{{ $user->name }}</strong> ({{ $user->email }})</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- User Security Status Card -->
         <div class="lg:col-span-1 space-y-6">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">État du Compte</h2>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center text-sm">
@@ -48,7 +48,7 @@
                 </div>
                 
                 @if($user->isLocked())
-                    <div class="mt-6 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-sm">
+                    <div class="mt-6 p-4 bg-red-50 border border-red-100 rounded-lg text-red-700 text-sm">
                         <div class="font-bold flex items-center gap-2 mb-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Risk Profile -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-lg font-bold text-gray-900 mb-4">Profil de Risque</h2>
                 <div class="relative pt-1">
                     <div class="flex mb-2 items-center justify-between">
@@ -98,8 +98,8 @@
 
         <!-- Logs History -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-4 py-4 border-b border-gray-100 flex items-center justify-between">
                     <h2 class="text-lg font-bold text-gray-900">Historique des Connexions</h2>
                     <span class="text-xs text-gray-500 font-medium">30 derniers records</span>
                 </div>
@@ -107,42 +107,42 @@
                     <table class="w-full text-left">
                         <thead class="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Adresse IP</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Résultat</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Détails</th>
+                                <th class="px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Adresse IP</th>
+                                <th class="px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Résultat</th>
+                                <th class="px-4 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Détails</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($attempts as $log)
                                 <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                    <td class="px-4 py-4 text-sm text-gray-600">
                                         {{ $log->attempted_at->format('d/m/Y H:i') }}
                                     </td>
-                                    <td class="px-6 py-4 text-sm font-mono text-gray-600">
+                                    <td class="px-4 py-4 text-sm font-mono text-gray-600">
                                         {{ $log->ip_address }}
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-4 py-4">
                                         @if($log->status === 'success')
                                             <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">Succès</span>
                                         @else
                                             <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">Échec</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 text-xs text-gray-400">
+                                    <td class="px-4 py-4 text-xs text-gray-400">
                                         {{ $log->failure_reason ?? '-' }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-6 py-12 text-center text-gray-500">Aucun historique disponible.</td>
+                                    <td colspan="4" class="px-4 py-12 text-center text-gray-500">Aucun historique disponible.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
                 @if($attempts->hasPages())
-                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                    <div class="px-4 py-4 bg-gray-50 border-t border-gray-100">
                         {{ $attempts->links() }}
                     </div>
                 @endif

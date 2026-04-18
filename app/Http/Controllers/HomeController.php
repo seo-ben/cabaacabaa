@@ -217,7 +217,7 @@ class HomeController extends Controller
         $vendeurs = $query->paginate(12);
 
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
-        $zones = ZoneGeographique::where('actif', true)->orderBy('nom')->get();
+        $zones = ZoneGeographique::where('actif', true)->orderBy('nom_zone')->get();
         // Optionnel: Récupérer les types uniques de vendeurs pour le filtre
         $types = collect(['restaurant', 'boutique', 'epicerie', 'fast_food', 'autre'])->map(function($t) {
             return (object) ['id_category_vendeur' => $t, 'name' => ucfirst($t)];
@@ -232,7 +232,6 @@ class HomeController extends Controller
     public function explorePlats(Request $request)
     {
         $query = Plat::where('disponible', 1)
-            ->where('is_available', 1)
             ->with(['categorie', 'vendeur.zone', 'groupesVariantes.variantes'])
             ->join('vendeurs', 'plats.id_vendeur', '=', 'vendeurs.id_vendeur')
             ->select('plats.*');
@@ -268,12 +267,13 @@ class HomeController extends Controller
             $query->where('id_categorie', $request->category);
         }
 
-        // Recherche
+        // Recherche (Par nom de plat, description ou nom de la boutique)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('plats.nom_plat', 'like', '%' . $search . '%')
-                    ->orWhere('plats.description', 'like', '%' . $search . '%');
+                    ->orWhere('plats.description', 'like', '%' . $search . '%')
+                    ->orWhere('vendeurs.nom_boutique', 'like', '%' . $search . '%');
             });
         }
 
@@ -288,7 +288,7 @@ class HomeController extends Controller
         $plats = $query->paginate(12);
 
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
-        $zones = ZoneGeographique::where('actif', true)->orderBy('nom')->get();
+        $zones = ZoneGeographique::where('actif', true)->orderBy('nom_zone')->get();
 
         return view('explore-plats', compact('plats', 'categories', 'zones'));
     }

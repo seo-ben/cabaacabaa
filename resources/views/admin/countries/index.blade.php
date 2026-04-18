@@ -13,7 +13,7 @@
     </div>
 
     <!-- Instructions Card -->
-    <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 flex items-start gap-4">
+    <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 flex items-start gap-4">
         <div class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-indigo-200">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -28,10 +28,10 @@
     <!-- Country Selection Form -->
     <form action="{{ route('admin.countries.update-selection') }}" method="POST">
         @csrf
-        <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-x divide-y divide-gray-50">
                 @foreach($allCountries as $country)
-                    <label class="group relative flex items-center gap-4 p-6 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <label class="group relative flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-50 transition-colors">
                         <div class="relative flex items-center">
                             <input type="checkbox" name="countries[]" value="{{ $country['phone_prefix'] }}" 
                                    {{ in_array($country['phone_prefix'], $activeCountries) ? 'checked' : '' }}
@@ -53,9 +53,9 @@
             </div>
 
             <!-- Footer Action -->
-            <div class="p-8 bg-gray-50 border-t border-gray-100 flex justify-end">
+            <div class="p-5 bg-gray-50 border-t border-gray-100 flex justify-end">
                 <button type="submit" 
-                        class="px-10 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black rounded-2xl shadow-xl shadow-red-200 hover:shadow-2xl hover:shadow-red-300 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-3">
+                        class="px-10 py-4 bg-gradient-to-r from-red-600 to-orange-600 text-white font-black rounded-lg shadow-xl shadow-red-200 hover:shadow-2xl hover:shadow-red-300 transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>

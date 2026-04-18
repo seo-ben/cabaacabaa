@@ -268,7 +268,7 @@
                  x-transition:leave-end="opacity-0 scale-90"
                  class="pointer-events-auto flex items-center gap-3 px-5 py-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800">
                 <div :class="toast.type === 'success' ? 'bg-green-500' : 'bg-blue-500'" class="w-3 h-3 rounded-full shrink-0"></div>
-                <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white" x-text="toast.message"></p>
+                <p class="text-[11px] font-black  tracking-widest text-gray-900 dark:text-white" x-text="toast.message"></p>
                 <button @click="toasts = toasts.filter(t => t.id !== toast.id)" class="ml-auto text-gray-400 hover:text-gray-900 dark:hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
@@ -305,7 +305,7 @@
                  class="relative inline-block px-8 py-10 overflow-hidden text-center align-bottom transition-all transform bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl sm:my-8 sm:align-middle sm:max-w-md w-full border border-gray-100 dark:border-gray-800">
                 
                 <div class="flex flex-col items-center">
-                    <!-- Icon --> 
+                    <!-- Icon -->
                     <div :class="{
                         'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400': modalType === 'success',
                         'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400': modalType === 'error',
@@ -323,10 +323,10 @@
                     </div>
 
                     <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4 tracking-tight" x-text="modalTitle"></h3>
-                    <p class="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-loose mb-10" x-text="modalMessage"></p>
+                    <p class="text-sm font-bold text-gray-400 dark:text-gray-500  tracking-widest leading-loose mb-10" x-text="modalMessage"></p>
 
                     <button @click="showModal = false" 
-                            class="w-full py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-black dark:hover:bg-gray-100 transition-all shadow-xl shadow-gray-200 dark:shadow-none">
+                            class="w-full py-5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl text-[10px] font-black  tracking-[0.3em] hover:bg-black dark:hover:bg-gray-100 transition-all shadow-xl shadow-gray-200 dark:shadow-none">
                         D'accord
                     </button>
                 </div>
@@ -358,22 +358,22 @@
 
                     <!-- Navigation Desktop -->
                     <nav class="hidden lg:flex items-center gap-8">
-                        <a href="/" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('/') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
+                        <a href="/" class="relative text-[11px] font-black  tracking-[0.2em] {{ request()->is('/') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Accueil
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('/') ? 'w-full' : '' }}"></span>
                         </a>
-                        <a href="{{ route('explore') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('explore') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
+                        <a href="{{ route('explore') }}" class="relative text-[11px] font-black  tracking-[0.2em] {{ request()->is('explore') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Vendeurs
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('explore') ? 'w-full' : '' }}"></span>
                         </a>
-                        <a href="{{ route('explore.plats') }}" class="relative text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('produits*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
+                        <a href="{{ route('explore.plats') }}" class="relative text-[11px] font-black  tracking-[0.2em] {{ request()->is('produits*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                             Produits
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all group-hover:w-full {{ request()->is('produits*') ? 'w-full' : '' }}"></span>
                         </a>
 
                         <!-- Discovery Dropdown -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @mouseenter="open = true" @click="open = !open" class="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] {{ request()->is('vendeurs-proches*') || request()->is('carte-livreurs*') || request()->is('commande/suivi*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
+                            <button @mouseenter="open = true" @click="open = !open" class="flex items-center gap-2 text-[11px] font-black  tracking-[0.2em] {{ request()->is('vendeurs-proches*') || request()->is('carte-livreurs*') || request()->is('commande/suivi*') ? 'text-red-600' : 'text-gray-400' }} hover:text-red-600 transition-colors group">
                                 Découvrir
                                 <svg class="w-3 h-3 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
                             </button>
@@ -390,7 +390,7 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                     </div>
                                     <div>
-                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Autour de moi</p>
+                                        <p class="text-[11px] font-black  tracking-widest text-gray-900 dark:text-white">Autour de moi</p>
                                         <p class="text-[9px] text-gray-400 font-bold">Boutiques à proximité</p>
                                     </div>
                                 </a>
@@ -399,19 +399,21 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                                     </div>
                                     <div>
-                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Livreurs Live</p>
+                                        <p class="text-[11px] font-black  tracking-widest text-gray-900 dark:text-white">Livreurs Live</p>
                                         <p class="text-[9px] text-gray-400 font-bold">Suivi en temps réel</p>
                                     </div>
                                 </a>
+                                @if(!auth()->check() || !in_array(auth()->user()->role, ['admin', 'super_admin']))
                                 <a href="{{ route('orders.track') }}" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all group/item">
                                     <div class="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg group-hover/item:scale-110 transition-transform">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                                     </div>
                                     <div>
-                                        <p class="text-[11px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Suivi Commande</p>
+                                        <p class="text-[11px] font-black  tracking-widest text-gray-900 dark:text-white">Suivi Commande</p>
                                         <p class="text-[9px] text-gray-400 font-bold">Où est mon colis ?</p>
                                     </div>
                                 </a>
+                                @endif
                             </div>
                         </div>
                     </nav>
@@ -454,7 +456,7 @@
                              x-cloak>
                             
                             <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between">
-                                <h3 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white">Notifications</h3>
+                                <h3 class="text-xs font-black  tracking-widest text-gray-900 dark:text-white">Notifications</h3>
                                 <span class="px-2.5 py-1 bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-lg text-[10px] font-black" x-text="unreadCount + ' nouvelles'"></span>
                             </div>
 
@@ -479,12 +481,12 @@
                                         <div class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-200 dark:text-gray-700">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
                                         </div>
-                                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">Aucune nouvelle notification</p>
+                                        <p class="text-[10px] font-black  tracking-widest text-gray-400">Aucune nouvelle notification</p>
                                     </div>
                                 </template>
                             </div>
 
-                            <a href="#" class="block p-5 bg-gray-50 dark:bg-gray-800/80 text-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-red-600 transition-colors">
+                            <a href="#" class="block p-5 bg-gray-50 dark:bg-gray-800/80 text-center text-[10px] font-black  tracking-[0.2em] text-gray-500 hover:text-red-600 transition-colors">
                                 Tout voir
                             </a>
                         </div>
@@ -512,7 +514,7 @@
                                          alt="{{ auth()->user()->name }}">
                                     <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
                                 </div>
-                                <span class="hidden md:block text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white border-l border-gray-100 dark:border-gray-800 pl-3 ml-1">{{ Str::limit(auth()->user()->name, 12) }}</span>
+                                <span class="hidden md:block text-xs font-black  tracking-widest text-gray-900 dark:text-white border-l border-gray-100 dark:border-gray-800 pl-3 ml-1">{{ Str::limit(auth()->user()->name, 12) }}</span>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                                 </svg>
@@ -533,7 +535,7 @@
                                     </div>
                                     <div>
                                         <p class="text-sm font-black text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest truncate">{{ auth()->user()->email }}</p>
+                                        <p class="text-[10px] text-gray-400 font-bold  tracking-widest truncate">{{ auth()->user()->email }}</p>
                                     </div>
                                 </div>
 
@@ -541,6 +543,7 @@
                                     <a href="{{ $dashboardRoute }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-black text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-all">
                                         Tableau de bord
                                     </a>
+                                    @if(!in_array(auth()->user()->role, ['admin', 'super_admin']))
                                     <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
                                         Mon profil
                                     </a>
@@ -550,6 +553,7 @@
                                     <a href="{{ route('orders.track') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-xl transition-all">
                                         Suivre une commande
                                     </a>
+                                    @endif
                                     @if(auth()->user()->isDriver())
                                     <a href="{{ route('delivery.my-deliveries') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl transition-all">
                                         Espace Livreur
@@ -562,7 +566,7 @@
 
                                 @if(auth()->user()->isVendor())
                                     <div class="p-2 border-t border-gray-50 dark:border-gray-800">
-                                        <div class="px-4 py-2 mb-1 text-[10px] font-black uppercase tracking-widest text-gray-400">Espace Vendeur</div>
+                                        <div class="px-4 py-2 mb-1 text-[10px] font-black  tracking-widest text-gray-400">Espace Vendeur</div>
                                         <a href="{{ vendor_route('vendeur.slug.orders.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl transition-all">
                                             Commandes reçues
                                         </a>
@@ -584,8 +588,8 @@
                         </div>
                     @else
                         <div class="hidden lg:flex items-center gap-3">
-                            <a href="{{ route('login') }}" class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Connexion</a>
-                            <a href="{{ route('register') }}" class="px-6 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-black dark:hover:bg-gray-100 transition shadow-lg">S'inscrire</a>
+                            <a href="{{ route('login') }}" class="text-[11px] font-black  tracking-widest text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition">Connexion</a>
+                            <a href="{{ route('register') }}" class="px-6 py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-[11px] font-black  tracking-widest rounded-xl hover:bg-black dark:hover:bg-gray-100 transition shadow-lg">S'inscrire</a>
                         </div>
                     @endauth
                 </div>
@@ -652,7 +656,7 @@
 
                 <!-- Footer Nav Sections -->
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
+                    <h4 class="text-xs font-black  tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
                         <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
                         Plateforme
                     </h4>
@@ -697,7 +701,7 @@
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
+                    <h4 class="text-xs font-black  tracking-[0.2em] text-gray-900 dark:text-white mb-8 flex items-center gap-2">
                         <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
                         Aide & Plus
                     </h4>
@@ -723,42 +727,95 @@
                     </ul>
                 </div>
 
-                <!-- Newsletter Column (Normal styling) -->
+                <!-- Newsletter Column -->
                 <div class="sm:col-span-2 lg:col-span-1">
                     <div class="space-y-6">
-                        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-gray-900 dark:text-white flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Newsletter
-                        </h4>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-red-50 dark:bg-red-900/40 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                            <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">Newsletter</h4>
+                        </div>
                         <div class="space-y-4">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 leading-relaxed">
-                                Savourez nos offres exclusives chaque semaine directement dans votre boîte mail.
+                            <p class="text-[13px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed tracking-tight">
+                                Rejoignez notre communauté et recevez nos meilleures offres chaque semaine.
                             </p>
-                            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="space-y-3">
-                                @csrf
-                                <div class="relative group">
-                                    <input type="email" name="email" placeholder="Votre email" required
-                                           class="w-full px-5 py-4 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-red-500 transition-all outline-none">
+                            <div x-data="{ 
+                                email: '', 
+                                loading: false, 
+                                success: false, 
+                                message: '',
+                                subscribe() {
+                                    if(!this.email) return;
+                                    this.loading = true;
+                                    fetch('{{ route('newsletter.subscribe') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Accept': 'application/json'
+                                        },
+                                        body: JSON.stringify({ email: this.email })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        this.loading = false;
+                                        if(data.success) {
+                                            this.success = true;
+                                            this.message = data.message;
+                                            this.email = '';
+                                        }
+                                    })
+                                    .catch(error => {
+                                        this.loading = false;
+                                    });
+                                }
+                            }">
+                                <form @submit.prevent="subscribe()" class="space-y-3" x-show="!success">
+                                    <div class="relative group">
+                                        <input type="email" x-model="email" placeholder="votre@email.com" required
+                                               class="w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-800/50 border-2 border-transparent rounded-2xl text-[13px] font-bold text-slate-900 dark:text-white placeholder-slate-400 transition-all outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-red-500/30">
+                                    </div>
+                                    <button type="submit" 
+                                            :disabled="loading"
+                                            class="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-slate-200 dark:shadow-none disabled:opacity-50">
+                                        <span x-show="!loading">S'abonner maintenant</span>
+                                        <span x-show="loading" class="flex items-center justify-center gap-2">
+                                            <svg class="animate-spin h-4 w-4 text-white dark:text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Envoi...
+                                        </span>
+                                    </button>
+                                </form>
+
+                                <!-- Success Message -->
+                                <div x-show="success" 
+                                     x-transition:enter="ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 translate-y-4"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     class="p-6 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800/30 rounded-[2rem] text-center space-y-3">
+                                    <div class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center mx-auto text-white shadow-lg shadow-green-500/20">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                                    </div>
+                                    <p class="text-[13px] font-black text-green-800 dark:text-green-400">Merci de faire confiance à CabaaCabaa</p>
                                 </div>
-                                <button type="submit" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-black dark:hover:bg-gray-200 transition-all font-black text-[10px] uppercase tracking-[0.2em] shadow-lg active:scale-[0.98]">
-                                    Souscrire
-                                </button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>
             
-            <div class="mt-20 pt-10 border-t border-gray-50 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
-                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center md:text-left order-2 md:order-1">
+            <div class="mt-5 pt-10 border-t border-gray-50 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] font-black  tracking-[0.3em] text-gray-300 dark:text-gray-600 text-center md:text-left order-2 md:order-1">
                     &copy; {{ date('Y') }} {{ $siteName }}. Tous droits réservés.
                 </p> 
-                
                 <div class="flex gap-8 order-1 md:order-2">
-                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Cotonou</span>
-                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Abidjan</span>
-                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600 uppercase tracking-widest">Lomel</span>
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600  tracking-widest">Lomé</span>
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600  tracking-widest">Tsévié</span>
+                    <span class="text-[10px] font-black text-gray-300 dark:text-gray-600  tracking-widest">Adidogomé</span>
                 </div>
             </div>
         </div>
@@ -766,7 +823,7 @@
 
     <!-- Footer Mobile (page d'accueil uniquement) -->
     @if(request()->routeIs('home'))
-    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-2 overflow-hidden relative">
+    <footer class="lg:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900 pt-2 pb-6 overflow-hidden relative">
         <div class="px-6 space-y-6">
             <!-- Brand & Tagline -->
             <div class="flex flex-col items-center text-center space-y-3">
@@ -802,13 +859,13 @@
                     <div class="w-8 h-8 bg-orange-50 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Autour de moi</span>
+                    <span class="text-[10px] font-black  tracking-widest text-gray-900 dark:text-white">Autour de moi</span>
                 </a>
                 <a href="{{ route('drivers.map') }}" class="flex-1 flex items-center gap-3 bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl border border-gray-100 dark:border-gray-800 active:scale-95 transition-transform">
                     <div class="w-8 h-8 bg-red-50 dark:bg-red-900/30 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">Livreurs Live</span>
+                    <span class="text-[10px] font-black  tracking-widest text-gray-900 dark:text-white">Livreurs Live</span>
                 </a>
             </div>
         </div>
@@ -946,7 +1003,8 @@
                                 <span class="text-sm font-semibold">Tableau de bord</span>
                             </a>
 
-                            <!-- My Orders -->
+                            <!-- My Orders & Profile -->
+                            @if(!in_array(auth()->user()->role, ['admin', 'super_admin']))
                             <a href="{{ route('orders.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                 <div class="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
@@ -954,13 +1012,13 @@
                                 <span class="text-sm font-semibold">Mes commandes</span>
                             </a>
 
-                            <!-- Profile -->
                             <a href="{{ route('profile.edit') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                 <div class="w-8 h-8 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                 </div>
                                 <span class="text-sm font-semibold">Mon profil</span>
                             </a>
+                            @endif
 
                             <!-- Favorites -->
                             <a href="{{ route('favoris.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
@@ -979,7 +1037,7 @@
                         <!-- Vendor Section -->
                         @if(auth()->user()->isVendor())
                         <div class="p-2 border-t border-gray-100 dark:border-gray-800">
-                            <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400">Espace Vendeur</div>
+                            <div class="px-3 py-1.5 text-[9px] font-black  tracking-widest text-gray-400">Espace Vendeur</div>
                             <a href="{{ vendor_route('vendeur.slug.plats.index') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors">
                                 <div class="w-8 h-8 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
@@ -998,7 +1056,7 @@
                         <!-- Admin Section -->
                         @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super_admin')
                         <div class="p-2 border-t border-gray-100 dark:border-gray-800">
-                            <div class="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-gray-400">Administration</div>
+                            <div class="px-3 py-1.5 text-[9px] font-black  tracking-widest text-gray-400">Administration</div>
                             <a href="{{ route('admin.dashboard') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <div class="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -1051,9 +1109,9 @@
             </div>
         </div>
     </nav>
-    <div class="lg:hidden h-24"></div>
+    <div class="lg:hidden">
 
-
+    </div>
     <style>
         /* iOS Safe Area Support */
         @supports (padding-bottom: env(safe-area-inset-bottom)) {

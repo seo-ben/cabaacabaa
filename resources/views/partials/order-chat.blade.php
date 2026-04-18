@@ -1,6 +1,7 @@
-<div x-data="orderChat({{ $orderId }})" 
+<div x-data="orderChat({{ $orderId === 'dynamic' ? 'orderId' : $orderId }})" 
      x-init="init()" 
      class="flex flex-col bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden h-full max-h-[600px] border-b-8 border-b-orange-600"
+     @new-message.window="if($event.detail.orderId == orderId) loadMessages()"
      x-cloak>
     
     <!-- Chat Header -->
@@ -62,13 +63,21 @@
                          class="px-5 py-3 relative">
                         <!-- Message Text -->
                         <p class="text-[13px] font-bold leading-relaxed whitespace-pre-wrap" x-text="message.message"></p>
+                        
+                        <!-- Status Indicators -->
+                        <div x-show="message.sending" class="absolute -left-6 top-1/2 -translate-y-1/2">
+                            <div class="w-3 h-3 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                        <div x-show="message.error" class="absolute -left-6 top-1/2 -translate-y-1/2 text-rose-500" title="Échec de l'envoi">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                        </div>
                     </div>
                     <!-- Metadata below bubble -->
-                    <div :class="message.id_user == currentUserId ? 'text-right' : 'text-left'" class="mt-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div :class="message.id_user == currentUserId ? 'text-right' : 'text-left'" class="mt-2 flex items-center gap-2 opacity-60 transition-opacity">
                         <span class="text-[9px] font-black uppercase text-gray-400 dark:text-gray-600 tracking-tighter" 
-                              x-text="message.id_user == currentUserId ? 'Vous' : (message.user ? message.user.short_name : 'Intervenant')"></span>
+                               x-text="message.id_user == currentUserId ? 'Vous' : (message.user ? message.user.short_name : 'Intervenant')"></span>
                         <span class="w-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></span>
-                        <span class="text-[9px] font-black uppercase text-gray-400 dark:text-gray-600 tracking-tighter" x-text="formatTime(message.created_at)"></span>
+                        <span class="text-[9px] font-black uppercase text-gray-400 dark:text-gray-600 tracking-tighter" x-text="message.sending ? 'Envoi...' : formatTime(message.created_at)"></span>
                     </div>
                 </div>
             </div>
@@ -127,6 +136,37 @@ function orderChat(orderId) {
                 this.loading = false;
             });
             this.startPolling();
+            
+            // Real-time Echo listeners
+            this.initEcho();
+            
+            // Watch for ID changes in dynamic contexts (modals)
+            this.$watch('orderId', (newVal) => {
+                if (newVal) {
+                    this.messages = [];
+                    this.loadMessages();
+                    this.initEcho(); // Re-init Echo for the new order ID
+                }
+            });
+        },
+
+        initEcho() {
+            if (window.Echo && this.orderId) {
+                // Get order code (needed for channel name) - maybe we should pass it or fetch it once?
+                // For simplicity, we can fetch messages normally. 
+                // But let's check if we have a way to know the channel.
+                // In track.blade.php we have orderCode.
+                const code = window.orderCode; 
+                if (code) {
+                    window.Echo.channel('order.' + code)
+                        .listen('.message.new', (e) => {
+                            if (!this.messages.find(m => m.id == e.id)) {
+                                this.messages.push(e);
+                                this.$nextTick(() => this.scrollToBottom());
+                            }
+                        });
+                }
+            }
         },
 
         async loadMessages() {
@@ -154,8 +194,22 @@ function orderChat(orderId) {
         async sendMessage() {
             if (!this.newMessage.trim() || this.sending) return;
 
-            const msg = this.newMessage;
+            const msgText = this.newMessage;
+            const tempId = Date.now();
+            
+            // Optimistic UI: Add message as "sending" immediately
+            const optimisticMessage = {
+                id: tempId,
+                id_user: this.currentUserId,
+                message: msgText,
+                created_at: new Date().toISOString(),
+                isOptimistic: true,
+                sending: true
+            };
+            
+            this.messages.push(optimisticMessage);
             this.newMessage = '';
+            this.$nextTick(() => this.scrollToBottom());
             this.sending = true;
 
             try {
@@ -166,20 +220,33 @@ function orderChat(orderId) {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ message: msg })
+                    body: JSON.stringify({ message: msgText })
                 });
 
                 if (response.ok) {
                     const message = await response.json();
-                    this.messages.push(message);
-                    this.$nextTick(() => this.scrollToBottom());
+                    // Replace the optimistic message with the real one
+                    const index = this.messages.findIndex(m => m.id === tempId);
+                    if (index !== -1) {
+                        this.messages[index] = message;
+                    }
                 } else {
-                    // Restore message on error
-                    this.newMessage = msg;
+                    // Show error in the optimistic message
+                    const index = this.messages.findIndex(m => m.id === tempId);
+                    if (index !== -1) {
+                        this.messages[index].error = true;
+                        this.messages[index].sending = false;
+                    }
+                    this.newMessage = msgText; // Restore text to input on failure
                 }
             } catch (error) {
                 console.error('Error sending message:', error);
-                this.newMessage = msg;
+                const index = this.messages.findIndex(m => m.id === tempId);
+                if (index !== -1) {
+                    this.messages[index].error = true;
+                    this.messages[index].sending = false;
+                }
+                this.newMessage = msgText;
             } finally {
                 this.sending = false;
             }

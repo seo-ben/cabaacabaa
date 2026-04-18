@@ -78,18 +78,31 @@
     </section>
     
     {{-- Map Section (Mobile) --}}
-    @if($commande->id_livreur)
+    @if($commande->type_recuperation == 'livraison')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <section class="px-4 mb-4" id="order-map-mobile-container" style="{{ $commande->statut == 'en_livraison' ? '' : 'display:none' }}">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between">
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Position du livreur</span>
-                <div class="flex items-center gap-1.5 px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-[8px] font-black uppercase tracking-widest">
-                    <span class="w-1 h-1 rounded-full bg-green-500 animate-pulse"></span>
-                    En direct
+    <section class="block px-4 mb-4" id="order-map-mobile-container">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-gray-50 dark:border-slate-800/50 flex items-center justify-between bg-white/50 dark:bg-slate-900/50">
+                <div>
+                    <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest block mb-0.5">Itinéraire Livraison</span>
+                    <div class="flex items-center gap-2">
+                        <span id="map-status-dot" class="w-2 h-2 rounded-full {{ $commande->statut == 'en_livraison' ? 'bg-green-500 animate-pulse' : 'bg-orange-500' }}"></span>
+                        <span id="map-status-text" class="text-[9px] font-black text-gray-900 dark:text-white uppercase tracking-tight">
+                            @if($commande->statut == 'en_livraison') En direct @else Planifié @endif
+                        </span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">{{ number_format($commande->distance_livraison, 1) }} KM</span>
                 </div>
             </div>
-            <div id="order-map-mobile" class="w-full h-48 z-0"></div>
+            <div id="order-map-mobile" class="w-full h-64 z-0 bg-slate-100 dark:bg-slate-800"></div>
+            {{-- Map Instructions/Overlay --}}
+            <div class="p-3 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800">
+                <p class="text-[9px] font-medium text-gray-500 text-center leading-relaxed">
+                    <span class="font-black text-orange-600">Note:</span> Suivez l'itinéraire de la boutique vers votre position.
+                </p>
+            </div>
         </div>
     </section>
     @endif
@@ -234,20 +247,27 @@
                 </div>
 
                 <!-- Tracking Map (Desktop) -->
-                @if($commande->id_livreur)
-                <div id="order-map-desktop-container" class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-700" style="{{ $commande->statut == 'en_livraison' ? '' : 'display:none' }}">
-                     <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-xl flex items-center justify-center">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                @if($commande->type_recuperation == 'livraison')
+                <div id="order-map-desktop-container" class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in zoom-in duration-700">
+                     <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-900/30">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white dark:bg-gray-800 text-orange-600 rounded-2xl shadow-sm flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </div>
                             <div>
-                                <h3 class="text-sm font-black text-gray-900 dark:text-white">Suivi livreur</h3>
-                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Position en temps réel</p>
+                                <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Itinéraire de Livraison</h3>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <p class="text-[10px] text-gray-500 font-black uppercase tracking-widest">Suivi actif - Commande #{{ $commande->numero_commande }}</p>
+                                </div>
                             </div>
                         </div>
+                        <div class="text-right">
+                             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Distance</p>
+                             <p class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($commande->distance_livraison, 1) }} KM</p>
+                        </div>
                     </div>
-                    <div id="order-map-desktop" class="w-full h-80 z-0"></div>
+                    <div id="order-map-desktop" class="w-full h-96 z-0 bg-slate-100 dark:bg-slate-800"></div>
                 </div>
                 @endif
 
@@ -379,45 +399,84 @@
 @if($commande)
 @section('scripts')
 <script>
-    const orderCode = "{{ $commande->numero_commande }}";
+    window.orderCode = "{{ $commande->numero_commande }}";
     const statusRanks = {
         'en_attente': 0, 'confirmee': 0, 'en_preparation': 1, 'pret': 2, 'en_livraison': 3, 'termine': 4
     };
 
-    @if($commande->id_livreur)
+    @if($commande->type_recuperation == 'livraison')
     // Map Logic
     let map = null;
     let driverMarker = null;
-    const assignedDriverId = "{{ $commande->id_livreur }}";
+    let routeLine = null;
+    const assignedDriverId = "{{ $commande->id_livreur ?? '' }}";
     
     function initMap() {
         const mapContainer = window.innerWidth >= 1024 ? 'order-map-desktop' : 'order-map-mobile';
         if (!document.getElementById(mapContainer)) return;
         
-        map = L.map(mapContainer).setView([6.1375, 1.2123], 16);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap, © CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 20
-        }).addTo(map);
-
-        // Add vendor marker
+        // Coords
         const vendorLat = {{ $commande->vendeur->latitude ?? '6.1375' }};
         const vendorLng = {{ $commande->vendeur->longitude ?? '1.2123' }};
+        const customerLat = {{ $commande->latitude_livraison ?? '6.1375' }};
+        const customerLng = {{ $commande->longitude_livraison ?? '1.2123' }};
+
+        map = L.map(mapContainer, {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([ (vendorLat + customerLat)/2, (vendorLng + customerLng)/2 ], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Add vendor marker (SHOP)
         L.marker([vendorLat, vendorLng], {
             icon: L.divIcon({
                 className: 'vendor-marker',
-                html: '<div class="w-8 h-8 bg-red-600 rounded-lg border-2 border-white shadow-lg flex items-center justify-center text-white font-bold">🏢</div>',
-                iconSize: [32, 32],
-                iconAnchor: [16, 16]
+                html: `<div class="w-10 h-10 bg-white dark:bg-gray-800 rounded-2xl border-2 border-orange-500 shadow-xl flex items-center justify-center text-xl">🏢</div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
             })
         }).addTo(map).bindPopup('<b>Boutique</b><br>{{ $commande->vendeur->nom_commercial }}');
 
-        // Initial fetch
+        // Add customer marker (YOU)
+        L.marker([customerLat, customerLng], {
+            icon: L.divIcon({
+                className: 'customer-marker',
+                html: `<div class="w-10 h-10 bg-white dark:bg-gray-800 rounded-2xl border-2 border-green-500 shadow-xl flex items-center justify-center text-xl">🏠</div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            })
+        }).addTo(map).bindPopup('<b>Votre position</b>');
+
+        // Draw Route (Dashed Line)
+        routeLine = L.polyline([
+            [vendorLat, vendorLng],
+            [customerLat, customerLng]
+        ], {
+            color: '#f97316',
+            weight: 3,
+            opacity: 0.6,
+            dashArray: '10, 10',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        // Fit bounds to show both
+        map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+
+        // Initial driver fetch if assigned
+        if (assignedDriverId) {
+            fetchDriverLocation(assignedDriverId);
+        }
+    }
+
+    function fetchDriverLocation(id) {
         fetch('/api/drivers/online')
             .then(res => res.json())
             .then(drivers => {
-                const myDriver = drivers.find(d => d.driverId == assignedDriverId);
+                const myDriver = drivers.find(d => d.driverId == id);
                 if (myDriver) updateDriverMarker(myDriver);
             });
     }
@@ -432,37 +491,45 @@
             driverMarker = L.marker(latlng, {
                 icon: L.divIcon({
                     className: 'driver-marker',
-                    html: '<div class="w-10 h-10 bg-gray-900 rounded-xl border-2 border-white shadow-xl flex items-center justify-center text-xl transform scale-110">🏍️</div>',
-                    iconSize: [40, 40],
-                    iconAnchor: [20, 20]
+                    html: '<div class="w-12 h-12 bg-gray-900 dark:bg-slate-800 rounded-2xl border-4 border-white dark:border-slate-700 shadow-2xl flex items-center justify-center text-2xl animate-bounce-slow">🏍️</div>',
+                    iconSize: [48, 48],
+                    iconAnchor: [24, 24]
                 })
             }).addTo(map);
-            driverMarker.bindPopup('<b>Votre livreur</b>').openPopup();
+            driverMarker.bindPopup('<b>Votre livreur est ici</b>').openPopup();
         }
         
-        // Follow driver if in delivery
+        // Auto-center balance between driver and customer if active delivery
         if ("{{ $commande->statut }}" === 'en_livraison') {
-            map.panTo(latlng);
+             const custLat = {{ $commande->latitude_livraison ?? '0' }};
+             const custLng = {{ $commande->longitude_livraison ?? '0' }};
+             if(custLat != 0) {
+                 const bounds = L.latLngBounds([latlng, [custLat, custLng]]);
+                 map.flyToBounds(bounds, { padding: [100, 100], duration: 2 });
+             } else {
+                 map.flyTo(latlng, 17);
+             }
         }
     }
 
     // Load Leaflet JS
-    const script = document.createElement('script');
-    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-    script.onload = initMap;
-    document.head.appendChild(script);
+    const lScript = document.createElement('script');
+    lScript.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    lScript.onload = initMap;
+    document.head.appendChild(lScript);
     @endif
 
     function updateTrackingUI(status, label = null) {
         const rank = statusRanks[status] ?? 0;
         const progress = (rank / 4) * 100;
         
-        // Show/Hide Map
-        const mapM = document.getElementById('order-map-mobile-container');
-        const mapD = document.getElementById('order-map-desktop-container');
+        // Show/Hide Map or Update Status UI
+        const mapStatusDot = document.getElementById('map-status-dot');
+        const mapStatusText = document.getElementById('map-status-text');
+        
         if (status === 'en_livraison') {
-            if (mapM) mapM.style.display = 'block';
-            if (mapD) mapD.style.display = 'block';
+            if (mapStatusDot) mapStatusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+            if (mapStatusText) mapStatusText.innerText = 'En direct';
             if (map) map.invalidateSize();
         }
 
@@ -553,6 +620,15 @@
             .then(data => { if (data.statut) updateTrackingUI(data.statut, data.statut_label); })
             .catch(err => console.error('Erreur tracking:', err));
     }, pollInterval);
+
+    // Fallback Driver Polling
+    @if($commande->id_livreur)
+    if (assignedDriverId) {
+        setInterval(() => {
+            fetchDriverLocation(assignedDriverId);
+        }, 30000);
+    }
+    @endif
 </script>
 @endsection
 @endif

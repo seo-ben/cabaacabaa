@@ -8,8 +8,8 @@
         <a href="{{ route('admin.zones.index') }}" class="text-blue-600 hover:text-blue-800">← Retour à la liste</a>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-        <h1 class="text-3xl font-bold mb-6">Éditer Zone: {{ $zone->nom }}</h1>
+    <div class="bg-white rounded-lg shadow p-4">
+        <h1 class="text-xl font-bold mb-6">Éditer Zone: {{ $zone->nom }}</h1>
 
         @if ($errors->any())
             <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg">
@@ -128,10 +128,10 @@
             </div>
 
             <div class="flex gap-3 pt-4">
-                <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
                     Sauvegarder
                 </button>
-                <a href="{{ route('admin.zones.index') }}" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
+                <a href="{{ route('admin.zones.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
                     Annuler
                 </a>
             </div>
@@ -139,7 +139,7 @@
     </div>
 
     <!-- Zone Coverage Info -->
-    <div class="mt-6 bg-white rounded-lg shadow p-6">
+    <div class="mt-6 bg-white rounded-lg shadow p-4">
         <h3 class="font-semibold text-lg mb-4">Informations de couverture</h3>
         <div class="grid grid-cols-2 gap-4">
             <div>

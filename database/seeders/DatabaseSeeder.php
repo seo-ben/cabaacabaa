@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             AppSettingSeeder::class,
             VendorCategorySeeder::class,
+            CategoryPlatSeeder::class,
             CountrySeeder::class,
+            AdminPermissionSeeder::class,
         ]);
 
         // 2. Create Admin User

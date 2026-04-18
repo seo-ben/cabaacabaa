@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="min-h-screen bg-white dark:bg-gray-950 pt-16 lg:pt-32 pb-32 transition-colors duration-300">
+<div class="min-h-screen bg-white dark:bg-gray-950 pt-8 pb-32 transition-colors duration-300">
     <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
@@ -97,55 +97,53 @@
             <!-- Summary Sidebar -->
             <div class="lg:col-span-4">
                 <div class="sticky top-32 space-y-6">
-                    <div class="bg-gray-900 dark:bg-gray-900 rounded-[2.5rem] p-8 sm:p-10 text-white shadow-2xl relative overflow-hidden">
-                        <!-- Abstract Decoration -->
-                        <div class="absolute -top-12 -right-12 w-40 h-40 bg-red-600/20 blur-[80px] rounded-full"></div>
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800 relative overflow-hidden">
                         
-                        <h3 class="text-lg font-black uppercase tracking-widest border-b border-white/10 pb-6 mb-8">Détails</h3>
+                        <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-6">Détails de la commande</h3>
                         
-                        <div class="space-y-6">
-                            <div class="flex justify-between text-white/50 text-[10px] font-black uppercase tracking-widest">
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                                 <span>Sous-total</span>
-                                <span class="text-white"><span class="cart-total-val">{{ number_format($total, 0, ',', ' ') }}</span> FCFA</span>
+                                <span class="font-medium text-gray-900 dark:text-white"><span class="cart-total-val">{{ number_format($total, 0, ',', ' ') }}</span> FCFA</span>
                             </div>
                             
                             @if(session()->has('coupon'))
                             @php $discount = session('coupon')['type'] === 'percentage' ? ($total * (session('coupon')['valeur'] / 100)) : session('coupon')['valeur']; @endphp
-                            <div class="flex justify-between text-green-400 text-[10px] font-black uppercase tracking-widest">
+                            <div class="flex justify-between text-sm text-green-600 dark:text-green-400">
                                 <span>Réduction ({{ session('coupon')['code'] }})</span>
-                                <span>- {{ number_format($discount, 0, ',', ' ') }} FCFA</span>
+                                <span class="font-medium">- {{ number_format($discount, 0, ',', ' ') }} FCFA</span>
                             </div>
                             @endif
 
-                            <div class="pt-8 border-t border-white/10">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-red-500 mb-1">Total à payer</p>
-                                <p class="text-5xl font-black tracking-tighter text-white">
+                            <div class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-800">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Total à payer</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-white flex items-baseline gap-1">
                                     <span id="final-total-val">{{ number_format(session()->has('coupon') ? $total - $discount : $total, 0, ',', ' ') }}</span>
-                                    <span class="text-sm font-bold text-gray-500 ml-1">FCFA</span>
+                                    <span class="text-base font-medium text-gray-500 dark:text-gray-400 ml-1">FCFA</span>
                                 </p>
                             </div>
 
-                            <a href="{{ route('checkout.index') }}" class="block w-full py-6 bg-red-600 hover:bg-red-700 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-red-600/20 active:scale-95 text-center mt-8">
+                            <a href="{{ route('checkout.index') }}" class="mt-8 flex items-center justify-center w-full py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold text-sm transition-all shadow-md shadow-red-600/20 active:scale-[0.98]">
                                 Passer à la caisse
                             </a>
                         </div>
                     </div>
 
                     <!-- Coupon Input -->
-                    <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800">
-                        <h4 class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4">Avez-vous un code promo ?</h4>
+                    <div class="bg-gray-50 dark:bg-gray-900 rounded-3xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Code promo</h4>
                         @if(session()->has('coupon'))
-                        <div class="flex items-center gap-3 text-green-600 dark:text-green-400 text-xs font-black uppercase tracking-widest">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                        <div class="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             Code appliqué !
                         </div>
                         @else
                         <div class="flex gap-2">
-                            <input type="text" id="coupon_code" placeholder="Entrez le code..." 
-                                   class="flex-1 px-5 py-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl text-[13px] font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 outline-none transition-all">
-                            <button id="apply_coupon" class="px-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-[9px] font-black uppercase tracking-widest rounded-2xl active:scale-95">OK</button>
+                            <input type="text" id="coupon_code" placeholder="Entrez le code promo" 
+                                   class="flex-1 px-4 py-3 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all">
+                            <button id="apply_coupon" class="px-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-sm font-bold rounded-xl active:scale-95 transition-transform">OK</button>
                         </div>
-                        <div id="coupon-message" class="hidden mt-3 text-[9px] font-black uppercase tracking-widest"></div>
+                        <div id="coupon-message" class="hidden mt-3 text-xs font-semibold"></div>
                         @endif
                     </div>
                 </div>
@@ -153,7 +151,7 @@
         </div>
         @else
         <!-- Empty State -->
-        <div class="flex flex-col items-center justify-center py-32 text-center">
+        <div class="flex flex-col items-center justify-center py-16 text-center">
             <div class="w-24 h-24 bg-gray-50 dark:bg-gray-900 rounded-[2rem] flex items-center justify-center text-gray-200 dark:text-gray-700 mb-8 border border-gray-100 dark:border-gray-800">
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             </div>

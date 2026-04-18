@@ -3,191 +3,149 @@
 @section('title', 'Gestion Zones Géographiques')
 
 @section('content')
-<div x-data="{ showAddModal: false }" @keydown.escape="showAddModal = false">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-3xl font-bold">Gestion des Zones Géographiques</h1>
-        <button @click="showAddModal = true" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-            + Ajouter une zone
+<div x-data="{ showAddModal: false }" @keydown.escape="showAddModal = false" class="space-y-4">
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-xl font-black text-gray-900 tracking-tight leading-none uppercase">Zones Géographiques</h1>
+            <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1.5 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                Sectorisation & Logistique
+            </p>
+        </div>
+        
+        <button @click="showAddModal = true" class="px-4 py-2.5 bg-gray-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg active:scale-95">
+            Nouvelle Zone
         </button>
     </div>
 
-    <!-- Flash Messages -->
-    @if(session('success'))
-        <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-lg border border-green-300 flex items-center justify-between">
-            <span>{{ session('success') }}</span>
-            <button onclick="this.parentElement.style.display='none'" class="text-green-600 hover:text-green-800">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-lg border border-red-300 flex items-center justify-between">
-            <span>{{ session('error') }}</span>
-            <button onclick="this.parentElement.style.display='none'" class="text-red-600 hover:text-red-800">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </button>
-        </div>
-    @endif
-
     <!-- Zones Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-[10px]">
         @if($zones->count())
-            <table class="w-full">
-                <thead class="bg-gray-100 border-b border-gray-200">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Zone</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Localisation</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Rayon (km)</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Vendeurs</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Statut</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Actions</th>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 border-b border-gray-100">
+                        <th class="pl-4 pr-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none">Nom de Zone</th>
+                        <th class="px-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none">Localisation</th>
+                        <th class="px-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none">Couverture</th>
+                        <th class="px-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none">Vendeurs</th>
+                        <th class="px-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none">Statut</th>
+                        <th class="pr-4 pl-3 py-3 font-black text-gray-400 uppercase tracking-widest leading-none text-right">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-50">
                     @foreach($zones as $zone)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4">
-                                <div class="font-medium text-gray-900">{{ $zone->nom }}</div>
-                                <div class="text-sm text-gray-500">{{ $zone->description ? Str::limit($zone->description, 50) : 'Pas de description' }}</div>
+                        <tr class="group hover:bg-gray-50/50 transition-all duration-200">
+                            <td class="pl-4 pr-3 py-2.5">
+                                <div class="min-w-0">
+                                    <p class="font-black text-gray-900 truncate">{{ $zone->nom }}</p>
+                                    <p class="text-[8px] text-gray-400 font-bold uppercase truncate max-w-[200px]">{{ $zone->description ?? 'Pas de description' }}</p>
+                                </div>
                             </td>
-                            <td class="px-6 py-4 text-sm">
-                                <div class="text-gray-900">{{ $zone->ville ?? 'Non spécifiée' }}</div>
-                                <div class="text-xs text-gray-500">{{ $zone->code_postal ?? 'N/A' }}</div>
+                            <td class="px-3 py-2.5">
+                                <p class="text-[9px] font-black text-gray-700 uppercase tracking-tighter">{{ $zone->ville ?? 'N/A' }}</p>
+                                <p class="text-[7px] text-gray-300 font-bold uppercase mt-0.5">{{ $zone->code_postal ?? 'N/A' }}</p>
                             </td>
-                            <td class="px-6 py-4 text-sm font-semibold text-gray-900">
-                                {{ number_format($zone->rayon_km, 1) }} km
+                            <td class="px-3 py-2.5">
+                                <span class="font-black text-gray-900">{{ number_format($zone->rayon_km, 1) }} KM</span>
+                                <p class="text-[7px] text-gray-300 font-bold uppercase mt-0.5 italic">Rayon d'action</p>
                             </td>
-                            <td class="px-6 py-4 text-sm">
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded font-semibold">
-                                    {{ $zone->vendeurs()->count() }}
+                            <td class="px-3 py-2.5">
+                                <span class="px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded font-black text-[8px] border border-blue-100">
+                                    {{ $zone->vendeurs()->count() }} PARTENAIRES
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
-                                @if($zone->actif)
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold">Actif</span>
-                                @else
-                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-semibold">Inactif</span>
-                                @endif
+                            <td class="px-3 py-2.5">
+                                <span class="font-black tracking-tighter {{ $zone->actif ? 'text-emerald-500' : 'text-gray-300' }} uppercase">
+                                    {{ $zone->actif ? 'ACTIF' : 'OFF' }}
+                                </span>
                             </td>
-                            <td class="px-6 py-4 text-sm space-x-2">
-                                <a href="{{ route('admin.zones.edit', $zone->id_zone) }}" class="text-blue-600 hover:text-blue-800">Éditer</a>
-                                <form action="{{ route('admin.zones.destroy', $zone->id_zone) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800">Supprimer</button>
-                                </form>
+                            <td class="pr-4 pl-3 py-2.5 text-right">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <a href="{{ route('admin.zones.edit', $zone->id_zone) }}" class="p-2 bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    </a>
+                                    <form action="{{ route('admin.zones.destroy', $zone->id_zone) }}" method="POST" onsubmit="return confirm('Supprimer ?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="p-2 bg-gray-50 text-gray-400 hover:text-red-500 rounded-lg transition-all">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-
-            <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-200">
+            
+            <div class="px-4 py-3 bg-gray-50/50 border-t border-gray-100 flex justify-center text-[8px] font-bold text-gray-400 uppercase tracking-widest">
                 {{ $zones->links() }}
             </div>
         @else
-            <div class="p-8 text-center">
-                <p class="text-gray-500">Aucune zone créée.</p>
+            <div class="py-12 text-center">
+                <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest italic">Aucune zone enregistrée</p>
             </div>
         @endif
     </div>
 
-    <!-- Modal Ajouter Zone -->
-    <div @click.self="showAddModal = false" x-show="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4" style="display: none;" x-data="zoneForm()">
-        <!-- Modal -->
-        <div class="relative bg-white rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
-                <h2 class="text-xl font-bold">Ajouter une Zone</h2>
-                <button @click="showAddModal = false" class="text-gray-500 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+    <!-- Modal Ajouter Zone (Stylized) -->
+    <div x-show="showAddModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4" x-data="zoneForm()">
+        <div @click.away="showAddModal = false" class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="px-5 py-4 bg-gray-900 text-white flex items-center justify-between">
+                <h2 class="text-xs font-black uppercase tracking-widest">Ajouter une Zone</h2>
+                <button @click="showAddModal = false" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
-            <form action="{{ route('admin.zones.store') }}" method="POST" class="p-6 space-y-4">
+            <form action="{{ route('admin.zones.store') }}" method="POST" class="p-6 space-y-4 overflow-y-auto">
                 @csrf
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom de la zone</label>
-                    <input type="text" name="nom" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Nom de la zone</label>
+                    <input type="text" name="nom" required class="w-full px-3 py-2 bg-gray-50 border-none rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition-all">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea name="description" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Description</label>
+                    <textarea name="description" rows="2" class="w-full px-3 py-2 bg-gray-50 border-none rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition-all"></textarea>
                 </div>
 
-                <!-- Recherche d'adresses -->
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher une localisation</label>
+                <div class="bg-blue-50/50 rounded-xl p-3 border border-blue-100 space-y-3">
                     <div class="flex gap-2">
-                        <input type="text" x-model="searchQuery" placeholder="Lome, Togo" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-                        <button type="button" @click="searchLocation()" :disabled="!searchQuery || searching" class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm font-medium">
+                        <input type="text" x-model="searchQuery" placeholder="Recherche (ex: Lome, Togo)" class="flex-1 px-3 py-1.5 bg-white border-none rounded-lg text-xs font-bold text-gray-900 focus:ring-2 focus:ring-blue-500/20">
+                        <button type="button" @click="searchLocation()" :disabled="!searchQuery || searching" class="px-4 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-[10px] font-black uppercase tracking-widest transition-all">
                             <span x-show="!searching">Chercher</span>
                             <span x-show="searching">...</span>
                         </button>
                     </div>
 
-                    <!-- Résultats de recherche -->
-                    <div x-show="searchResults.length > 0" class="mt-3 space-y-2 max-h-48 overflow-y-auto">
+                    <div x-show="searchResults.length > 0" class="space-y-1 max-h-32 overflow-y-auto">
                         <template x-for="result in searchResults" :key="result.lon">
-                            <button type="button" @click="selectResult(result)" class="w-full text-left p-2 bg-white border border-gray-200 rounded hover:bg-gray-50 transition text-xs">
-                                <div class="font-medium text-gray-900" x-text="result.display_name"></div>
-                                <div class="text-gray-500" x-text="'Lat: ' + result.lat.toFixed(4) + ', Lon: ' + result.lon.toFixed(4)"></div>
+                            <button type="button" @click="selectResult(result)" class="w-full text-left p-2 bg-white border border-gray-100 rounded-lg hover:bg-gray-50 transition text-[8px] font-bold uppercase">
+                                <div class="text-gray-900" x-text="result.display_name"></div>
+                                <div class="text-gray-400 mt-0.5" x-text="'COORD: ' + result.lat.toFixed(4) + ', ' + result.lon.toFixed(4)"></div>
                             </button>
                         </template>
                     </div>
-
-                    <div x-show="searchError" class="mt-2 text-xs text-red-600" x-text="searchError"></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                        <input type="text" name="ville" x-model="form.ville" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Ville</label>
+                        <input type="text" name="ville" x-model="form.ville" class="w-full px-3 py-2 bg-gray-50 border-none rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition-all">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Code Postal</label>
-                        <input type="text" name="code_postal" x-model="form.code_postal" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <div class="space-y-1.5">
+                        <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Rayon (KM)</label>
+                        <input type="number" name="rayon_km" step="0.1" required class="w-full px-3 py-2 bg-gray-50 border-none rounded-xl text-xs font-bold text-gray-900 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition-all">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
-                        <input type="number" name="latitude" x-model="form.latitude" step="0.0001" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Auto (par adresse)">
-                        <p class="text-xs text-gray-500 mt-1">Optionnel - récupéré automatiquement</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
-                        <input type="number" name="longitude" x-model="form.longitude" step="0.0001" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Auto (par adresse)">
-                        <p class="text-xs text-gray-500 mt-1">Optionnel - récupéré automatiquement</p>
-                    </div>
-                </div>
+                <input type="hidden" name="latitude" x-model="form.latitude">
+                <input type="hidden" name="longitude" x-model="form.longitude">
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Rayon de couverture (km)</label>
-                    <input type="number" name="rayon_km" step="0.1" min="0.1" max="100" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="ex: 5">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
-                    <select name="actif" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                        <option value="1">Actif</option>
-                        <option value="0">Inactif</option>
-                    </select>
-                </div>
-
-                <div class="flex gap-3 pt-4 sticky bottom-0 bg-white border-t">
-                    <button type="submit" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium">
-                        Créer
-                    </button>
-                    <button type="button" @click="showAddModal = false" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
-                        Annuler
-                    </button>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" class="flex-1 py-3 bg-gray-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all shadow-lg shadow-gray-900/10">Créer Zone</button>
+                    <button type="button" @click="showAddModal = false" class="px-6 py-3 bg-gray-100 text-gray-400 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-all">Annuler</button>
                 </div>
             </form>
         </div>
@@ -225,15 +183,12 @@
                     const data = await response.json();
 
                     if (!data.success) {
-                        this.searchError = data.message || 'Erreur lors de la recherche';
+                        this.searchError = data.message || 'Erreur';
                     } else {
                         this.searchResults = data.results || [];
-                        if (this.searchResults.length === 0) {
-                            this.searchError = 'Aucun résultat trouvé';
-                        }
                     }
                 } catch (error) {
-                    this.searchError = 'Erreur réseau: ' + error.message;
+                    this.searchError = 'Erreur';
                 }
 
                 this.searching = false;
@@ -241,7 +196,6 @@
             selectResult(result) {
                 this.form.latitude = result.lat;
                 this.form.longitude = result.lon;
-                // Essayer d'extraire la ville du display_name
                 const parts = result.display_name.split(',');
                 if (parts.length > 0) {
                     this.form.ville = parts[0].trim();

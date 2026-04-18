@@ -15,6 +15,7 @@ class User extends Authenticatable
     protected $primaryKey = 'id_user';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $appends = ['short_name'];
 
@@ -87,6 +88,11 @@ class User extends Authenticatable
     public function favoris()
     {
         return $this->hasMany(FavorisClient::class, 'id_client', 'id_user');
+    }
+
+    public function vendeursFavoris()
+    {
+        return $this->belongsToMany(Vendeur::class, 'favoris_clients', 'id_client', 'id_vendeur');
     }
 
     public function referrer()

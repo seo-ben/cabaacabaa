@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-gray-100">
+            <div class="border-t border-gray-100">
                 <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Rayon de recherche</label>
                 <div class="radius-selector">
                     <div class="radius-item active" data-radius="0.5">500m</div>

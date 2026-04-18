@@ -77,6 +77,7 @@ Route::get('/commande/suivi', [\App\Http\Controllers\OrderController::class, 'tr
 Route::get('/commande/recu/{code}', [\App\Http\Controllers\OrderController::class, 'showReceipt'])->name('order.receipt');
 Route::get('/commande/check-status/{code}', [\App\Http\Controllers\OrderController::class, 'checkStatus'])->name('order.check-status');
 Route::post('/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+Route::post('/reviews/vendor', [\App\Http\Controllers\ReviewController::class, 'storeVendorReview'])->name('reviews.vendor.store');
 
 // Newsletter subscription
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');

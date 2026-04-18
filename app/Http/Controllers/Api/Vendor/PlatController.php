@@ -1,0 +1,182 @@
+<?php
+
+namespace App\Http\Controllers\Api\Vendor;
+
+use App\Http\Controllers\Controller;
+use App\Models\Plat;
+use App\Models\Vendeur;
+use App\Models\CategoryPlat;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\ImageHelper;
+
+class PlatController extends Controller
+{
+    /**
+     * Liste des plats du vendeur.
+     */
+    public function index(Request $request)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        if (!$vendeur)
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+
+        $plats = $vendeur->plats()->with('categorie')->get();
+        return response()->json(["info" => "Point de terminaison API généré... Il faut y injecter vos variables de vue."]);
+    }
+
+    /**
+     * Formulaire d'ajout d'un plat.
+     */
+    public function create(Request $request)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        if (!$vendeur)
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+
+        // Restriction: Seulement les catégories choisies par le vendeur
+        $categories = $vendeur->categories;
+
+        if ($categories->isEmpty()) {
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+        }
+
+        return response()->json(["info" => "Point de terminaison API généré... Il faut y injecter vos variables de vue."]);
+    }
+
+    /**
+     * Enregistrer un nouveau plat.
+     */
+    public function store(Request $request)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+
+        $validated = $request->validate([
+            'nom_plat' => 'required|string|max:100',
+            'id_categorie' => 'required|exists:categories_plats,id_categorie',
+            'description' => 'nullable|string',
+            'prix' => 'required|numeric|min:0',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        // Vérification de sécurité: la catégorie doit appartenir aux spécialités du vendeur
+        if (!$vendeur->categories()->where('vendeur_categories.id_categorie', $validated['id_categorie'])->exists()) {
+            return response()->json(["info" => "Action terminée (Ancien back).", "status" => "success"]);
+        }
+
+        $plat = new Plat($validated);
+        $plat->id_vendeur = $vendeur->id_vendeur;
+
+        if ($request->hasFile('image')) {
+            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats', 80, 1200, true);
+        }
+
+        $plat->save();
+
+        // Ensure id_plat is available for relations
+        if ($request->has('variants')) {
+            foreach ($request->variants as $variantData) {
+                // Créer le groupe
+                $groupe = new \App\Models\GroupeVariante([
+                    'id_plat' => $plat->id_plat,
+                    'nom' => $variantData['groupe_nom'],
+                    'obligatoire' => isset($variantData['obligatoire']),
+                    'choix_multiple' => isset($variantData['choix_multiple']),
+                    'min_choix' => $variantData['min_choix'] ?? 0,
+                    'max_choix' => $variantData['max_choix'] ?? 1,
+                ]);
+                $groupe->save();
+
+                // Créer les options
+                if (isset($variantData['options']) && is_array($variantData['options'])) {
+                    foreach ($variantData['options'] as $optionData) {
+                        if (!empty($optionData['nom'])) {
+                            $groupe->variantes()->create([
+                                'nom' => $optionData['nom'],
+                                'prix_supplement' => $optionData['prix'] ?? 0,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+    }
+
+    /**
+     * Formulaire de modification d'un plat.
+     */
+    public function edit(Request $request, $vendor_slug, $id)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
+        $categories = $vendeur->categories;
+
+        return response()->json(["info" => "Point de terminaison API généré... Il faut y injecter vos variables de vue."]);
+    }
+
+    /**
+     * Mettre à jour un plat existant.
+     */
+    public function update(Request $request, $vendor_slug, $id)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
+
+        $validated = $request->validate([
+            'nom_plat' => 'required|string|max:100',
+            'id_categorie' => 'required|exists:categories_plats,id_categorie',
+            'description' => 'nullable|string',
+            'prix' => 'required|numeric|min:0',
+            'en_promotion' => 'boolean',
+            'prix_promotion' => 'required_if:en_promotion,1|nullable|numeric|min:0',
+            'image' => 'nullable|image|max:2048',
+            'disponible' => 'boolean',
+        ]);
+
+        if (!$vendeur->categories()->where('vendeur_categories.id_categorie', $validated['id_categorie'])->exists()) {
+            return response()->json(["info" => "Action terminée (Ancien back).", "status" => "success"]);
+        }
+
+        $plat->fill($validated);
+        $plat->en_promotion = $request->has('en_promotion');
+        $plat->disponible = $request->has('disponible');
+
+        if ($request->hasFile('image')) {
+            $plat->image_principale = ImageHelper::uploadAndConvert($request->file('image'), 'plats', 80, 1200, true);
+        }
+
+        $plat->save();
+
+        return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+    }
+
+    /**
+     * Supprimer un plat.
+     */
+    public function destroy(Request $request, $vendor_slug, $id)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
+
+        $plat->delete();
+
+        return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+    }
+
+    /**
+     * Basculer la disponibilité d'un plat (Rupture de stock).
+     */
+    public function toggleAvailability(Request $request, $vendor_slug, $id)
+    {
+        $vendeur = $request->get('current_vendor') ?? Auth::user()->vendeur;
+        $plat = Plat::where('id_vendeur', $vendeur->id_vendeur)->findOrFail($id);
+
+        $plat->disponible = !$plat->disponible;
+        $plat->save();
+
+        $msg = $plat->disponible ? 'Article à nouveau disponible !' : 'Article marqué comme épuisé.';
+        return response()->json(["info" => "Action terminée (Ancien back).", "status" => "success"]);
+    }
+}

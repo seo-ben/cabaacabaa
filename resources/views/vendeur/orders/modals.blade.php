@@ -77,19 +77,21 @@
 </div>
 
 {{-- Other modals (Chat, Assign, etc.) could be here too --}}
-<div x-data="{ open: false, orderId: null }" 
-     @open-chat-modal.window="open = true; orderId = $event.detail.orderId"
+<div x-data="{ open: false, orderId: null, orderCode: null }" 
+     @open-chat-modal.window="open = true; orderId = $event.detail.orderId; orderCode = $event.detail.orderCode"
      x-show="open" 
-     class="fixed inset-0 z-[60] flex items-center justify-center p-4"
+     class="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300"
      style="display: none;">
     <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm" @click="open = false"></div>
-    <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-sm p-10 text-center">
-         <div class="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-3xl flex items-center justify-center mx-auto mb-6 text-blue-600">
-             <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+    <div class="relative bg-white dark:bg-gray-900 rounded-[2.5rem] w-full max-w-lg overflow-hidden h-[600px] shadow-2xl animate-in zoom-in-95">
+         {{-- Close Button --}}
+         <button @click="open = false" class="absolute top-6 right-6 z-50 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/40 backdrop-blur text-gray-900 rounded-lg transition-all">
+             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+         </button>
+         
+         <div class="h-full">
+            @include('partials.order-chat', ['orderId' => 'dynamic'])
          </div>
-         <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">Messagerie Client</h3>
-         <p class="text-gray-400 text-sm mb-6">La messagerie instantanée avec le client est en cours d'initialisation...</p>
-         <button @click="open = false" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-black text-[10px] uppercase tracking-widest active:scale-95">Compris</button>
     </div>
 </div>
 

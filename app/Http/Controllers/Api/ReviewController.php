@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+
+use App\Models\AvisEvaluation;
+use App\Models\Commande;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class ReviewController extends Controller
+{
+    public function store(Request $request)
+    {
+        $request->validate([
+            'id_commande' => 'required|exists:commandes,id_commande',
+            'note' => 'required|integer|min:1|max:5',
+            'commentaire' => 'nullable|string|max:1000',
+        ]);
+
+        $commande = Commande::findOrFail($request->id_commande);
+
+        // Security check
+        $clientId = Auth::id() ?? $commande->id_client;
+
+        // Check if a review already exists for this order
+        $existing = AvisEvaluation::where('id_commande', $commande->id_commande)->first();
+        if ($existing) {
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+        }
+
+        AvisEvaluation::create([
+            'id_client' => $clientId,
+            'id_vendeur' => $commande->id_vendeur,
+            'id_commande' => $commande->id_commande,
+            'note' => $request->note,
+            'commentaire' => $request->commentaire,
+            'statut_avis' => 'visible',
+            'date_publication' => now(),
+        ]);
+
+        // Update Vendor Stats
+        $vendeur = $commande->vendeur;
+        if ($vendeur) {
+            $stats = AvisEvaluation::where('id_vendeur', $vendeur->id_vendeur)
+                ->where('statut_avis', 'visible')
+                ->selectRaw('AVG(note) as avg_note, COUNT(*) as count_avis')
+                ->first();
+
+            $vendeur->update([
+                'note_moyenne' => $stats->avg_note ?? 0,
+                'nombre_avis' => $stats->count_avis ?? 0,
+            ]);
+        }
+
+        return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+    }
+    public function storeVendorReview(Request $request)
+    {
+        $request->validate([
+            'id_vendeur' => 'required|exists:vendeurs,id_vendeur',
+            'note' => 'required|integer|min:1|max:5',
+            'commentaire' => 'required|string|min:5|max:1000',
+        ], [
+            'commentaire.required' => 'Le commentaire est requis pour laisser un avis.',
+            'commentaire.min' => 'Le commentaire est trop court (min 5 caractères).',
+        ]);
+
+        if (!Auth::check()) {
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+        }
+
+        $clientId = Auth::id();
+
+        // Avoid spam: check if the user recently reviewed (last 24 hours without an order)
+        // Or just limit to one review per user per vendor if not tied to an order.
+        $recentReview = AvisEvaluation::where('id_vendeur', $request->id_vendeur)
+            ->where('id_client', $clientId)
+            ->whereNull('id_commande')
+            ->first();
+
+        if ($recentReview) {
+            return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+        }
+
+        AvisEvaluation::create([
+            'id_client' => $clientId,
+            'id_vendeur' => $request->id_vendeur,
+            'id_commande' => null,
+            'note' => $request->note,
+            'commentaire' => $request->commentaire,
+            'statut_avis' => 'visible',
+            'date_publication' => now(),
+        ]);
+
+        // Update Vendor Stats
+        $vendeur = \App\Models\Vendeur::find($request->id_vendeur);
+        if ($vendeur) {
+            $stats = AvisEvaluation::where('id_vendeur', $vendeur->id_vendeur)
+                ->where('statut_avis', 'visible')
+                ->selectRaw('AVG(note) as avg_note, COUNT(*) as count_avis')
+                ->first();
+
+            $vendeur->update([
+                'note_moyenne' => $stats->avg_note ?? 0,
+                'nombre_avis' => $stats->count_avis ?? 0,
+            ]);
+        }
+
+        return response()->json(["info" => "Action terminée (Ancien redirect).", "status" => "success"]);
+    }
+}

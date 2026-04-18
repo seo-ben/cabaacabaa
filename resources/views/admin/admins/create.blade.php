@@ -11,7 +11,7 @@
         <h1 class="text-2xl font-bold text-gray-900">Nouvel Administrateur</h1>
     </div>
 
-    <form action="{{ route('admin.admins.store') }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+    <form action="{{ route('admin.admins.store') }}" method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 space-y-6">
         @csrf
 
         <div class="space-y-4">
@@ -66,8 +66,8 @@
         </div>
 
         <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
-            <a href="{{ route('admin.admins.index') }}" class="px-6 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Annuler</a>
-            <button type="submit" class="px-6 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition shadow-lg shadow-red-200">
+            <a href="{{ route('admin.admins.index') }}" class="px-4 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Annuler</a>
+            <button type="submit" class="px-4 py-2.5 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition shadow-lg shadow-red-200">
                 Créer l'administrateur
             </button>
         </div>

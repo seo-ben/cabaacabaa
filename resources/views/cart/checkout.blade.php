@@ -72,19 +72,19 @@
                             @endphp
                             @foreach($modes as $mode)
                             <label class="relative cursor-pointer group">
-                                <input type="radio" name="type_recuperation" value="{{ $mode['val'] }}" class="peer sr-only" 
-                                       {{ old('type_recuperation', 'emporter') == $mode['val'] ? 'checked' : '' }} 
-                                       onchange="toggleDelivery(this.value === 'livraison')">
-                                <div class="h-full py-4 bg-gray-50 dark:bg-gray-800/50 border-2 border-transparent rounded-2xl transition-all duration-300 peer-checked:border-red-500 peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:shadow-xl group-active:scale-95 flex flex-col items-center justify-center text-center gap-2">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 peer-checked:bg-red-500 peer-checked:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $mode['icon'] }}"/></svg>
-                                    </div>
-                                    <div class="px-1">
-                                        <span class="block text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">{{ $mode['label'] }}</span>
-                                        <span class="hidden sm:block text-[8px] text-gray-400 font-bold uppercase tracking-tighter">{{ $mode['desc'] }}</span>
-                                    </div>
-                                </div>
-                            </label>
+                                 <input type="radio" name="type_recuperation" value="{{ $mode['val'] }}" class="peer sr-only" 
+                                        {{ old('type_recuperation', 'emporter') == $mode['val'] ? 'checked' : '' }} 
+                                        onchange="toggleRecoveryMode(this.value)">
+                                 <div class="h-full py-4 bg-gray-50 dark:bg-gray-800/50 border-2 border-transparent rounded-2xl transition-all duration-300 peer-checked:border-red-500 peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:shadow-xl group-active:scale-95 flex flex-col items-center justify-center text-center gap-2">
+                                     <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 peer-checked:bg-red-500 peer-checked:text-white transition-colors">
+                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $mode['icon'] }}"/></svg>
+                                     </div>
+                                     <div class="px-1">
+                                         <span class="block text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-900 dark:text-white">{{ $mode['label'] }}</span>
+                                         <span class="hidden sm:block text-[8px] text-gray-400 font-bold uppercase tracking-tighter">{{ $mode['desc'] }}</span>
+                                     </div>
+                                 </div>
+                             </label>
                             @endforeach
                         </div>
 
@@ -103,12 +103,18 @@
                                         <svg id="gps-spinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         <span id="gps-text">Ma position GPS</span>
                                     </button>
-                                    <div class="relative rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 h-40 group">
-                                        <div id="delivery-map" class="w-full h-full z-0"></div>
-                                        <div class="absolute inset-x-0 bottom-0 p-2 bg-black/50 backdrop-blur-sm text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                            <span class="text-[8px] font-bold text-white uppercase">Glissez pour ajuster</span>
-                                        </div>
-                                    </div>
+                                     <div class="relative rounded-3xl overflow-hidden border-2 border-slate-100 dark:border-slate-800 h-64 sm:h-72 group shadow-inner">
+                                         <div id="delivery-map" class="w-full h-full z-0 bg-slate-100 dark:bg-slate-900"></div>
+                                         <div id="map-overlay-info" class="absolute inset-x-0 bottom-0 p-3 bg-black/60 backdrop-blur-md text-center opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10">
+                                             <span id="map-action-text" class="text-[10px] font-black text-white uppercase tracking-widest">Glissez le marqueur pour ajuster</span>
+                                         </div>
+                                         {{-- Overlay indicator if map not active --}}
+                                         <div id="map-instructions" class="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] pointer-events-none z-10 transition-opacity">
+                                             <div class="px-4 py-2 bg-white/90 dark:bg-slate-900/90 rounded-full shadow-xl">
+                                                 <p id="map-prompt" class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Indiquez votre position sur la carte</p>
+                                             </div>
+                                         </div>
+                                     </div>
                                 </div>
 
                                 <div class="space-y-4">
@@ -238,51 +244,105 @@
     let mapInitialized = false;
 
     // Check if we already have old input to show delivery details
-    if (document.querySelector('input[name="type_recuperation"]:checked').value === 'livraison') {
-        setTimeout(() => toggleDelivery(true), 100);
-    }
+    const initialMode = document.querySelector('input[name="type_recuperation"]:checked').value;
+    setTimeout(() => toggleRecoveryMode(initialMode), 100);
 
-    function toggleDelivery(show) {
+    function toggleRecoveryMode(mode) {
+        const showDelivery = (mode === 'livraison');
         const details = document.getElementById('delivery-details');
         const summaryLine = document.getElementById('delivery-fee-line');
-        if (show) {
-            details.classList.remove('hidden');
+        const gpsBtn = document.getElementById('gps-btn');
+        const mapPrompt = document.getElementById('map-prompt');
+        const mapActionText = document.getElementById('map-action-text');
+
+        // Always show the map container area but change its context
+        details.classList.remove('hidden');
+
+        if (showDelivery) {
             summaryLine.classList.remove('hidden');
-            // Init map after a short delay so container has dimensions
+            if(gpsBtn) gpsBtn.classList.remove('hidden');
+            if(mapPrompt) mapPrompt.innerText = "Indiquez votre position sur la carte";
+            if(mapActionText) mapActionText.innerText = "Glissez le marqueur pour ajuster";
+        } else {
+            summaryLine.classList.add('hidden');
+            if(gpsBtn) gpsBtn.classList.add('hidden');
+            if(mapPrompt) mapPrompt.innerText = "Localisation du vendeur";
+            if(mapActionText) mapActionText.innerText = "La boutique se trouve ici";
+            currentFee = 0;
+            document.getElementById('distance-info').classList.add('hidden');
+            updateTotal();
+        }
+
+        // Re-init or update map
+        requestAnimationFrame(() => {
             setTimeout(() => {
                 if (!mapInitialized) {
                     initDeliveryMap();
                 } else {
                     deliveryMap.invalidateSize();
+                    refreshMapContext(mode);
                 }
-            }, 200);
+                // Double check size after transition
+                setTimeout(() => deliveryMap && deliveryMap.invalidateSize(), 500);
+            }, 300);
+        });
+    }
+
+    function refreshMapContext(mode) {
+        if (!deliveryMap || !deliveryMarker) return;
+        
+        if (mode === 'livraison') {
+            const lat = document.getElementById('user-lat').value;
+            const lng = document.getElementById('user-lng').value;
+            if(lat && lng) {
+                deliveryMarker.setLatLng([lat, lng]);
+                deliveryMap.setView([lat, lng], 17);
+            }
+            deliveryMarker.dragging.enable();
         } else {
-            details.classList.add('hidden');
-            summaryLine.classList.add('hidden');
-            currentFee = 0;
-            document.getElementById('user-lat').value = '';
-            document.getElementById('user-lng').value = '';
-            document.getElementById('distance-info').classList.add('hidden');
-            updateTotal();
+            // Show vendor location
+            const vLat = {{ $vendeur->latitude ?? '6.1319' }};
+            const vLng = {{ $vendeur->longitude ?? '1.2227' }};
+            deliveryMarker.setLatLng([vLat, vLng]);
+            deliveryMap.setView([vLat, vLng], 17);
+            deliveryMarker.dragging.disable();
+            
+            // Hide instructions overlay
+            const instr = document.getElementById('map-instructions');
+            if(instr) instr.classList.add('opacity-0');
         }
     }
 
     function initDeliveryMap() {
-        // Default center: Lomé or old coordinates
+        const mode = document.querySelector('input[name="type_recuperation"]:checked').value;
         const oldLat = document.getElementById('user-lat').value;
         const oldLng = document.getElementById('user-lng').value;
-        const defaultLat = oldLat ? parseFloat(oldLat) : 6.1319;
-        const defaultLng = oldLng ? parseFloat(oldLng) : 1.2227;
+        
+        let defaultLat = 6.1319;
+        let defaultLng = 1.2227;
+
+        if (mode === 'livraison') {
+            defaultLat = oldLat ? parseFloat(oldLat) : 6.1319;
+            defaultLng = oldLng ? parseFloat(oldLng) : 1.2227;
+        } else {
+            defaultLat = {{ $vendeur->latitude ?? '6.1319' }};
+            defaultLng = {{ $vendeur->longitude ?? '1.2227' }};
+        }
 
         deliveryMap = L.map('delivery-map', {
             zoomControl: false,
             tap: true
-        }).setView([defaultLat, defaultLng], oldLat ? 16 : 13);
+        }).setView([defaultLat, defaultLng], (mode === 'livraison' && !oldLat) ? 13 : 16);
 
-        L.tileLayer('https://{s}.tile.basemaps.cartocdn.com/voyager_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap',
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
         }).addTo(deliveryMap);
+
+        // Force tile loading update
+        setTimeout(() => {
+            deliveryMap.invalidateSize(true);
+        }, 500);
 
         const customerIcon = L.divIcon({
             className: 'custom-customer-marker',
@@ -318,6 +378,11 @@
     function setDeliveryPosition(lat, lng) {
         document.getElementById('user-lat').value = lat;
         document.getElementById('user-lng').value = lng;
+        
+        // Hide instructions overlay once position is set
+        const instr = document.getElementById('map-instructions');
+        if(instr) instr.classList.add('opacity-0');
+        
         calculateFee(lat, lng);
     }
 
@@ -339,6 +404,10 @@
                     const lng = position.coords.longitude;
 
                     if (deliveryMap && deliveryMarker) {
+                        setTimeout(() => {
+                            deliveryMap.invalidateSize(true);
+                        }, 400);
+                        
                         deliveryMarker.setLatLng([lat, lng]);
                         deliveryMap.flyTo([lat, lng], 17, { duration: 1.2 });
                     } else {

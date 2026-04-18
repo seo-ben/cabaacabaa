@@ -54,4 +54,58 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('success', 'Merci pour votre avis !');
     }
+    public function storeVendorReview(Request $request)
+    {
+        $request->validate([
+            'id_vendeur' => 'required|exists:vendeurs,id_vendeur',
+            'note' => 'required|integer|min:1|max:5',
+            'commentaire' => 'required|string|min:5|max:1000',
+        ], [
+            'commentaire.required' => 'Le commentaire est requis pour laisser un avis.',
+            'commentaire.min' => 'Le commentaire est trop court (min 5 caractères).',
+        ]);
+
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vous devez être connecté pour laisser un avis.');
+        }
+
+        $clientId = Auth::id();
+
+        // Avoid spam: check if the user recently reviewed (last 24 hours without an order)
+        // Or just limit to one review per user per vendor if not tied to an order.
+        $recentReview = AvisEvaluation::where('id_vendeur', $request->id_vendeur)
+            ->where('id_client', $clientId)
+            ->whereNull('id_commande')
+            ->first();
+
+        if ($recentReview) {
+            return redirect()->back()->with('error', 'Vous avez déjà laissé un avis général pour cette boutique.');
+        }
+
+        AvisEvaluation::create([
+            'id_client' => $clientId,
+            'id_vendeur' => $request->id_vendeur,
+            'id_commande' => null,
+            'note' => $request->note,
+            'commentaire' => $request->commentaire,
+            'statut_avis' => 'visible',
+            'date_publication' => now(),
+        ]);
+
+        // Update Vendor Stats
+        $vendeur = \App\Models\Vendeur::find($request->id_vendeur);
+        if ($vendeur) {
+            $stats = AvisEvaluation::where('id_vendeur', $vendeur->id_vendeur)
+                ->where('statut_avis', 'visible')
+                ->selectRaw('AVG(note) as avg_note, COUNT(*) as count_avis')
+                ->first();
+
+            $vendeur->update([
+                'note_moyenne' => $stats->avg_note ?? 0,
+                'nombre_avis' => $stats->count_avis ?? 0,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Votre avis a été publié avec succès !');
+    }
 }

@@ -240,7 +240,6 @@ class OrderController extends Controller
                     
                     if ($plat->quantite_disponible <= 0) {
                         $plat->quantite_disponible = 0;
-                        $plat->is_available = false;
                         $plat->disponible = false; // Sortie du marché auto
 
                         // Notification automatique au vendeur

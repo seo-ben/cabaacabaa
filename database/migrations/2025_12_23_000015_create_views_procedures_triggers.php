@@ -89,6 +89,7 @@ class CreateViewsProceduresTriggers extends Migration
         if ($driver === 'mysql') {
             $sql = <<<'SQL'
             -- PROCEDURES
+            DROP PROCEDURE IF EXISTS calculer_note_vendeur;
             CREATE PROCEDURE calculer_note_vendeur(IN p_id_vendeur BIGINT)
             BEGIN
                 UPDATE vendeurs v
@@ -108,6 +109,7 @@ class CreateViewsProceduresTriggers extends Migration
                 WHERE id_vendeur = p_id_vendeur;
             END;
 
+            DROP PROCEDURE IF EXISTS generer_numero_commande;
             CREATE PROCEDURE generer_numero_commande(OUT p_numero VARCHAR(20))
             BEGIN
                 SET p_numero = CONCAT(
@@ -118,6 +120,7 @@ class CreateViewsProceduresTriggers extends Migration
             END;
 
             -- TRIGGERS
+            DROP TRIGGER IF EXISTS after_commande_insert;
             CREATE TRIGGER after_commande_insert
             AFTER INSERT ON commandes
             FOR EACH ROW
@@ -129,6 +132,7 @@ class CreateViewsProceduresTriggers extends Migration
                 WHERE id_vendeur = NEW.id_vendeur;
             END;
 
+            DROP TRIGGER IF EXISTS after_ligne_commande_insert;
             CREATE TRIGGER after_ligne_commande_insert
             AFTER INSERT ON lignes_commande
             FOR EACH ROW

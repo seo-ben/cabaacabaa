@@ -28,21 +28,47 @@
             </p>
         </div>
 
+        <!-- Tracking Map -->
+        @if($commande->type_recuperation == 'livraison')
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <div class="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-700">
+            <div class="p-6 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/30 dark:bg-gray-800/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white dark:bg-gray-800 text-orange-600 rounded-xl flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">Itinéraire de Livraison</h3>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <p class="text-[9px] text-gray-400 font-black uppercase tracking-widest">Suivi en direct actif</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="confirmation-map" class="w-full h-80 z-0 bg-slate-100 dark:bg-slate-800"></div>
+            <div class="p-4 bg-orange-50/50 dark:bg-orange-950/10 border-t border-gray-50 dark:border-gray-800">
+                 <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Code de suivi: <span class="text-orange-600">#{{ $commande->numero_commande }}</span></p>
+                    <button onclick="copyTrackingLink()" class="text-[9px] font-black text-white bg-orange-600 px-3 py-1.5 rounded-lg uppercase tracking-widest">Copier le lien</button>
+                 </div>
+            </div>
+        </div>
+        @endif
+
         <!-- Tracking Timeline -->
         @if($commande->statut != 'annule')
         <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-10 border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none">
             @php
                 $steps = [
                     ['id' => 'en_attente', 'label' => 'Reçue', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                    ['id' => 'en_preparation', 'label' => 'Préparation', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
+                    ['id' => 'en_preparation', 'label' => 'Cuisine', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4'],
                     ['id' => 'pret', 'label' => 'Prête', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
+                    ['id' => 'en_livraison', 'label' => 'Coursier', 'icon' => 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     ['id' => 'termine', 'label' => 'Livrée', 'icon' => 'M5 13l4 4L19 7']
                 ];
                 $currentStatusRank = [
-                    'en_attente' => 0,
-                    'en_preparation' => 1,
-                    'pret' => 2,
-                    'termine' => 3
+                    'en_attente' => 0, 'confirmee' => 0, 'en_preparation' => 1, 'pret' => 2, 'en_livraison' => 3, 'termine' => 4
                 ][$commande->statut] ?? 0;
             @endphp
 
@@ -53,9 +79,10 @@
                 <!-- Active Line -->
                 <div id="tracking-progress-bar" class="absolute top-1/2 left-10 -translate-y-1/2 h-1 bg-orange-500 transition-all duration-1000 z-0"
                     style="width: 
-                    @if($commande->statut == 'en_attente') 0% 
-                    @elseif($commande->statut == 'en_preparation') 33% 
-                    @elseif($commande->statut == 'pret') 66% 
+                    @if($commande->statut == 'en_attente' || $commande->statut == 'confirmee') 0% 
+                    @elseif($commande->statut == 'en_preparation') 25% 
+                    @elseif($commande->statut == 'pret') 50% 
+                    @elseif($commande->statut == 'en_livraison') 75% 
                     @elseif($commande->statut == 'termine') 100% 
                     @endif">
                 </div>
@@ -77,9 +104,10 @@
                 <!-- Active Line -->
                 <div id="tracking-progress-bar-mobile" class="absolute top-6 left-[23px] w-1 bg-orange-500 transition-all duration-1000 z-0 origin-top"
                     style="height: 
-                    @if($commande->statut == 'en_attente') 0% 
-                    @elseif($commande->statut == 'en_preparation') 33% 
-                    @elseif($commande->statut == 'pret') 66% 
+                    @if($commande->statut == 'en_attente' || $commande->statut == 'confirmee') 0% 
+                    @elseif($commande->statut == 'en_preparation') 25% 
+                    @elseif($commande->statut == 'pret') 50% 
+                    @elseif($commande->statut == 'en_livraison') 75% 
                     @elseif($commande->statut == 'termine') 100% 
                     @endif">
                 </div>
@@ -305,18 +333,107 @@
 
 @section('scripts')
 <script>
-    const orderCode = "{{ $commande->numero_commande }}";
+    window.orderCode = "{{ $commande->numero_commande }}";
     const statusRanks = {
-        'en_attente': 0,
-        'confirmee': 0,
-        'en_preparation': 1,
-        'pret': 2,
-        'termine': 3
+        'en_attente': 0, 'confirmee': 0, 'en_preparation': 1, 'pret': 2, 'en_livraison': 3, 'termine': 4
     };
+
+    function copyTrackingLink() {
+        const url = "{{ route('orders.track', ['code' => $commande->numero_commande]) }}";
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Lien de suivi copié ! Gardez-le précieusement.');
+        });
+    }
+
+    @if($commande->type_recuperation == 'livraison')
+    // Map Logic
+    let map = null;
+    let driverMarker = null;
+    let routeLine = null;
+    const assignedDriverId = "{{ $commande->id_livreur ?? '' }}";
+
+    function initMap() {
+        const container = 'confirmation-map';
+        if (!document.getElementById(container)) return;
+
+        const vLat = {{ $commande->vendeur->latitude ?? '6.1375' }};
+        const vLng = {{ $commande->vendeur->longitude ?? '1.2123' }};
+        const cLat = {{ $commande->latitude_livraison ?? '6.1375' }};
+        const cLng = {{ $commande->longitude_livraison ?? '1.2123' }};
+
+        map = L.map(container, { zoomControl: false, attributionControl: false })
+               .setView([ (vLat + cLat)/2, (vLng + cLng)/2 ], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+        L.marker([vLat, vLng], {
+            icon: L.divIcon({
+                className: 'v-marker',
+                html: `<div class="w-10 h-10 bg-white rounded-2xl border-2 border-orange-500 shadow-xl flex items-center justify-center text-xl">🏢</div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            })
+        }).addTo(map);
+
+        L.marker([cLat, cLng], {
+            icon: L.divIcon({
+                className: 'c-marker',
+                html: `<div class="w-10 h-10 bg-white rounded-2xl border-2 border-green-500 shadow-xl flex items-center justify-center text-xl">🏠</div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            })
+        }).addTo(map);
+
+        routeLine = L.polyline([[vLat, vLng], [cLat, cLng]], {
+            color: '#f97316', weight: 3, opacity: 0.6, dashArray: '10, 10'
+        }).addTo(map);
+
+        map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+
+        if (assignedDriverId) {
+            fetchDriverPos(assignedDriverId);
+            setInterval(() => fetchDriverPos(assignedDriverId), 30000);
+        }
+    }
+
+    function fetchDriverPos(id) {
+        fetch('/api/drivers/online').then(r => r.json()).then(drivers => {
+            const d = drivers.find(drv => drv.driverId == id);
+            if (d) updateDMarker(d);
+        });
+    }
+
+    function updateDMarker(data) {
+        if (!map) return;
+        const ll = [parseFloat(data.latitude), parseFloat(data.longitude)];
+        if (driverMarker) { driverMarker.setLatLng(ll); } 
+        else {
+            driverMarker = L.marker(ll, {
+                icon: L.divIcon({
+                    className: 'd-marker',
+                    html: '<div class="w-12 h-12 bg-gray-900 rounded-2xl border-4 border-white shadow-2xl flex items-center justify-center text-2xl animate-bounce-slow">🏍️</div>',
+                    iconSize: [48, 48], iconAnchor: [24, 24]
+                })
+            }).addTo(map).bindPopup('<b>Livreur en route</b>').openPopup();
+        }
+        if ("{{ $commande->statut }}" === 'en_livraison') {
+             const destLat = {{ $commande->latitude_livraison ?? '0' }};
+             const destLng = {{ $commande->longitude_livraison ?? '0' }};
+             if(destLat != 0) {
+                 map.flyToBounds(L.latLngBounds([ll, [destLat, destLng]]), { padding: [100, 100], duration: 2 });
+             } else { map.flyTo(ll, 17); }
+        }
+    }
+
+    const scriptLeaflet = document.createElement('script');
+    scriptLeaflet.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    scriptLeaflet.onload = initMap;
+    document.head.appendChild(scriptLeaflet);
+    @endif
 
     function updateTrackingUI(status) {
         const rank = statusRanks[status] ?? 0;
-        const progress = (rank / 3) * 100;
+        const progress = (rank / 4) * 100;
         
         // Update line
         const activeLine = document.getElementById('tracking-progress-bar');
