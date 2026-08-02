@@ -651,10 +651,10 @@ class ComprehensiveSystemSeeder extends Seeder
     private function seedCoupons(array $vendors): array
     {
         $coupons = [];
-        foreach ($vendors as $vendor) {
+        foreach ($vendors as $index => $vendor) {
             $coupons[] = Coupon::create([
                 'id_vendeur' => $vendor->id_vendeur,
-                'code' => 'PROMO' . rand(10, 50),
+                'code' => 'PROMO' . ($index + 1) . '0',
                 'type' => 'percentage',
                 'valeur' => 15.00,
                 'montant_minimal_achat' => 3000,
