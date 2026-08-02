@@ -25,7 +25,7 @@
                 <div>
                     <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Nom complet</label>
                     <input type="text" name="name" value="{{ old('name', $staff->user->name) }}" required
-                           class="w-full bg-gray-50 dark:bg-gray-800/50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff4d00] transition-all" placeholder="Ex: Jean Dupont">
+                           class="w-full bg-gray-50 dark:bg-gray-800/50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff4d00] transition-all" placeholder="Ex: Koffi Ablo">
                     @error('name')<p class="mt-2 text-xs font-bold text-red-500 ml-1">{{ $message }}</p>@enderror
                 </div>
 

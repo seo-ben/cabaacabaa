@@ -27,7 +27,7 @@
     </div>
 
     {{-- Content --}}
-    <div class="px-4 -mt-4 space-y-3">
+    <div class="px-4 mt-4 space-y-3">
 
         @if($favoris->count() === 0)
             {{-- Empty state --}}

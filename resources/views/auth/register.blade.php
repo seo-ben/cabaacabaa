@@ -108,7 +108,7 @@
                             </div>
                             <input type="text" name="name" value="{{ old('name') }}" required
                                    class="w-full pl-11 pr-4 py-4 bg-transparent border-none focus:ring-0 focus:outline-none text-sm font-bold text-gray-900 placeholder-gray-400"
-                                   placeholder="Jean Dupont">
+                                   placeholder="Koffi Ablo">
                         </div>
                     </div>
 
@@ -248,7 +248,7 @@
                 </div>
                 <form action="{{ route('register') }}" method="POST" class="space-y-4">
                     @csrf
-                    <div><label class="block text-sm font-bold text-gray-700 mb-2">Nom complet</label><input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all" placeholder="Jean Dupont"></div>
+                    <div><label class="block text-sm font-bold text-gray-700 mb-2">Nom complet</label><input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all" placeholder="Koffi Ablo"></div>
                     <div><label class="block text-sm font-bold text-gray-700 mb-2">Adresse email</label><input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition-all" placeholder="vous@exemple.com"></div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Téléphone</label>

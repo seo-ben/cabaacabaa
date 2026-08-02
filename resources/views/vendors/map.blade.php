@@ -400,7 +400,7 @@
                                     <span class="text-[10px] font-black text-red-600 uppercase tracking-widest border-b-2 border-red-600 pb-0.5">Visiter la boutique</span>
                                 </div>
                                 <div class="w-16 h-16 rounded-2xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm">
-                                    <img src="${v.image_full || '/images/default-vendor.jpg'}" class="w-full h-full object-cover">
+                                    <img src="${v.image_full}" class="w-full h-full object-cover" onerror="this.src='/assets/default-boutiques.png'">
                                 </div>
                             </a>
                         </div>

@@ -18,7 +18,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
                 <input type="text" name="name" value="{{ old('name') }}" required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition" placeholder="Ex: Jean Dupont">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#ff4d00] focus:border-[#ff4d00] transition" placeholder="Ex: Koffi Ablo">
                 @error('name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 

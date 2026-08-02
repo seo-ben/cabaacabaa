@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CategoryPlatSeeder::class,
             CountrySeeder::class,
             AdminPermissionSeeder::class,
+            ComprehensiveSystemSeeder::class,
         ]);
 
         // 2. Create Admin User

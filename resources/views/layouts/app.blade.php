@@ -916,7 +916,7 @@
 
                 <!-- Cart Button (Central - Elevated) -->
                 <div class="relative -mt-6 -translate-y-4 z-10 flex-1 flex justify-center">
-                    <a href="{{ route('cart.index') }}" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl shadow-xl shadow-orange-500/30 transform active:scale-90 transition-all duration-300 group">
+                    <a href="{{ route('cart.index') }}" class="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-4xl shadow-xl shadow-orange-500/30 transform active:scale-90 transition-all duration-300 group">
                         <!-- Animated ring on hover -->
                         <div class="absolute inset-0 rounded-2xl border-2 border-white/20 group-active:border-white/40 transition-colors"></div>
                         <!-- Cart Icon -->
@@ -929,7 +929,7 @@
                         </template>
                         <!-- Pulse effect when cart has items -->
                         <template x-if="cartCount > 0">
-                            <div class="absolute inset-0 rounded-2xl bg-orange-400 animate-ping opacity-20"></div>
+                            <div class="absolute inset-0 rounded-4xl bg-orange-400 animate-ping opacity-20"></div>
                         </template>
                     </a>
                     <span class="absolute -bottom-8 block text-center mt-1 text-[8px] font-bold text-gray-400 dark:text-gray-500">Panier</span>
@@ -958,7 +958,7 @@
                         <div class="relative">
                             <div class="{{ request()->url() === $dashboardRoute ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->url() === $dashboardRoute ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
                             <div class="relative">
-                                <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff&bold=true&size=64' }}" 
+                                <img src="{{ auth()->user()->photo_profil ? asset('storage/'.auth()->user()->photo_profil) : asset('assets/default-profil.png') }}" 
                                      class="w-6 h-6 rounded-lg object-cover ring-2 transition-all duration-300 {{ request()->url() === $dashboardRoute ? 'ring-orange-500 scale-110' : 'ring-transparent' }}"
                                      alt="{{ auth()->user()->name }}">
                                 <!-- Online indicator -->
@@ -983,7 +983,7 @@
                         <!-- User Info Header -->
                         <div class="p-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
                             <div class="flex items-center gap-3">
-                                <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=ef4444&color=fff&bold=true&size=64' }}" 
+                                <img src="{{ auth()->user()->photo_profil ? asset('storage/'.auth()->user()->photo_profil) : asset('assets/default-profil.png') }}" 
                                      class="w-10 h-10 rounded-xl object-cover"
                                      alt="{{ auth()->user()->name }}">
                                 <div class="flex-1 min-w-0">
@@ -1025,6 +1025,10 @@
                                 <div class="w-8 h-8 bg-pink-50 dark:bg-pink-900/20 rounded-lg flex items-center justify-center text-pink-600 dark:text-pink-400">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                 </div>
+                                <span class="text-sm font-semibold">Mes favoris</span>
+                            </a>
+                            
+                        
                                 <!-- Driver Map -->
                                 <a href="{{ route('drivers.map') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors">
                                     <div class="w-8 h-8 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center text-green-600 dark:text-green-400">
@@ -1032,6 +1036,16 @@
                                     </div>
                                     <span class="text-sm font-semibold">Carte des livreurs</span>
                                 </a>
+
+                                <!-- Become a Vendor -->
+                                @if(auth()->user()->canApplyAsVendor())
+                                <a href="{{ route('vendor.apply') }}" @click="accountMenu = false" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors">
+                                    <div class="w-8 h-8 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center text-orange-600 dark:text-orange-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                    </div>
+                                    <span class="text-sm font-semibold text-orange-600 dark:text-orange-400">Ouvrir ma boutique</span>
+                                </a>
+                                @endif
                             </div>
 
                         <!-- Vendor Section -->

@@ -23,7 +23,7 @@
                 </div>
             </div>
             {{-- Quick action --}}
-            <a href="{{ route('home') }}"
+            <a href="{{ route('explore.plats') }}"
                class="px-4 py-2.5 bg-red-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest active:scale-95 transition-transform shadow-lg shadow-red-900/30">
                 Commander
             </a>

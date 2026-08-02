@@ -19,7 +19,7 @@
         </div>
         <h2 class="text-xl font-black text-gray-900 dark:text-white mb-2">Aucune commande</h2>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 font-medium max-w-xs">Découvrez nos articles et faites votre première commande !</p>
-        <a href="{{ route('home') }}" class="px-8 py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl active:scale-95 transition-transform">Explorer le catalogue</a>
+        <a href="{{ route('explore.plats') }}" class="px-8 py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl active:scale-95 transition-transform">Explorer le catalogue</a>
     </div>
 
     @else
@@ -129,7 +129,7 @@
                 </div>
                 <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Vous n'avez pas encore commandé</h3>
                 <p class="text-gray-500 dark:text-gray-400 mb-10 max-w-sm mx-auto font-medium">Nos articles n'attendent que vous. Découvrez les meilleures boutiques autour de vous.</p>
-                <a href="{{ route('home') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le catalogue</a>
+                <a href="{{ route('explore.plats') }}" class="inline-block px-10 py-5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-orange-600 dark:hover:bg-gray-200 transition-all shadow-xl active:scale-95">Explorer le catalogue</a>
             </div>
         @else
             <div class="space-y-8">

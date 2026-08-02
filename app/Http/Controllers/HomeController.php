@@ -293,6 +293,49 @@ class HomeController extends Controller
         $categories = CategoryPlat::where('actif', true)->orderBy('nom_categorie')->get();
         $zones = ZoneGeographique::where('actif', true)->orderBy('nom_zone')->get();
 
+        // ── JSON response for AJAX real-time search ──
+        if ($request->ajax() || $request->wantsJson()) {
+            $platsData = $plats->getCollection()->map(function ($plat) {
+                $vendeur = $plat->vendeur;
+                $canShowMedia = $vendeur ? $vendeur->canUseGallery() : false;
+                $hasOptions = $plat->groupesVariantes->isNotEmpty();
+                $hasMedia = ($plat->medias && $plat->medias->count() > 0) || !empty($plat->video_url);
+                $opensModal = $hasOptions || ($hasMedia && $canShowMedia);
+
+                return [
+                    'id_plat'           => $plat->id_plat,
+                    'nom_plat'          => $plat->nom_plat,
+                    'description'       => $plat->description,
+                    'prix'              => $plat->prix,
+                    'prix_promotion'    => $plat->prix_promotion,
+                    'en_promotion'      => (bool) $plat->en_promotion,
+                    'image_principale'  => $plat->image_principale ? asset('storage/' . $plat->image_principale) : null,
+                    'video_url'         => $plat->video_url,
+                    'categorie_nom'     => $plat->categorie ? $plat->categorie->nom_categorie : 'Produit',
+                    'opens_modal'       => $opensModal,
+                    'vendeur' => $vendeur ? [
+                        'id_vendeur'     => $vendeur->id_vendeur,
+                        'nom_commercial' => $vendeur->nom_commercial,
+                        'slug'           => Str::slug($vendeur->nom_commercial ?? 'boutique'),
+                    ] : null,
+                    // Full plat object for modal (groupes_variantes, medias, etc.)
+                    'plat_json'         => $plat->toArray(),
+                ];
+            });
+
+            return response()->json([
+                'plats'       => $platsData,
+                'total'       => $plats->total(),
+                'current_page'=> $plats->currentPage(),
+                'last_page'   => $plats->lastPage(),
+                'per_page'    => $plats->perPage(),
+                'from'        => $plats->firstItem(),
+                'to'          => $plats->lastItem(),
+                'next_page_url' => $plats->nextPageUrl(),
+                'prev_page_url' => $plats->previousPageUrl(),
+            ]);
+        }
+
         return view('explore-plats', compact('plats', 'categories', 'zones'));
     }
 

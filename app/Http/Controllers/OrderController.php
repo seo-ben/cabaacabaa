@@ -142,15 +142,11 @@ class OrderController extends Controller
 
         $rules = [
             'nom_complet' => 'required|string|max:200',
+            'email' => 'required|email|max:150',
             'phone' => 'required|string|max:20',
             'type_recuperation' => 'required|in:emporter,sur_place,livraison',
-            // ============================================================================
-            // PAIEMENT EN LIGNE - TEMPORAIREMENT DÉSACTIVÉ
-            // ============================================================================
-            // TODO: Réactiver 'mobile_money' quand Tmoney, Flooz seront opérationnels
-            // Ancienne validation: 'mode_paiement' => 'required|in:espece,mobile_money',
-            // ============================================================================
-            'mode_paiement' => 'required|in:espece', // Seul espèces accepté pour le moment
+            'heure_recuperation_souhaitee' => 'required|string',
+            'mode_paiement' => 'required|in:espece',
             'notes' => 'nullable|string',
         ];
 
@@ -203,15 +199,27 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
-            $commande = new Commande();
-            $commande->numero_commande = 'CMD-' . strtoupper(Str::random(8));
-            $commande->id_client = Auth::id();
-            $commande->nom_complet_client = $request->nom_complet;
-            $commande->telephone_client = $request->phone;
-            $commande->id_vendeur = $id_vendeur;
-            $commande->statut = 'en_attente';
-            $commande->type_recuperation = $request->type_recuperation;
-            $commande->adresse_livraison = $request->adresse_livraison;
+            $heureRecuperation = now();
+        if ($request->heure_recuperation_souhaitee == '+30min') {
+            $heureRecuperation->addMinutes(30);
+        } elseif ($request->heure_recuperation_souhaitee == '+1h') {
+            $heureRecuperation->addHour();
+        } elseif ($request->heure_recuperation_souhaitee == '+2h') {
+            $heureRecuperation->addHours(2);
+        }
+
+        // 2. Create the order
+        $commande = new Commande();
+        $commande->numero_commande = 'CMD-' . strtoupper(Str::random(8));
+        $commande->id_client = Auth::id();
+        $commande->email_client = $request->email;
+        $commande->nom_complet_client = $request->nom_complet;
+        $commande->telephone_client = $request->phone;
+        $commande->id_vendeur = $id_vendeur;
+        $commande->statut = 'en_attente';
+        $commande->type_recuperation = $request->type_recuperation;
+        $commande->heure_recuperation_souhaitee = $heureRecuperation;
+        $commande->adresse_livraison = $request->adresse_livraison;
             $commande->latitude_livraison = $request->lat;
             $commande->longitude_livraison = $request->lng;
             $commande->distance_livraison = $distance;

@@ -163,7 +163,7 @@ curl -X POST "https://example.com/pizza-hut/payouts" \
   -d '{
     "montant": 50000,
     "methode_paiement": "momo",
-    "informations_paiement": "Numéro: +225 07 XX XX XX XX, Nom: Jean Dupont"
+    "informations_paiement": "Numéro: +225 07 XX XX XX XX, Nom: Koffi Ablo"
   }'
 ```
 

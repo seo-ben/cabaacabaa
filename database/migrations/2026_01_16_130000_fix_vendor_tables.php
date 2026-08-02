@@ -11,12 +11,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // 1. Change icon to TEXT to support long SVG strings
-        // Using raw SQL to avoid dependency requirement
-        DB::statement("ALTER TABLE vendor_categories MODIFY COLUMN icon TEXT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            // 1. Change icon to TEXT to support long SVG strings
+            DB::statement("ALTER TABLE vendor_categories MODIFY COLUMN icon TEXT NULL");
 
-        // 2. Make type_vendeur nullable in vendeurs table
-        DB::statement("ALTER TABLE vendeurs MODIFY COLUMN type_vendeur ENUM('restaurant','cantine','fast_food','vendeur_independant','patisserie','autre') NULL");
+            // 2. Make type_vendeur nullable in vendeurs table
+            DB::statement("ALTER TABLE vendeurs MODIFY COLUMN type_vendeur ENUM('restaurant','cantine','fast_food','vendeur_independant','patisserie','autre') NULL");
+        }
     }
 
     /**

@@ -133,25 +133,25 @@
         @endif
 
         <!-- Order Summary Card -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden">
+        {{-- <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden">
             <div class="p-6 md:p-10 border-b border-gray-50 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-white dark:bg-gray-700 rounded-2xl flex items-center justify-center text-orange-600 dark:text-orange-400 shadow-sm font-black italic border border-gray-100 dark:border-gray-600">
                         {{ substr($commande->vendeur->nom_commercial, 0, 1) }}
                     </div>
                     <div>
-                        <h2 class="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">Prestataire</h2>
+                        <h2 class="text-xs font-black  tracking-widest text-gray-400 dark:text-gray-500">Prestataire</h2>
                         <p class="text-sm font-black text-gray-900 dark:text-white">{{ $commande->vendeur->nom_commercial }}</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <h2 class="text-xs font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-1">Status Actuel</h2>
+                    <h2 class="text-xs font-black  tracking-widest text-gray-400 dark:text-gray-500 mb-1">Status Actuel</h2>
                     <span id="current-status-badge" class="px-5 py-2.5 
                         @if($commande->statut == 'en_attente') bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-900/30
                         @elseif($commande->statut == 'confirmee' || $commande->statut == 'termine') bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-100 dark:border-green-900/30
                         @elseif($commande->statut == 'annule') bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30
                         @else bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30 @endif
-                        rounded-full text-[10px] font-black uppercase tracking-widest border border-current">
+                        rounded-full text-[10px] font-black  tracking-widest border border-current">
                         {{ ucfirst(str_replace('_', ' ', $commande->statut)) }}
                     </span>
                 </div>
@@ -167,7 +167,7 @@
                                 </div>
                                 <div>
                                     <span class="text-sm font-black text-gray-900 dark:text-white block">{{ $ligne->nom_plat_snapshot }}</span>
-                                    <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">{{ number_format($ligne->prix_unitaire, 0) }} FCFA / unité</span>
+                                    <span class="text-[10px] text-gray-400 dark:text-gray-500 font-bold  tracking-widest">{{ number_format($ligne->prix_unitaire, 0) }} FCFA / unité</span>
                                 </div>
                             </div>
                             <span class="text-sm font-black text-gray-900 dark:text-white">{{ number_format($ligne->sous_total, 0) }} FCFA</span>
@@ -278,20 +278,21 @@
                     <p class="text-[11px] text-green-700 dark:text-green-400 font-medium">Votre note a bien été enregistrée. {{ $commande->vendeur->nom_commercial }} vous remercie !</p>
                 </div>
             </div>
-        </div>    
-            <div class="bg-gray-900 dark:bg-gray-800 p-8 flex items-center justify-between">
+        </div>     --}}
+        <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-2xl shadow-gray-200/50 dark:shadow-none overflow-hidden"></div>
+            <div class="bg-gray-900 dark:bg-gray-800 rounded-2xl  p-4 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-gray-800 dark:bg-gray-700 rounded-2xl flex items-center justify-center text-white font-black italic relative">
                         {{ substr($commande->vendeur->nom_commercial, 0, 1) }}
                         <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-gray-900 dark:border-gray-800 rounded-full"></div>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Besoin d'aide ?</p>
+                        <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 tracking-widest">Besoin d'aide ?</p>
                         <p class="text-xs font-black text-white">Contactez l'établissement</p>
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <a href="tel:{{ $commande->vendeur->telephone_commercial }}" class="px-6 py-4 bg-white text-[10px] font-black uppercase tracking-widest text-gray-900 rounded-2xl hover:bg-orange-600 hover:text-white transition-all shadow-sm flex items-center gap-2">
+                    <a href="tel:{{ $commande->vendeur->telephone_commercial }}" class="px-6 py-4 bg-white text-[10px] font-black tracking-widest text-gray-900 rounded-2xl hover:bg-orange-600 hover:text-white transition-all shadow-sm flex items-center gap-2">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                         Appeler
                     </a>
@@ -299,7 +300,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 pt-4">
+        <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 pt-4 px-5">
             <a href="{{ route('home') }}" class="w-full md:w-auto text-center px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-2 border-gray-100 dark:border-gray-800 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all active:scale-95">Explorer d'autres articles</a>
             
             @if($commande->statut == 'en_attente')

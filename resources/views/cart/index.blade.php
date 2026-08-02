@@ -2,14 +2,14 @@
 
 @section('content')
 
-<div class="min-h-screen bg-white dark:bg-gray-950 pt-8 pb-32 transition-colors duration-300">
+<div class="min-h-screen bg-white dark:bg-gray-950 pt-4 pb-32 transition-colors duration-300">
     <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 border-b border-gray-100 dark:border-gray-800 pb-8">
+        <div class="flex flex-col sm:flex-row sm:items-end  justify-between gap-6 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
             <div class="space-y-2">
-                <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Mon Panier</h1>
-                <p class="text-xs font-black uppercase tracking-[0.3em] text-red-600 dark:text-red-400">
+                <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Mon Panier</h1>
+                <p class="text-xs font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400">
                     {{ count($cart) }} Article{{ count($cart) > 1 ? 's' : '' }} au total
                 </p>
             </div>
@@ -96,7 +96,7 @@
 
             <!-- Summary Sidebar -->
             <div class="lg:col-span-4">
-                <div class="sticky top-32 space-y-6">
+                <div class="sticky top-16 space-y-3">
                     <div class="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-gray-800 relative overflow-hidden">
                         
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-6">Détails de la commande</h3>
@@ -124,7 +124,7 @@
                             </div>
 
                             <a href="{{ route('checkout.index') }}" class="mt-8 flex items-center justify-center w-full py-4 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold text-sm transition-all shadow-md shadow-red-600/20 active:scale-[0.98]">
-                                Passer à la caisse
+                                Valider ma comande
                             </a>
                         </div>
                     </div>

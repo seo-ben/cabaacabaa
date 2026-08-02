@@ -181,10 +181,37 @@
         </div>
     </div>
 
-    {{-- Chat Section (Mobile) --}}
-    <section class="px-4 mb-4" id="order-chat-section">
-        @include('partials.order-chat', ['orderId' => $commande->id_commande])
-    </section>
+    {{-- Floating Action Button (Chat) --}}
+    <div class="fixed bottom-24 right-6 z-50 lg:hidden">
+        <button onclick="toggleChat()" 
+                class="relative w-16 h-16 bg-orange-600 text-white rounded-2xl shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group overflow-hidden">
+            <!-- Ripple Effect -->
+            <span class="absolute inset-0 bg-white/20 scale-0 group-hover:scale-150 transition-transform duration-700 rounded-full"></span>
+            
+            <svg class="w-7 h-7 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+
+            <!-- Unread Badge (Optional) -->
+            <div id="chat-unread-badge" class="hidden absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white dark:border-slate-950 shadow-lg">
+                1
+            </div>
+        </button>
+    </div>
+
+    {{-- Chat Modal/Overlay (Mobile) --}}
+    <div id="chat-modal" class="fixed inset-0 z-[60] hidden transition-all duration-300">
+        <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-sm" onclick="toggleChat()"></div>
+        <div class="absolute inset-x-0 bottom-0 top-12 bg-white dark:bg-slate-900 rounded-t-[2.5rem] shadow-2xl flex flex-col transform translate-y-full transition-transform duration-500 ease-out" id="chat-modal-content">
+            <div class="w-12 h-1.5 bg-gray-200 dark:bg-slate-800 rounded-full mx-auto mt-4 mb-2" onclick="toggleChat()"></div>
+            <div class="flex-1 overflow-hidden relative">
+                <button onclick="toggleChat()" class="absolute top-4 right-6 z-10 w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                @include('partials.order-chat', ['orderId' => $commande->id_commande])
+            </div>
+        </div>
+    </div>
 
     @elseif($code)
     <div class="flex flex-col items-center justify-center min-h-[50vh] px-8 text-center">
@@ -221,15 +248,6 @@
         </div>
 
         @if($commande)
-        <!-- Mobile Chat Trigger (Desktop still uses this for chat scroll) -->
-        <div class="lg:hidden fixed bottom-6 right-6 z-40">
-            <button @click="document.getElementById('order-chat-section').scrollIntoView({behavior: 'smooth'})" 
-                    class="w-14 h-14 bg-orange-600 text-white rounded-full shadow-2xl flex items-center justify-center animate-bounce">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-            </button>
-        </div>
         <!-- Tracking Display -->
         <div id="tracking-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
             
@@ -377,9 +395,11 @@
                 </div>
             </div>
 
-            <!-- Right Column: Chat -->
-            <div class="lg:col-span-1" id="order-chat-section">
-                @include('partials.order-chat', ['orderId' => $commande->id_commande])
+            <!-- Right Column: Chat Widget (Desktop) -->
+            <div class="hidden lg:block lg:col-span-1">
+                <div class="sticky top-28">
+                    @include('partials.order-chat', ['orderId' => $commande->id_commande])
+                </div>
             </div>
         </div>
         @elseif($code)
@@ -629,6 +649,23 @@
         }, 30000);
     }
     @endif
+
+    function toggleChat() {
+        const modal = document.getElementById('chat-modal');
+        const content = document.getElementById('chat-modal-content');
+        
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        } else {
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 500);
+        }
+    }
 </script>
 @endsection
 @endif

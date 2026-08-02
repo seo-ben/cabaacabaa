@@ -12,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Change type_notification from ENUM to VARCHAR to allow dynamic notification types
-        // Using raw statement to ensure compatibility if doctrine/dbal is missing
-        DB::statement("ALTER TABLE notifications MODIFY COLUMN type_notification VARCHAR(50) NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE notifications MODIFY COLUMN type_notification VARCHAR(50) NOT NULL");
+        }
     }
 
     /**

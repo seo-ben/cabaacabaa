@@ -50,16 +50,13 @@ class DriverController extends Controller
             'lng' => 'required|numeric'
         ]);
 
-        $driver = Driver::updateOrCreate(
-            ['id_user' => $request->user()->id_user],
-            [
-                'latitude' => $request->lat,
-                'longitude' => $request->lng,
-                'is_online' => true,
-                'last_location_update' => now()
-            ]
+        // Dispatcher le job sur la file dédiée 'geolocation'
+        \App\Jobs\ProcessDriverLocationJob::dispatch(
+            $request->user()->id_user,
+            (float) $request->lat,
+            (float) $request->lng
         );
 
-        return response()->json(['message' => 'Location updated']);
+        return response()->json(['message' => 'Location updated', 'queued' => true]);
     }
 }

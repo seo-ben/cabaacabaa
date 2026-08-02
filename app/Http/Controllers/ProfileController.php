@@ -28,24 +28,30 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id_user, 'id_user')],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('users')->ignore($user->id_user, 'id_user')],
             'telephone' => ['nullable', 'string', 'max:20'],
-            'photo_profil' => ['nullable', 'image', 'max:2048'], // 2MB Max
+            'photo_profil' => ['nullable', 'image', 'max:2048', 'mimes:jpg,jpeg,png,gif'], // 2MB Max
         ]);
 
         if ($request->hasFile('photo_profil')) {
-            // Delete old photo if exists
+            // Delete old photo if exists in public storage
             if ($user->photo_profil) {
-                Storage::delete($user->photo_profil);
+                Storage::disk('public')->delete($user->photo_profil);
             }
             $path = $request->file('photo_profil')->store('avatars', 'public');
             $user->photo_profil = $path;
+            $user->save();
+            
+            // If it was just a photo update, we can return early or continue
+            if (!$request->has('name') && !$request->has('email')) {
+                return redirect()->route('profile.edit')->with('success', 'Photo de profil mise à jour.');
+            }
         }
 
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->telephone = $validated['telephone'];
+        if ($request->has('name')) $user->name = $validated['name'];
+        if ($request->has('email')) $user->email = $validated['email'];
+        if ($request->has('telephone')) $user->telephone = $validated['telephone'];
         $user->save();
 
         return redirect()->route('profile.edit')->with('success', 'Profil mis à jour avec succès.');

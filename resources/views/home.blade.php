@@ -8,7 +8,7 @@
 <main class="block lg:hidden bg-gray-50 dark:bg-slate-950 min-h-screen font-sans">
     
     <!-- 1. Ads Slider / Pubs (MiseEnAvant) -->
-    <section class="pt-4 px-4 mb-6">
+    <section class="pt-4 px-4 mb-6 mt-2">
         <div id="mobile-ads-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 no-scrollbar scroll-smooth">
             @forelse($pubs as $pub)
                 <div class="snap-center shrink-0 w-[85vw] sm:w-[400px] h-48 rounded-2xl overflow-hidden relative shadow-lg">
@@ -150,13 +150,13 @@
     </section>
 
     <!-- 4. Quick Promotions / Feeds (Optional, below grid) -->
-    <section class="mt-8 px-4">
+    <section class="mt-8 mb-6 px-4">
         <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4">Populaire près de chez vous</h3>
         <div class="grid grid-cols-2 gap-4">
             @foreach($vendeurs->take(4) as $vendor)
             <a href="{{ route('vendor.show', ['id' => $vendor->id_vendeur, 'slug' => Str::slug($vendor->nom_commercial)]) }}" class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 block">
                 <div class="h-28 relative">
-                    <img src="{{ $vendor->image_principale ? asset('storage/' . $vendor->image_principale) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&fit=crop' }}" class="w-full h-full object-cover">
+                    <img src="{{ $vendor->thumbnail_url }}" class="w-full h-full object-cover">
                     @if($vendor->is_boosted)
                         <span class="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">PROMO</span>
                     @endif
@@ -174,126 +174,336 @@
         </div>
     </section>
 
-    <!-- 5. About CabaaCabaa (Mobile) -->
-    <section class="px-4 py-8 bg-white dark:bg-slate-900 rounded-2xl mx-2 my-8 shadow-sm">
-        <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-4 text-center">À propos de {{ config('app.name') }}</h3>
-        
-        <div class="relative rounded-2xl overflow-hidden h-40 mb-6">
-             <img src="{{ asset('assets/cabaacabaa_logo/5e67d812-c344-4c34-a0ac-b60a19080bde.png') }}" class="w-full h-full object-cover" alt="À propos">
-             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                 <p class="text-white text-xs font-medium leading-relaxed drop-shadow-md">
-                     La première plateforme locale qui connecte vos envies aux meilleurs commerçants de la ville.
-                 </p>
-             </div>
-        </div>
 
-        <div class="space-y-4 px-2">
-            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed text-justify">
-                {{ config('app.name') }} est bien plus qu'une simple application de livraison. Nous sommes votre partenaire quotidien pour découvrir, commander et recevoir tout ce dont vous avez besoin, rapidement et simplement.
-            </p>
-            <div class="grid grid-cols-2 gap-4 mt-4">
-                <div class="bg-red-50 dark:bg-red-900/10 p-3 rounded-xl text-center">
-                    <span class="block text-2xl font-black text-red-600 mb-1">10k+</span>
-                    <span class="text-[10px] text-gray-500 uppercase font-bold">Utilisateurs</span>
-                </div>
-                <div class="bg-orange-50 dark:bg-orange-900/10 p-3 rounded-xl text-center">
-                    <span class="block text-2xl font-black text-orange-600 mb-1">500+</span>
-                    <span class="text-[10px] text-gray-500 uppercase font-bold">Partenaires</span>
-                </div>
-            </div>
-            <div class="text-center mt-6">
-                <a href="{{ route('about') }}" class="text-red-600 font-bold text-sm hover:underline">En savoir plus sur notre mission →</a>
-            </div>
-        </div>
-    </section>
 
 </main>
 
 <!-- ================= DESKTOP VIEW (>= lg) ================= -->
 <main class="hidden lg:block bg-white dark:bg-slate-950 font-sans selection:bg-red-500 selection:text-white pb-20">
 
-    <!-- 1. Refined Hero Section -->
-    <section class="relative  pb-10 lg:pb-2 overflow-hidden">
-        <!-- Subtle Ambient Background -->
-        {{-- <div class="absolute top-0 right-0 w-[500px] h-[200px] bg-red-500/5 rounded-full blur-[120px]"></div> --}}
-        <div class="max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
+    <!-- 1. Full-Bleed Hero Section with 4-Slide Auto-Carousel (Desktop) -->
+    <section x-data="{
+        activeSlide: 0,
+        totalSlides: 4,
+        timer: null,
+        progress: 0,
+        progressInterval: null,
+        startTimer() {
+            this.stopTimer();
+            this.progress = 0;
+            const duration = 3500;
+            const stepTime = 50;
+            this.progressInterval = setInterval(() => {
+                this.progress += (stepTime / duration) * 100;
+                if (this.progress >= 100) {
+                    this.nextSlide();
+                }
+            }, stepTime);
+        },
+        stopTimer() {
+            if (this.progressInterval) clearInterval(this.progressInterval);
+        },
+        nextSlide() {
+            this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+            this.startTimer();
+        },
+        prevSlide() {
+            this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+            this.startTimer();
+        },
+        goToSlide(index) {
+            this.activeSlide = index;
+            this.startTimer();
+        }
+    }" 
+    class="relative w-full overflow-hidden group/hero bg-slate-950">
+
+        <!-- Slides Container (Full Width Full-Bleed) -->
+        <div class="relative w-full h-[520px] lg:h-[580px]">
+            
+            <!-- SLIDE 1: Gastronomie & Restaurants -->
+            <div x-show="activeSlide === 0"
+                 x-transition:enter="transition ease-out duration-700 transform"
+                 x-transition:enter-start="opacity-0 scale-105"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-300 transform absolute inset-0"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="w-full h-full absolute inset-0 flex items-center">
                 
-                <!-- Left Content -->
-                <div data-aos="fade-up">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-50 dark:bg-red-900/20 rounded-full mb-6 border border-red-100 dark:border-red-900/30">
-                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                        <span class="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">N°1 de la marketplace locale</span>
-                    </div>
-                    
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6">
-                        Tous vos commerces, <br/>
-                        <span class="text-red-600">à portée de clic</span>.
-                    </h1>
-                    
-                    <p class="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
-                        Restaurants, boutiques, épiceries... Commandez tout ce dont vous avez besoin, livré chez vous ou à emporter.
-                    </p>
+                <!-- Background Image & Overlay -->
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&h=1080&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Gastronomie">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-transparent"></div>
 
-                    <!-- Search Box - More Compact -->
-                    <form action="{{ route('explore.plats') }}" method="GET" class="relative max-w-lg flex items-center bg-gray-50 dark:bg-slate-900 rounded-2xl p-1.5 border border-gray-200 dark:border-slate-800 shadow-sm focus-within:ring-2 focus-within:ring-red-500/20 transition-all">
-                        <div class="flex-1 flex items-center px-4 gap-3">
-                            <button type="button" onclick="detectLocation()" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Autour de moi">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            </button>
-                            <input type="text" name="search" placeholder="Quel produit recherchez-vous ?" 
-                                   class="w-full py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
-                            <input type="hidden" name="lat" id="search_lat" value="{{ request('lat') }}">
-                            <input type="hidden" name="lng" id="search_lng" value="{{ request('lng') }}">
-                        </div>
-                        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 transition-colors shadow-md">
-                            Rechercher
-                        </button>
-                    </form>
+                <!-- Content -->
+                <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full relative z-10">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-md">
+                            Tous vos restaurants préférés, <br/>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-amber-400">livrés à votre porte</span>.
+                        </h1>
+                        
+                        <p class="text-base md:text-lg text-slate-200 mb-8 max-w-lg leading-relaxed font-normal drop-shadow">
+                            Des plats savoureux préparés par les meilleurs chefs locaux, livrés chauds chez vous ou au bureau en moins de 30 minutes.
+                        </p>
 
-                    <!-- Trust Stats - Balanced -->
-                    <div class="mt-10 flex items-center gap-8">
-                        <div>
-                            <p class="text-xl font-bold text-slate-900 dark:text-white">{{ number_format($stats['total_commandes']) }}+</p>
-                            <p class="text-[11px] text-gray-500 uppercase tracking-wide font-semibold">Commandes</p>
-                        </div>
-                        <div class="w-px h-8 bg-gray-200 dark:bg-slate-800"></div>
-                        <div>
-                            <p class="text-xl font-bold text-slate-900 dark:text-white">{{ $stats['total_vendeurs'] }}+</p>
-                            <p class="text-[11px] text-gray-500 uppercase tracking-wide font-semibold">Établissements</p>
-                        </div>
-                        <div class="w-px h-8 bg-gray-200 dark:bg-slate-800"></div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex -space-x-2">
-                                @for($i=1; $i<=3; $i++)
-                                    <img src="https://i.pravatar.cc/100?u={{$i}}" class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-950">
-                                @endfor
+                        <!-- Search Box -->
+                        <form action="{{ route('explore.plats') }}" method="GET" class="relative max-w-xl flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 border border-white/20 shadow-2xl focus-within:ring-2 focus-within:ring-red-500/40 transition-all">
+                            <div class="flex-1 flex items-center px-4 gap-3">
+                                <button type="button" onclick="detectLocation()" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors" title="Autour de moi">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </button>
+                                <input type="text" name="search" placeholder="Envie d'un plat spécifique ? (Burgers, Pizzas, Thiéb...)" 
+                                       class="w-full py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                                <input type="hidden" name="lat" id="search_lat_0" value="{{ request('lat') }}">
+                                <input type="hidden" name="lng" id="search_lng_0" value="{{ request('lng') }}">
                             </div>
-                            <p class="text-[11px] text-gray-500 font-semibold tracking-wide uppercase">4.9/5 Avis</p>
-                        </div>
+                            <button type="submit" class="px-7 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-red-600/30 flex items-center gap-2">
+                                <span>Rechercher</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Right: Clean Visual -->
-                <div class="relative hidden lg:block" data-aos="fade-left">
-                    <div class="grid grid-cols-12 gap-4">
-                        <div class="col-span-12">
-                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=500&fit=crop" class="rounded-2xl shadow-xl w-full object-cover h-[400px]" alt="Hero Food">
+                <!-- Floating Badge -->
+                <div class="absolute bottom-10 right-12 hidden lg:flex items-center gap-4 z-10">
+                    <div class="bg-black/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-white flex items-center gap-4 shadow-2xl">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-red-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Fast Delivery</span>
+                            <h4 class="text-sm font-bold mt-0.5">Plats chauds & préparés minute</h4>
                         </div>
-                        <div class="col-span-6">
-                            <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800 flex items-center gap-4 -mt-12 relative z-20">
-                                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-xl flex items-center justify-center text-green-600">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white">Livraison Rapide</p>
-                                    <p class="text-[11px] text-gray-500">Moyenne 25 min</p>
-                                </div>
-                            </div>
+                        <div class="w-px h-8 bg-white/20"></div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-300">Temps moyen</p>
+                            <p class="text-base font-black text-white">25 min</p>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- SLIDE 2: Burgers & Fast-Food -->
+            <div x-show="activeSlide === 1"
+                 x-transition:enter="transition ease-out duration-700 transform"
+                 x-transition:enter-start="opacity-0 scale-105"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-300 transform absolute inset-0"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="w-full h-full absolute inset-0 flex items-center">
+                
+                <!-- Background Image & Overlay -->
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1920&h=1080&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Burgers Fast Food">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-transparent"></div>
+
+                <!-- Content -->
+                <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full relative z-10">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-md">
+                            Burgers gourmands & Fast-Food, <br/>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-amber-400">préparés à la commande</span>.
+                        </h1>
+                        
+                        <p class="text-base md:text-lg text-slate-200 mb-8 max-w-lg leading-relaxed font-normal drop-shadow">
+                            Des burgers généreux, frites croustillantes et menus gourmands livrés directement chez vous.
+                        </p>
+
+                        <!-- Search Box -->
+                        <form action="{{ route('explore.plats') }}" method="GET" class="relative max-w-xl flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 border border-white/20 shadow-2xl focus-within:ring-2 focus-within:ring-orange-500/40 transition-all">
+                            <div class="flex-1 flex items-center px-4 gap-3">
+                                <button type="button" onclick="detectLocation()" class="p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/30 rounded-lg transition-colors" title="Autour de moi">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </button>
+                                <input type="text" name="search" placeholder="Rechercher un burger, tacos, frites..." 
+                                       class="w-full py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                                <input type="hidden" name="lat" id="search_lat_1" value="{{ request('lat') }}">
+                                <input type="hidden" name="lng" id="search_lng_1" value="{{ request('lng') }}">
+                            </div>
+                            <button type="submit" class="px-7 py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-orange-600/30 flex items-center gap-2">
+                                <span>Rechercher</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Floating Badge -->
+                <div class="absolute bottom-10 right-12 hidden lg:flex items-center gap-4 z-10">
+                    <div class="bg-black/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-white flex items-center gap-4 shadow-2xl">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-orange-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Super Cook</span>
+                            <h4 class="text-sm font-bold mt-0.5">Burgers & Fast-Food artisanaux</h4>
+                        </div>
+                        <div class="w-px h-8 bg-white/20"></div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-300">Qualité</p>
+                            <p class="text-base font-black text-white">Garantie</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: Pizzas & Spécialités Italiennes -->
+            <div x-show="activeSlide === 2"
+                 x-transition:enter="transition ease-out duration-700 transform"
+                 x-transition:enter-start="opacity-0 scale-105"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-300 transform absolute inset-0"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="w-full h-full absolute inset-0 flex items-center">
+                
+                <!-- Background Image & Overlay -->
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1920&h=1080&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Pizzas Chaudes">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent"></div>
+
+                <!-- Content -->
+                <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full relative z-10">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-md">
+                            Pizzas au four à bois, <br/>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">chaudes & croustillantes</span>.
+                        </h1>
+                        
+                        <p class="text-base md:text-lg text-slate-200 mb-8 max-w-lg leading-relaxed font-normal drop-shadow">
+                            Découvrez les meilleures pizzerias de votre ville, livrées chez vous en un temps record.
+                        </p>
+
+                        <!-- Search Box -->
+                        <form action="{{ route('explore.plats') }}" method="GET" class="relative max-w-xl flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 border border-white/20 shadow-2xl focus-within:ring-2 focus-within:ring-amber-500/40 transition-all">
+                            <div class="flex-1 flex items-center px-4 gap-3">
+                                <button type="button" onclick="detectLocation()" class="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30 rounded-lg transition-colors" title="Autour de moi">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </button>
+                                <input type="text" name="search" placeholder="Rechercher une pizza, calzone, pâtes..." 
+                                       class="w-full py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                                <input type="hidden" name="lat" id="search_lat_2" value="{{ request('lat') }}">
+                                <input type="hidden" name="lng" id="search_lng_2" value="{{ request('lng') }}">
+                            </div>
+                            <button type="submit" class="px-7 py-3.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-amber-600/30 flex items-center gap-2">
+                                <span>Rechercher</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Floating Badge -->
+                <div class="absolute bottom-10 right-12 hidden lg:flex items-center gap-4 z-10">
+                    <div class="bg-black/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-white flex items-center gap-4 shadow-2xl">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-amber-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Four à bois</span>
+                            <h4 class="text-sm font-bold mt-0.5">Pizzerias locales certifiées</h4>
+                        </div>
+                        <div class="w-px h-8 bg-white/20"></div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-300">Service</p>
+                            <p class="text-base font-black text-white">100% Chaud</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: Promotions Repas & Festin -->
+            <div x-show="activeSlide === 3"
+                 x-transition:enter="transition ease-out duration-700 transform"
+                 x-transition:enter-start="opacity-0 scale-105"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-300 transform absolute inset-0"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="w-full h-full absolute inset-0 flex items-center">
+                
+                <!-- Background Image & Overlay -->
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&h=1080&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Festin Nourriture">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent"></div>
+
+                <!-- Content -->
+                <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 w-full relative z-10">
+                    <div class="max-w-2xl">
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight drop-shadow-md">
+                            Menus Spécialités & Offres, <br/>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">jusqu'à -50% chaque jour</span>.
+                        </h1>
+                        
+                        <p class="text-base md:text-lg text-slate-200 mb-8 max-w-lg leading-relaxed font-normal drop-shadow">
+                            Profitez de réductions exclusives sur les meilleurs plats, menus combos et formules repas de vos restaurants.
+                        </p>
+
+                        <!-- Search Box -->
+                        <form action="{{ route('explore.plats') }}" method="GET" class="relative max-w-xl flex items-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl p-1.5 border border-white/20 shadow-2xl focus-within:ring-2 focus-within:ring-purple-500/40 transition-all">
+                            <div class="flex-1 flex items-center px-4 gap-3">
+                                <button type="button" onclick="detectLocation()" class="p-2 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30 rounded-lg transition-colors" title="Autour de moi">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                </button>
+                                <input type="text" name="search" placeholder="Rechercher des promotions sur les plats..." 
+                                       class="w-full py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-slate-900 dark:text-white font-medium placeholder-gray-400 text-sm">
+                                <input type="hidden" name="lat" id="search_lat_3" value="{{ request('lat') }}">
+                                <input type="hidden" name="lng" id="search_lng_3" value="{{ request('lng') }}">
+                            </div>
+                            <button type="submit" class="px-7 py-3.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-purple-600/30 flex items-center gap-2">
+                                <span>Rechercher</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Floating Badge -->
+                <div class="absolute bottom-10 right-12 hidden lg:flex items-center gap-4 z-10">
+                    <div class="bg-black/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/20 text-white flex items-center gap-4 shadow-2xl">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-purple-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Offres Spéciales</span>
+                            <h4 class="text-sm font-bold mt-0.5">Codes Promos Quotidiens</h4>
+                        </div>
+                        <div class="w-px h-8 bg-white/20"></div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-slate-300">Livraison</p>
+                            <p class="text-base font-black text-white">Offerte</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Carousel Indicators -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                <template x-for="(slide, index) in totalSlides" :key="index">
+                    <button @click="goToSlide(index)"
+                            class="relative h-2.5 rounded-full transition-all duration-500 overflow-hidden"
+                            :class="activeSlide === index ? 'w-10 bg-red-600' : 'w-3 bg-white/40 hover:bg-white/70'"
+                            :title="'Slide ' + (index + 1)">
+                        <div x-show="activeSlide === index"
+                             class="h-full bg-white/50 transition-all duration-75"
+                             :style="'width: ' + progress + '%'"></div>
+                    </button>
+                </template>
+            </div>
+
+        </div>
+
+        <!-- Trust Stats Bar below full-bleed hero slider -->
+        <div class="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800/80 py-5">
+            <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <div class="flex items-center gap-8">
+                    <div>
+                        <p class="text-xl font-bold text-slate-900 dark:text-white">{{ number_format($stats['total_commandes']) }}+</p>
+                        <p class="text-[11px] text-gray-500 uppercase tracking-wide font-semibold">Commandes Livrées</p>
+                    </div>
+                    <div class="w-px h-8 bg-gray-200 dark:bg-slate-800"></div>
+                    <div>
+                        <p class="text-xl font-bold text-slate-900 dark:text-white">{{ $stats['total_vendeurs'] }}+</p>
+                        <p class="text-[11px] text-gray-500 uppercase tracking-wide font-semibold">Partenaires</p>
+                    </div>
+                    <div class="w-px h-8 bg-gray-200 dark:bg-slate-800"></div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex -space-x-2">
+                            @for($i=1; $i<=3; $i++)
+                                <img src="https://i.pravatar.cc/100?u={{$i}}" class="w-8 h-8 rounded-full border-2 border-white dark:border-slate-950">
+                            @endfor
+                        </div>
+                        <p class="text-[11px] text-gray-500 font-semibold tracking-wide uppercase">4.9/5 Avis Clients</p>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </section>
 

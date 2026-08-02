@@ -11,11 +11,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Add 'super_admin' to the enum
-        // Since ALTER TABLE ... CHANGE COLUMN is tricky with Enums on some DBs, 
-        // we use raw SQL to modify column type.
-        // Assuming MySQL/MariaDB.
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('client', 'vendeur', 'admin', 'super_admin') DEFAULT 'client'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('client', 'vendeur', 'admin', 'super_admin') DEFAULT 'client'");
+        }
     }
 
     /**

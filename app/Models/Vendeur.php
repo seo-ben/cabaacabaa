@@ -221,4 +221,26 @@ class Vendeur extends Model
     {
         return $this->hasMany(DeliveryRequest::class, 'id_vendeur', 'id_vendeur');
     }
+
+    /**
+     * Obtenir l'URL de l'image principale ou l'image par défaut.
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_principale) {
+            return asset('storage/' . $this->image_principale);
+        }
+        return asset('assets/default-boutiques.png');
+    }
+
+    /**
+     * Obtenir l'URL de la miniature ou l'image par défaut.
+     */
+    public function getThumbnailUrlAttribute()
+    {
+        if ($this->image_principale) {
+            return asset('storage/' . dirname($this->image_principale) . '/thumbnails/' . basename($this->image_principale));
+        }
+        return asset('assets/default-boutiques.png');
+    }
 }

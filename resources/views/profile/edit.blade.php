@@ -14,14 +14,14 @@
                     @if($user->photo_profil)
                         <img src="{{ asset('storage/' . $user->photo_profil) }}" class="w-full h-full object-cover">
                     @else
-                        <div class="w-full h-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-2xl font-black">{{ substr($user->name, 0, 1) }}</div>
+                        <img src="{{ asset('assets/default-profil.png') }}" class="w-full h-full object-cover">
                     @endif
                 </div>
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" id="avf">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" id="avf-mobile">
                     @csrf @method('PATCH')
                     <label class="absolute -bottom-1 -right-1 w-6 h-6 bg-orange-500 rounded-lg flex items-center justify-center cursor-pointer shadow-lg">
                         <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                        <input type="file" name="photo_profil" class="hidden" accept="image/*" onchange="document.getElementById('avf').submit()">
+                        <input type="file" name="photo_profil" class="hidden" accept="image/*" onchange="document.getElementById('avf-mobile').submit()">
                     </label>
                 </form>
             </div>
@@ -158,17 +158,20 @@
                     <div class="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
                     <h2 class="text-xl font-black text-gray-900 dark:text-white">Informations Générales</h2>
                 </div>
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 shadow-sm space-y-6" id="profile-update-form-desktop">
                     @csrf @method('PATCH')
                     <div class="flex items-center gap-6">
                         <div class="relative group">
                             <div class="w-24 h-24 rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800">
-                                @if($user->photo_profil)<img src="{{ asset('storage/' . $user->photo_profil) }}" class="w-full h-full object-cover">
-                                @else<div class="w-full h-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-3xl font-black">{{ substr($user->name, 0, 1) }}</div>@endif
-                            </div>
+                            @if($user->photo_profil)
+                                <img src="{{ asset('storage/' . $user->photo_profil) }}" class="w-full h-full object-cover">
+                            @else
+                                <img src="{{ asset('assets/default-profil.png') }}" class="w-full h-full object-cover">
+                            @endif
+                        </div>
                             <label class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer rounded-2xl">
                                 <span class="text-xs font-bold text-white uppercase tracking-widest">Modifier</span>
-                                <input type="file" name="photo_profil" class="hidden" accept="image/*" onchange="form.submit()">
+                                <input type="file" name="photo_profil" class="hidden" accept="image/*" onchange="document.getElementById('profile-update-form-desktop').submit()">
                             </label>
                         </div>
                         <div><h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest mb-1">Photo de profil</h3><p class="text-xs text-gray-500 dark:text-gray-400">JPG, GIF ou PNG. 2MB max.</p></div>
