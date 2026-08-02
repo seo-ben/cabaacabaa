@@ -510,10 +510,11 @@ class ComprehensiveSystemSeeder extends Seeder
 
             if (str_contains($nom, 'pizza')) {
                 // Pizza Dishes
-                $p1 = Plat::create([
+                $p1 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Pizzas']->id_categorie,
                     'nom_plat' => 'Pizza Margherita Supreme',
+                ], [
+                    'id_categorie' => $dCategories['Pizzas']->id_categorie,
                     'description' => 'Sauce tomate fraîche, double mozzarella, huile d olive extra vierge et basilic',
                     'prix' => 5000,
                     'devise' => 'XOF',
@@ -521,10 +522,11 @@ class ComprehensiveSystemSeeder extends Seeder
                     'date_creation' => now(),
                 ]);
 
-                $p2 = Plat::create([
+                $p2 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Pizzas']->id_categorie,
                     'nom_plat' => 'Pizza 4 Fromages Gourmande',
+                ], [
+                    'id_categorie' => $dCategories['Pizzas']->id_categorie,
                     'description' => 'Mozzarella, Gorgonzola, chèvre frais, parmesan AOP',
                     'prix' => 6500,
                     'devise' => 'XOF',
@@ -533,27 +535,29 @@ class ComprehensiveSystemSeeder extends Seeder
                 ]);
 
                 // Create Variants Group
-                $g1 = GroupeVariante::create([
+                $g1 = GroupeVariante::updateOrCreate([
                     'id_plat' => $p1->id_plat,
                     'nom' => 'Taille de la Pizza',
+                ], [
                     'obligatoire' => true,
                     'choix_multiple' => false,
                     'min_choix' => 1,
                     'max_choix' => 1
                 ]);
 
-                Variante::create(['id_groupe' => $g1->id_groupe, 'nom' => 'Moyenne (30cm)', 'prix_supplement' => 0]);
-                Variante::create(['id_groupe' => $g1->id_groupe, 'nom' => 'Grande Familiale (40cm)', 'prix_supplement' => 2500]);
+                Variante::updateOrCreate(['id_groupe' => $g1->id_groupe, 'nom' => 'Moyenne (30cm)'], ['prix_supplement' => 0]);
+                Variante::updateOrCreate(['id_groupe' => $g1->id_groupe, 'nom' => 'Grande Familiale (40cm)'], ['prix_supplement' => 2500]);
 
                 $allPlats[] = $p1;
                 $allPlats[] = $p2;
 
             } elseif (str_contains($nom, 'saveurs') || str_contains($nom, 'grilladin')) {
                 // Local Dishes
-                $p1 = Plat::create([
+                $p1 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Cuisine Africaine & Togolaise']->id_categorie,
                     'nom_plat' => 'Poulet Braise au Charbon + Frites d Yame',
+                ], [
+                    'id_categorie' => $dCategories['Cuisine Africaine & Togolaise']->id_categorie,
                     'description' => 'Demi-poulet mariné aux épices locales, braisé à la perfection et servi avec piment vert',
                     'prix' => 4500,
                     'devise' => 'XOF',
@@ -561,10 +565,11 @@ class ComprehensiveSystemSeeder extends Seeder
                     'date_creation' => now(),
                 ]);
 
-                $p2 = Plat::create([
+                $p2 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Cuisine Africaine & Togolaise']->id_categorie,
                     'nom_plat' => 'Thieboudienne au Poisson Frais',
+                ], [
+                    'id_categorie' => $dCategories['Cuisine Africaine & Togolaise']->id_categorie,
                     'description' => 'Riz gras sénégalais au mérou frais, légumes mijotés (carotte, chou, manioc)',
                     'prix' => 3500,
                     'devise' => 'XOF',
@@ -577,10 +582,11 @@ class ComprehensiveSystemSeeder extends Seeder
 
             } elseif (str_contains($nom, 'burger')) {
                 // Burger Dishes
-                $p1 = Plat::create([
+                $p1 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Burgers & Tacos']->id_categorie,
                     'nom_plat' => 'Double Bacon Cheeseburger XL',
+                ], [
+                    'id_categorie' => $dCategories['Burgers & Tacos']->id_categorie,
                     'description' => 'Deux steaks hachés 150g, bacon croustillant, cheddar fondu, oignons caramélisés',
                     'prix' => 4200,
                     'devise' => 'XOF',
@@ -591,10 +597,11 @@ class ComprehensiveSystemSeeder extends Seeder
                 $allPlats[] = $p1;
             } else {
                 // Bakery / Desserts
-                $p1 = Plat::create([
+                $p1 = Plat::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'id_categorie' => $dCategories['Desserts & Pâtisseries']->id_categorie,
                     'nom_plat' => 'Tartelette Citron Meringuée',
+                ], [
+                    'id_categorie' => $dCategories['Desserts & Pâtisseries']->id_categorie,
                     'description' => 'Pâte sablée pur beurre, crème citron acidulée et meringue italienne dorée',
                     'prix' => 2000,
                     'devise' => 'XOF',
@@ -606,10 +613,11 @@ class ComprehensiveSystemSeeder extends Seeder
             }
 
             // Universal Drink for all vendors
-            $drink = Plat::create([
+            $drink = Plat::updateOrCreate([
                 'id_vendeur' => $vendor->id_vendeur,
-                'id_categorie' => $dCategories['Boissons & Jus Frais']->id_categorie,
                 'nom_plat' => 'Jus de Bissap Maison (50cl)',
+            ], [
+                'id_categorie' => $dCategories['Boissons & Jus Frais']->id_categorie,
                 'description' => 'Jus naturel d hibiscus parfumé à la menthe fraîche et fleur d oranger',
                 'prix' => 1000,
                 'devise' => 'XOF',
@@ -630,9 +638,10 @@ class ComprehensiveSystemSeeder extends Seeder
     {
         foreach ($vendors as $index => $vendor) {
             if ($vendor->is_boosted) {
-                MiseEnAvant::create([
+                MiseEnAvant::updateOrCreate([
                     'id_vendeur' => $vendor->id_vendeur,
                     'type_promotion' => 'sponsorise',
+                ], [
                     'priorite' => $index + 1,
                     'date_debut' => now()->subDays(5),
                     'date_fin' => now()->addDays(25),
@@ -652,9 +661,11 @@ class ComprehensiveSystemSeeder extends Seeder
     {
         $coupons = [];
         foreach ($vendors as $index => $vendor) {
-            $coupons[] = Coupon::create([
+            $code = 'PROMO' . ($index + 1) . '0';
+            $coupons[] = Coupon::updateOrCreate([
+                'code' => $code,
+            ], [
                 'id_vendeur' => $vendor->id_vendeur,
-                'code' => 'PROMO' . ($index + 1) . '0',
                 'type' => 'percentage',
                 'valeur' => 15.00,
                 'montant_minimal_achat' => 3000,
@@ -694,9 +705,11 @@ class ComprehensiveSystemSeeder extends Seeder
             $montantPlats = $selectedPlat->prix * $quantite;
             $fraisService = 500;
             $montantTotal = $montantPlats + $fraisService;
+            $numCommande = 'CAB-' . date('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT);
 
-            $commande = Commande::create([
-                'numero_commande' => 'CAB-' . date('Ymd') . '-' . str_pad($i, 4, '0', STR_PAD_LEFT),
+            $commande = Commande::updateOrCreate([
+                'numero_commande' => $numCommande,
+            ], [
                 'id_client' => $client->id_user,
                 'id_vendeur' => $vendor->id_vendeur,
                 'id_livreur' => in_array($statut, ['en_livraison', 'livree']) ? $driver->id_user : null,
@@ -714,13 +727,14 @@ class ComprehensiveSystemSeeder extends Seeder
                 'instructions_speciales' => 'Appeler à l arrivee au portail.',
             ]);
 
-            LigneCommande::create([
+            LigneCommande::updateOrCreate([
                 'id_commande' => $commande->id_commande,
                 'id_plat' => $selectedPlat->id_plat,
-                'nom_plat_historique' => $selectedPlat->nom_plat,
-                'prix_unitaire_historique' => $selectedPlat->prix,
+            ], [
+                'nom_plat_snapshot' => $selectedPlat->nom_plat,
                 'quantite' => $quantite,
-                'prix_total_ligne' => $montantPlats,
+                'prix_unitaire' => $selectedPlat->prix,
+                'sous_total' => $montantTotal,
             ]);
 
             $commandes[] = $commande;
@@ -783,22 +797,25 @@ class ComprehensiveSystemSeeder extends Seeder
      */
     private function seedFinancials(array $vendors): void
     {
-        foreach ($vendors as $vendor) {
+        foreach ($vendors as $index => $vendor) {
             // Financial Credit Transaction
-            TransactionFinanciere::create([
+            $ref = 'TX-VND' . $vendor->id_vendeur . '-001';
+            TransactionFinanciere::updateOrCreate([
+                'reference_paiement' => $ref,
+            ], [
                 'id_vendeur' => $vendor->id_vendeur,
                 'type_transaction' => 'commission_commande',
                 'montant' => rand(25000, 100000),
                 'devise' => 'XOF',
                 'statut' => 'complete',
-                'reference_paiement' => 'TX-' . strtoupper(Str::random(10)),
                 'notes' => 'Encaissement ventes commandes CabaaCabaa',
                 'date_transaction' => now()->subDays(rand(1, 5))
             ]);
 
             // Payout Request
-            PayoutRequest::create([
+            PayoutRequest::firstOrCreate([
                 'id_vendeur' => $vendor->id_vendeur,
+            ], [
                 'montant' => rand(15000, 50000),
                 'methode_paiement' => 'TMoney',
                 'informations_paiement' => '+22890' . rand(100000, 999999),
