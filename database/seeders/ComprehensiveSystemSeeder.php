@@ -104,22 +104,22 @@ class ComprehensiveSystemSeeder extends Seeder
     private function seedAppSettings(): void
     {
         $settings = [
-            ['key_name' => 'app_name', 'value' => 'CabaaCabaa', 'type' => 'string'],
-            ['key_name' => 'currency', 'value' => 'XOF', 'type' => 'string'],
-            ['key_name' => 'commission_rate', 'value' => '10.5', 'type' => 'float'],
-            ['key_name' => 'delivery_fee_base', 'value' => '500', 'type' => 'integer'],
-            ['key_name' => 'delivery_fee_per_km', 'value' => '150', 'type' => 'integer'],
-            ['key_name' => 'support_phone', 'value' => '+228 90 00 00 00', 'type' => 'string'],
-            ['key_name' => 'support_email', 'value' => 'support@cabaacabaa.com', 'type' => 'string'],
-            ['key_name' => 'enable_tmoney', 'value' => 'true', 'type' => 'boolean'],
-            ['key_name' => 'enable_flooz', 'value' => 'true', 'type' => 'boolean'],
-            ['key_name' => 'enable_card', 'value' => 'true', 'type' => 'boolean'],
-            ['key_name' => 'enable_cash_on_delivery', 'value' => 'true', 'type' => 'boolean'],
+            ['key' => 'app_name', 'value' => 'CabaaCabaa', 'label' => 'Nom de l application', 'group' => 'general', 'type' => 'text'],
+            ['key' => 'currency', 'value' => 'XOF', 'label' => 'Devise principale', 'group' => 'general', 'type' => 'text'],
+            ['key' => 'commission_rate', 'value' => '10.5', 'label' => 'Taux de commission (%)', 'group' => 'financial', 'type' => 'number'],
+            ['key' => 'delivery_fee_base', 'value' => '500', 'label' => 'Frais de livraison de base', 'group' => 'location', 'type' => 'number'],
+            ['key' => 'delivery_fee_per_km', 'value' => '150', 'label' => 'Frais par km', 'group' => 'location', 'type' => 'number'],
+            ['key' => 'support_phone', 'value' => '+228 90 00 00 00', 'label' => 'Téléphone support', 'group' => 'general', 'type' => 'text'],
+            ['key' => 'support_email', 'value' => 'support@cabaacabaa.com', 'label' => 'Email support', 'group' => 'general', 'type' => 'text'],
+            ['key' => 'enable_tmoney', 'value' => 'true', 'label' => 'Activer TMoney', 'group' => 'payment', 'type' => 'text'],
+            ['key' => 'enable_flooz', 'value' => 'true', 'label' => 'Activer Flooz', 'group' => 'payment', 'type' => 'text'],
+            ['key' => 'enable_card', 'value' => 'true', 'label' => 'Activer Carte Bancaire', 'group' => 'payment', 'type' => 'text'],
+            ['key' => 'enable_cash_on_delivery', 'value' => 'true', 'label' => 'Activer Paiement à la livraison', 'group' => 'payment', 'type' => 'text'],
         ];
 
         foreach ($settings as $setting) {
             AppSetting::updateOrCreate(
-                ['key_name' => $setting['key_name']],
+                ['key' => $setting['key']],
                 $setting
             );
         }
@@ -134,38 +134,32 @@ class ComprehensiveSystemSeeder extends Seeder
             [
                 'name' => 'Plan Gratuit',
                 'price' => 0,
-                'duration_days' => 30,
                 'product_limit' => 10,
                 'staff_limit' => 1,
                 'coupon_limit' => 1,
                 'has_gallery' => false,
                 'has_socials' => true,
                 'can_recruit_drivers' => false,
-                'description' => 'Idéal pour démarrer votre activité de restauration sur CabaaCabaa.'
             ],
             [
                 'name' => 'Plan Pro Resto',
                 'price' => 15000,
-                'duration_days' => 30,
                 'product_limit' => 50,
                 'staff_limit' => 5,
                 'coupon_limit' => 10,
                 'has_gallery' => true,
                 'has_socials' => true,
                 'can_recruit_drivers' => true,
-                'description' => 'Pour les restaurants et fast-foods établis souhaitant booster leur visibilité.'
             ],
             [
                 'name' => 'Plan Enterprise Fleet',
                 'price' => 45000,
-                'duration_days' => 30,
                 'product_limit' => 200,
                 'staff_limit' => 20,
                 'coupon_limit' => 50,
                 'has_gallery' => true,
                 'has_socials' => true,
                 'can_recruit_drivers' => true,
-                'description' => 'Solution complète pour les grandes franchises et chaînes de restaurants.'
             ]
         ];
 
@@ -263,18 +257,23 @@ class ComprehensiveSystemSeeder extends Seeder
     private function seedVendorCategories(): array
     {
         $vCats = [
-            ['name' => 'Restaurants & Gastronomie', 'icon' => 'fa-utensils', 'description' => 'Cuisine locale et internationale'],
-            ['name' => 'Fast-Food & Burgers', 'icon' => 'fa-hamburger', 'description' => 'Burgers, frites, tacos et snacks rapides'],
+            ['name' => 'Restaurant', 'icon' => 'fa-utensils', 'description' => 'Cuisine locale et internationale'],
+            ['name' => 'Fast Food', 'icon' => 'fa-hamburger', 'description' => 'Burgers, frites, tacos et snacks rapides'],
             ['name' => 'Pizzerias', 'icon' => 'fa-pizza-slice', 'description' => 'Pizzas au four à bois et spécialités italiennes'],
-            ['name' => 'Pâtisseries & Desserts', 'icon' => 'fa-ice-cream', 'description' => 'Gâteaux, boulangeries et douceurs sucrées'],
-            ['name' => 'Épicerie & Supermarché', 'icon' => 'fa-shopping-basket', 'description' => 'Produits frais et courses du quotidien'],
+            ['name' => 'Boulangerie / Pâtisserie', 'icon' => 'fa-ice-cream', 'description' => 'Gâteaux, boulangeries et douceurs sucrées'],
+            ['name' => 'Épicerie', 'icon' => 'fa-shopping-basket', 'description' => 'Produits frais et courses du quotidien'],
         ];
 
         $categories = [];
         foreach ($vCats as $vCat) {
             $categories[$vCat['name']] = VendorCategory::updateOrCreate(
-                ['name' => $vCat['name']],
-                $vCat
+                ['slug' => Str::slug($vCat['name'])],
+                [
+                    'name' => $vCat['name'],
+                    'description' => $vCat['description'],
+                    'icon' => $vCat['icon'],
+                    'is_active' => true
+                ]
             );
         }
         return $categories;
@@ -353,7 +352,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 ['email' => $dData['email']],
                 [
                     'name' => $dData['name'],
-                    'role' => 'client', // Livreur role mapping in schema
+                    'role' => 'client',
                     'telephone' => '+22899' . rand(100000, 999999),
                     'password' => Hash::make('password'),
                 ]
@@ -389,7 +388,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 'adresse_complete' => 'Boulevard Circulaire, Nyékonakpoè, Lomé',
                 'latitude' => 6.131944,
                 'longitude' => 1.222778,
-                'category' => $vCategories['Pizzerias']->id ?? null,
+                'category' => $vCategories['Pizzerias']->id_category_vendeur ?? null,
                 'zone' => $zones[0]->id_zone,
                 'plan' => $plans[1]->id,
                 'note' => 4.7,
@@ -404,7 +403,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 'adresse_complete' => 'Avenue de la Chance, Tokoin, Lomé',
                 'latitude' => 6.155000,
                 'longitude' => 1.215000,
-                'category' => $vCategories['Restaurants & Gastronomie']->id ?? null,
+                'category' => $vCategories['Restaurant']->id_category_vendeur ?? null,
                 'zone' => $zones[1]->id_zone,
                 'plan' => $plans[1]->id,
                 'note' => 4.9,
@@ -419,7 +418,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 'adresse_complete' => 'Carrefour Bodjona, Tokoin, Lomé',
                 'latitude' => 6.158000,
                 'longitude' => 1.218000,
-                'category' => $vCategories['Fast-Food & Burgers']->id ?? null,
+                'category' => $vCategories['Fast Food']->id_category_vendeur ?? null,
                 'zone' => $zones[1]->id_zone,
                 'plan' => $plans[0]->id,
                 'note' => 4.5,
@@ -434,7 +433,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 'adresse_complete' => 'Rue des Etoiles, Nyékonakpoè, Lomé',
                 'latitude' => 6.134000,
                 'longitude' => 1.224000,
-                'category' => $vCategories['Restaurants & Gastronomie']->id ?? null,
+                'category' => $vCategories['Restaurant']->id_category_vendeur ?? null,
                 'zone' => $zones[0]->id_zone,
                 'plan' => $plans[2]->id,
                 'note' => 4.8,
@@ -449,7 +448,7 @@ class ComprehensiveSystemSeeder extends Seeder
                 'adresse_complete' => 'Zone Résidentielle, Baguida, Lomé',
                 'latitude' => 6.142000,
                 'longitude' => 1.322000,
-                'category' => $vCategories['Pâtisseries & Desserts']->id ?? null,
+                'category' => $vCategories['Boulangerie / Pâtisserie']->id_category_vendeur ?? null,
                 'zone' => $zones[3]->id_zone,
                 'plan' => $plans[0]->id,
                 'note' => 4.6,
