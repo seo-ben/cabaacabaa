@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         if (DB::getDriverName() === 'mysql') {
-            DB::statement("ALTER TABLE commandes MODIFY COLUMN statut ENUM('en_attente', 'confirmee', 'en_preparation', 'pret', 'termine', 'annule', 'annulee', 'prete', 'recuperee', 'livree', 'annulee_client', 'annulee_vendeur', 'litige') DEFAULT 'en_attente'");
+            DB::statement("ALTER TABLE commandes MODIFY COLUMN statut ENUM('en_attente', 'confirmee', 'en_preparation', 'pret', 'termine', 'annule', 'annulee', 'prete', 'recuperee', 'en_livraison', 'livree', 'annulee_client', 'annulee_vendeur', 'litige') DEFAULT 'en_attente'");
         }
     }
 

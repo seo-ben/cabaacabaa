@@ -20,7 +20,7 @@ return new class extends Migration {
             DB::statement("UPDATE commandes SET heure_recuperation_effective = NULL WHERE CAST(heure_recuperation_effective AS CHAR) = '0000-00-00 00:00:00'");
 
             // Using raw SQL because changing ENUM values via Blueprint is sometimes problematic
-            DB::statement("ALTER TABLE commandes MODIFY COLUMN statut ENUM('en_attente', 'confirmee', 'en_preparation', 'pret', 'termine', 'annule', 'annulee', 'prete', 'recuperee', 'livree', 'annulee_client', 'annulee_vendeur', 'litige') DEFAULT 'en_attente'");
+            DB::statement("ALTER TABLE commandes MODIFY COLUMN statut ENUM('en_attente', 'confirmee', 'en_preparation', 'pret', 'termine', 'annule', 'annulee', 'prete', 'recuperee', 'en_livraison', 'livree', 'annulee_client', 'annulee_vendeur', 'litige') DEFAULT 'en_attente'");
         }
     }
 
