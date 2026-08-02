@@ -309,7 +309,7 @@ class ComprehensiveSystemSeeder extends Seeder
             ['email' => 'admin@cabaacabaa.com'],
             [
                 'name' => 'Super Admin CabaaCabaa',
-                'role' => 'admin',
+                'role' => 'super_admin',
                 'telephone' => '+22890111111',
                 'password' => Hash::make('password'),
             ]
