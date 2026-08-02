@@ -86,7 +86,7 @@ class ComprehensiveSystemSeeder extends Seeder
         $this->seedFinancials($vendors);
 
         // 14. SYSTEM ACTIVITY LOGS
-        $this->seedLogs($admin, $clients);
+        $this->seedLogs($admin);
 
         // Re-enable Foreign Key Checks
         if (DB::getDriverName() === 'sqlite') {
@@ -632,7 +632,7 @@ class ComprehensiveSystemSeeder extends Seeder
             if ($vendor->is_boosted) {
                 MiseEnAvant::create([
                     'id_vendeur' => $vendor->id_vendeur,
-                    'type_promotion' => 'banniere_hero',
+                    'type_promotion' => 'sponsorise',
                     'priorite' => $index + 1,
                     'date_debut' => now()->subDays(5),
                     'date_fin' => now()->addDays(25),
@@ -655,7 +655,7 @@ class ComprehensiveSystemSeeder extends Seeder
             $coupons[] = Coupon::create([
                 'id_vendeur' => $vendor->id_vendeur,
                 'code' => 'PROMO' . rand(10, 50),
-                'type' => 'pourcentage',
+                'type' => 'percentage',
                 'valeur' => 15.00,
                 'montant_minimal_achat' => 3000,
                 'limite_utilisation' => 100,
@@ -672,8 +672,8 @@ class ComprehensiveSystemSeeder extends Seeder
      */
     private function seedOrders(array $clients, array $vendors, array $drivers, array $plats): array
     {
-        $statuts = ['en_attente', 'en_preparation', 'prete', 'en_livraison', 'livree', 'annulee'];
-        $modesPaiement = ['tmoney', 'flooz', 'carte_bancaire', 'espece'];
+        $statuts = ['en_attente', 'en_preparation', 'prete', 'en_livraison', 'livree', 'annulee_vendeur'];
+        $modesPaiement = ['mobile_money', 'carte', 'espece', 'qr_code'];
         $commandes = [];
 
         for ($i = 1; $i <= 15; $i++) {
@@ -743,16 +743,17 @@ class ComprehensiveSystemSeeder extends Seeder
 
         foreach ($commandes as $cmd) {
             if ($cmd->statut === 'livree') {
-                AvisEvaluation::create([
+                AvisEvaluation::updateOrCreate([
                     'id_client' => $cmd->id_client,
                     'id_vendeur' => $cmd->id_vendeur,
+                ], [
                     'id_commande' => $cmd->id_commande,
                     'note' => rand(4, 5),
                     'commentaire' => $commentaires[array_rand($commentaires)],
                     'note_qualite' => rand(4, 5),
                     'note_rapidite' => rand(4, 5),
                     'note_rapport_qualite_prix' => rand(4, 5),
-                    'statut_avis' => 'publie',
+                    'statut_avis' => 'visible',
                     'date_publication' => now()->subHours(2),
                     'reponse_vendeur' => 'Merci beaucoup pour votre confiance et bon appétit !',
                     'date_reponse' => now()->subHour()
@@ -786,11 +787,12 @@ class ComprehensiveSystemSeeder extends Seeder
             // Financial Credit Transaction
             TransactionFinanciere::create([
                 'id_vendeur' => $vendor->id_vendeur,
-                'type' => 'credit',
+                'type_transaction' => 'commission_commande',
                 'montant' => rand(25000, 100000),
-                'description' => 'Encaissement ventes commandes CabaaCabaa',
+                'devise' => 'XOF',
                 'statut' => 'complete',
-                'reference' => 'TX-' . strtoupper(Str::random(10)),
+                'reference_paiement' => 'TX-' . strtoupper(Str::random(10)),
+                'notes' => 'Encaissement ventes commandes CabaaCabaa',
                 'date_transaction' => now()->subDays(rand(1, 5))
             ]);
 
@@ -798,8 +800,8 @@ class ComprehensiveSystemSeeder extends Seeder
             PayoutRequest::create([
                 'id_vendeur' => $vendor->id_vendeur,
                 'montant' => rand(15000, 50000),
-                'mode_paiement' => 'TMoney',
-                'numero_compte' => '+22890' . rand(100000, 999999),
+                'methode_paiement' => 'TMoney',
+                'informations_paiement' => '+22890' . rand(100000, 999999),
                 'statut' => 'approuve',
                 'created_at' => now()->subDays(rand(1, 3))
             ]);
@@ -809,15 +811,17 @@ class ComprehensiveSystemSeeder extends Seeder
     /**
      * 14. Seed Activity Logs
      */
-    private function seedLogs(User $admin, array $clients): void
+    private function seedLogs(User $admin): void
     {
         LogActivite::create([
-            'id_user' => $admin->id_user,
-            'action' => 'login_admin',
-            'description' => 'Connexion réussie au tableau de bord d administration',
-            'ip_address' => '127.0.0.1',
+            'id_utilisateur' => $admin->id_user,
+            'type_action' => 'login_admin',
+            'table_cible' => 'users',
+            'id_enregistrement' => $admin->id_user,
+            'details_action' => json_encode(['message' => 'Connexion réussie au tableau de bord d administration']),
+            'adresse_ip' => '127.0.0.1',
             'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-            'created_at' => now()
+            'date_action' => now()
         ]);
     }
 }
