@@ -14,7 +14,7 @@ class CreateCommandesTable extends Migration
             $table->unsignedBigInteger('id_client');
             $table->unsignedBigInteger('id_vendeur');
             $table->enum('statut', [
-                'en_attente','confirmee','en_preparation','prete','recuperee','livree','annulee_client','annulee_vendeur','litige'
+                'en_attente', 'confirmee', 'en_preparation', 'pret', 'termine', 'annule', 'annulee', 'prete', 'recuperee', 'en_livraison', 'livree', 'annulee_client', 'annulee_vendeur', 'litige'
             ])->default('en_attente');
             $table->enum('type_recuperation', ['emporter','sur_place','livraison'])->default('emporter');
             $table->enum('mode_paiement_prevu', ['espece','qr_code','mobile_money','carte'])->default('espece');
