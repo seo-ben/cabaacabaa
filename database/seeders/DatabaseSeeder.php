@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         
         // Vendeur 1: Centre ville (Lomé)
         $userVendeur1 = User::firstOrCreate(
-            ['email' => 'pizza@lome.com'],
+            ['email' => 'pizza.king@cabaacabaa.com'],
             [
                 'name' => 'Pizza King',
                 'role' => 'vendeur',
@@ -58,10 +58,10 @@ class DatabaseSeeder extends Seeder
         );
 
         Vendeur::updateOrCreate(
-            ['id_user' => $userVendeur1->id_user],
+            ['slug' => 'pizza-king-lome'],
             [
+                'id_user' => $userVendeur1->id_user,
                 'nom_commercial' => 'Pizza King Lomé',
-                'slug' => 'pizza-king-lome',
                 'description' => 'Les meilleures pizzas au feu de bois de la capitale.',
                 'type_vendeur' => 'restaurant', 
                 'adresse_complete' => 'Boulevard Circulaire, Lomé',
@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
 
         // Vendeur 2: Quartier Tokoin (Un peu plus au Nord)
         $userVendeur2 = User::firstOrCreate(
-            ['email' => 'burger@lome.com'],
+            ['email' => 'burger.house@cabaacabaa.com'],
             [
                 'name' => 'Burger House',
                 'role' => 'vendeur',
@@ -88,10 +88,10 @@ class DatabaseSeeder extends Seeder
         );
 
         Vendeur::updateOrCreate(
-            ['id_user' => $userVendeur2->id_user],
+            ['slug' => 'burger-house-tokoin'],
             [
+                'id_user' => $userVendeur2->id_user,
                 'nom_commercial' => 'Burger House Tokoin',
-                'slug' => 'burger-house-tokoin',
                 'description' => 'Burgers gourmets et frites maison.',
                 'type_vendeur' => 'fast_food',
                 'adresse_complete' => 'Tokoin, Lomé',
@@ -116,10 +116,10 @@ class DatabaseSeeder extends Seeder
         );
 
         Vendeur::updateOrCreate(
-            ['id_user' => $userVendeur3->id_user],
+            ['slug' => 'sushi-ocean'],
             [
+                'id_user' => $userVendeur3->id_user,
                 'nom_commercial' => 'Sushi Ocean',
-                'slug' => 'sushi-ocean',
                 'description' => 'Sushi frais face à la mer.',
                 'type_vendeur' => 'restaurant',
                 'adresse_complete' => 'Route de la Plage, Lomé',
@@ -144,10 +144,10 @@ class DatabaseSeeder extends Seeder
         );
 
         Vendeur::updateOrCreate(
-            ['id_user' => $userVendeur4->id_user],
+            ['slug' => 'super-marche-coin'],
             [
+                'id_user' => $userVendeur4->id_user,
                 'nom_commercial' => 'Super Marché du Coin',
-                'slug' => 'super-marche-coin',
                 'description' => 'Tous vos produits du quotidien.',
                 'type_vendeur' => 'autre', // Mapped to Épicerie later
                 'adresse_complete' => 'Quartier Administratif',
