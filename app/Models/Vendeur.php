@@ -227,10 +227,10 @@ class Vendeur extends Model
      */
     public function getImageUrlAttribute()
     {
-        if ($this->image_principale) {
+        if ($this->image_principale && file_exists(public_path('storage/' . $this->image_principale))) {
             return asset('storage/' . $this->image_principale);
         }
-        return asset('assets/default-boutiques.png');
+        return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop';
     }
 
     /**
@@ -239,8 +239,14 @@ class Vendeur extends Model
     public function getThumbnailUrlAttribute()
     {
         if ($this->image_principale) {
-            return asset('storage/' . dirname($this->image_principale) . '/thumbnails/' . basename($this->image_principale));
+            $thumbPath = dirname($this->image_principale) . '/thumbnails/' . basename($this->image_principale);
+            if (file_exists(public_path('storage/' . $thumbPath))) {
+                return asset('storage/' . $thumbPath);
+            }
+            if (file_exists(public_path('storage/' . $this->image_principale))) {
+                return asset('storage/' . $this->image_principale);
+            }
         }
-        return asset('assets/default-boutiques.png');
+        return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop';
     }
 }

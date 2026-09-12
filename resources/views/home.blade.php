@@ -156,7 +156,7 @@
             @foreach($vendeurs->take(4) as $vendor)
             <a href="{{ route('vendor.show', ['id' => $vendor->id_vendeur, 'slug' => Str::slug($vendor->nom_commercial)]) }}" class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 block">
                 <div class="h-28 relative">
-                    <img src="{{ $vendor->thumbnail_url }}" class="w-full h-full object-cover">
+                    <img src="{{ $vendor->thumbnail_url }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop';" class="w-full h-full object-cover" alt="{{ $vendor->nom_commercial }}">
                     @if($vendor->is_boosted)
                         <span class="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">PROMO</span>
                     @endif

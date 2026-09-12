@@ -86,7 +86,7 @@
             <article class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800 relative group">
                 <a href="{{ route('vendor.show', ['id' => $v->id_vendeur, 'slug' => \Str::slug($v->nom_commercial)]) }}" class="flex">
                     <div class="w-32 h-32 shrink-0 relative">
-                        <img src="{{ $v->image_principale ? asset('storage/' . $v->image_principale) : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400' }}" class="w-full h-full object-cover">
+                        <img src="{{ $v->image_url }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop';" class="w-full h-full object-cover">
                         @if($v->is_boosted)
                         <div class="absolute top-2 left-2 px-1.5 py-0.5 bg-orange-600 text-white text-[7px] font-black rounded uppercase tracking-widest shadow-lg">Ad</div>
                         @endif
@@ -454,11 +454,7 @@
                             <article class="group relative flex flex-col bg-white dark:bg-gray-900 rounded-2xl p-3 border border-gray-100 dark:border-gray-800 hover:border-orange-50 dark:hover:border-orange-900/30 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-200/10 dark:hover:shadow-none h-full">
                                 <a href="{{ route('vendor.show', ['id' => $v->id_vendeur, 'slug' => \Str::slug($v->nom_commercial)]) }}" class="block">
                                     <div class="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-50 dark:bg-gray-800">
-                                        @if($v->image_principale)
-                                            <img src="{{ asset('storage/' . $v->image_principale) }}" class="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-700">
-                                        @else
-                                            <div class="w-full h-full flex items-center justify-center text-4xl font-black text-gray-200 dark:text-gray-700 bg-gray-50 dark:bg-gray-800">{{ substr($v->nom_commercial, 0, 1) }}</div>
-                                        @endif
+                                        <img src="{{ $v->image_url }}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop';" class="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-700">
                                     </div>
                                     <div class="px-2">
                                         <div class="flex justify-between items-start mb-1">

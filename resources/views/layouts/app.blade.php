@@ -886,7 +886,7 @@
         <div class="bg-white/95 dark:bg-gray-950/95 backdrop-blur-2xl border-t border-gray-100/50 dark:border-gray-800/50 shadow-2xl shadow-black/10">
             <div class="relative flex justify-between items-end px-2 pt-2 pb-2">
                 
-                <!-- Home -->
+                <!-- Accueil -->
                 <a href="/" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
                         <div class="{{ request()->is('/') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('/') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
@@ -900,16 +900,16 @@
                     @endif
                 </a>
 
-                <!-- Produit/Search -->
-                <a href="{{ route('explore.plats') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
+                <!-- Boutiques / Vendeurs (Explore) -->
+                <a href="{{ route('explore') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
                     <div class="relative">
-                        <div class="{{ request()->is('produits*') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('produits*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
-                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('produits*') ? 'text-orange-600 dark:text-orange-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('produits*') ? '2.5' : '1.5' }}" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <div class="{{ request()->is('explore') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('explore') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('explore') ? 'text-orange-600 dark:text-orange-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('explore') ? '2.5' : '1.5' }}" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                     </div>
-                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('produits*') ? 'text-orange-600 dark:text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Produits</span>
-                    @if(request()->is('produits*'))
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('explore') ? 'text-orange-600 dark:text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Boutiques</span>
+                    @if(request()->is('explore'))
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></div>
                     @endif
                 </a>
@@ -934,6 +934,20 @@
                     </a>
                     <span class="absolute -bottom-8 block text-center mt-1 text-[8px] font-bold text-gray-400 dark:text-gray-500">Panier</span>
                 </div>
+
+                <!-- Produit/Search -->
+                <a href="{{ route('explore.plats') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
+                    <div class="relative">
+                        <div class="{{ request()->is('produits*') ? 'bg-orange-500' : 'bg-transparent' }} absolute -inset-1.5 rounded-xl transition-all duration-300 {{ request()->is('produits*') ? 'opacity-20' : 'opacity-0 group-active:opacity-10 group-active:bg-orange-500' }}"></div>
+                        <svg class="relative w-5 h-5 transition-all duration-300 {{ request()->is('produits*') ? 'text-orange-600 dark:text-orange-500 scale-110' : 'text-gray-400 dark:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="{{ request()->is('produits*') ? '2.5' : '1.5' }}" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <span class="mt-0.5 text-[8px] font-bold transition-colors duration-300 {{ request()->is('produits*') ? 'text-orange-600 dark:text-orange-500' : 'text-gray-400 dark:text-gray-500' }}">Produits</span>
+                    @if(request()->is('produits*'))
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full"></div>
+                    @endif
+                </a>
 
                 <!-- Track Order (Suivi) -->
                 <a href="{{ route('orders.track') }}" class="relative flex-1 flex flex-col items-center justify-center py-1.5 group transition-all duration-300">
