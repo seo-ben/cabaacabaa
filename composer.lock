@@ -136,57 +136,6 @@
             "time": "2024-02-09T16:56:22+00:00"
         },
         {
-            "name": "cinetpay/cinetpay-php",
-            "version": "1.9.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cinetpay/cinetpay-php-legacy.git",
-                "reference": "8a4a53bce076036fc5d6781bee839719780f2028"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cinetpay/cinetpay-php-legacy/zipball/8a4a53bce076036fc5d6781bee839719780f2028",
-                "reference": "8a4a53bce076036fc5d6781bee839719780f2028",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=5.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "CinetPay": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fawaz Adisa",
-                    "email": "adisaf@programmer.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "easily integrate cinetpay's gateway on your php web site.",
-            "homepage": "https://github.com/cinetpay/cinetpay-php-legacy",
-            "keywords": [
-                "cinetpay",
-                "integration",
-                "mobile",
-                "money"
-            ],
-            "support": {
-                "email": "support@cinetpay.com",
-                "issues": "https://github.com/cinetpay/cinetpay-php-legacy/issues",
-                "source": "https://github.com/cinetpay/cinetpay-php-legacy/tree/v1.9.2"
-            },
-            "time": "2020-11-30T00:00:00+00:00"
-        },
-        {
             "name": "clue/redis-protocol",
             "version": "v0.3.2",
             "source": {
